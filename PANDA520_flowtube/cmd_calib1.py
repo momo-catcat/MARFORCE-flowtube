@@ -34,8 +34,8 @@ def cmd_calib1(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, t
     D = 101325 / p * D * ((T ** (3 / 2)) / (T0 ** (3 / 2)))
 
 
-    dt = 0.00001                        # timestep [s]
-    timesteps = 10000                   # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
+    dt = 0.0001                        # timestep [s]
+    timesteps = 1000                   # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
     numLoop = 500                      # number of times to run to reach the pinhole of the instrument
 
     Zgrid = np.array(40).astype(int)                         # number of grid points in tube length direction
@@ -61,7 +61,7 @@ def cmd_calib1(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, t
     # plt.figure(1, figsize = [8,6])
     for j in range(numLoop):
         oldH2SO4 = c[:, -1 , 3]
-        c = odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, kHSO3pO2, O2conc, H2Oconc, SO2conc, D, R, L, Q, c, OHconc)
+        c = odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, kHSO3pO2, O2conc, H2Oconc, SO2conc, D, R, L, Q, c)
 
         t = ['HSO_3', 'SO_3', 'HO_2', 'H_2SO_4', 'OH']
 
