@@ -1,4 +1,5 @@
 #input packages
+#just try to change something in this file
 import numpy as np
 from cmd_calib1 import cmd_calib1
 from Vapour_calc import H2O_conc as H2O_conc
@@ -62,3 +63,4 @@ for i in range(1):#range(H2SO4.size):
     H2SO4[i] = cmd_calib1(O2conc[i], H2Oconc[i], SO2conc[i], ID / 10 / 2, L / 10, Q * 1000 / 60, It, T, p, fullOrSimpleModel, time)
 
 
+print(H2SO4)

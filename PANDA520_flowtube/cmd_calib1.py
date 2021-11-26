@@ -5,6 +5,8 @@ def cmd_calib1(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, t
     from Vapour_calc import H2O_conc
     import matplotlib.pyplot as plt
     from odesolve import odesolve as odesolve
+    from scipy import interpolate
+
     import matplotlib
     # matplotlib.use("TkAgg")
 
@@ -35,8 +37,8 @@ def cmd_calib1(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, t
 
 
     dt = 0.0001                        # timestep [s]
-    timesteps = 1000                   # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
     numLoop = 500                      # number of times to run to reach the pinhole of the instrument
+    timesteps = 1000                   # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
 
     Zgrid = np.array(40).astype(int)                         # number of grid points in tube length direction
     Rgrid = np.array(80)                         # number of grid points in tube radius direction
@@ -69,8 +71,7 @@ def cmd_calib1(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, t
         #     c[int(c[:, 0, i].size / 2) : -1, :, i] = np.flipud(c[1 : int(c[:, 0, i].size / 2), :, i]) # symmetry, program only returns values for 0..R
 
         tim = j * timesteps * dt
-        print(tim)
-        print(j)
+        print(['time: ' + str(tim)])
 
         for i in range(5): # plot
             plt.subplot(2, 3, i + 1)
@@ -88,32 +89,29 @@ def cmd_calib1(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, t
 
 
         newH2SO4 = c[:, -1, 3]
-        print(['t = ' + str(tim) + "  H2SO4" + str(np.sum(newH2SO4 - oldH2SO4))])
+        print(['t = ' + str(tim) + "  H2SO4 difference: " + str(np.sum(newH2SO4 - oldH2SO4))])
 
-        # if (j > 15) & (np.sum(newH2SO4 - oldH2SO4) / np.sum(oldH2SO4) < 1e-5):
-        #     break
+        if (j > 15) & (np.sum(newH2SO4 - oldH2SO4) / np.sum(oldH2SO4) < 1e-5):
+            break
 
-    # dr = R / (Rgrid - 1) * 2
-    # x = R:-dr:0
-    # y = c{4}(1:size(c{4},1)/2,end)'
-    # global splineres # this is to be used by f-function
-    # splineres = spline(x, y)
-    #
-    # # plot concentration profile
-    # subplot(2,3,6)
-    # plot(0:0.01:R,ppval(splineres, 0:0.01:R))
-    # title('[H2SO4] at end of tube')
-    # xlabel('r [cm]')
-    # ylabel('Concentration, [cm**{-3}]')
+        dr = R / (Rgrid - 1) * 2
+        x = np.arange(0, R, dr)
+        y = c[0 : int(Rgrid / 2), -1, 3]
+        splineres = interpolate.splrep(x, y)
+
+        # plot concentration profile
+        plt.subplot(2,3,6)
+        plt.plot(np.arange(0, R, dr), interpolate.splev(np.arange(0, R, dr), splineres))
+        plt.title('[H2SO4] at end of tube')
+        plt.xlabel('r [cm]')
+        plt.ylabel('Concentration, [cm**{-3}]')
 
 
-    # rVec=0:0.001:R
-    # cVec=ppval(splineres, 0:0.001:R)
-    # meanH2SO4=2*0.001/R**2*sum(cVec.*rVec)
-    # meanWeightedH2SO4=4*0.001/R**2*sum(cVec.*rVec.*(1-rVec.**2/R**2))
-    #
-    # #{
-    #     maxint = ppval(splineres, 0) # get integration bounds
-    #     splineres = spline(y, x) # disc integration with respect to r-axis
-    #     meanH2SO4 = quadl(@(x)f(x), 0, maxint, 1e3) # integrate
-    return(c)
+        rVec = np.arange(0, R, 0.001)
+        cVec = interpolate.splev(rVec, splineres)
+        meanH2SO4 = 2 * 0.001 / R ** 2 * np.sum(cVec * rVec) #calculate average concentration over the cross section
+        meanWeightedH2SO4 = 4 * 0.001 / R ** 2 * np.sum(cVec * rVec * (1 - rVec ** 2 / R ** 2)) #the inner layer shoul have large chance to get into the pinhole
+        print(np.sum(cVec * rVec))
+        print(np. sum(cVec * rVec * (1 - rVec ** 2 / R ** 2)))
+
+    return(meanWeightedH2SO4)
