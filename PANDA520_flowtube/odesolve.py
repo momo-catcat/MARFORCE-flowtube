@@ -51,7 +51,7 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, k
         term3[1:-1, 1:, 3] = kSO3p2H2O * H2Oconc * H2Oconc * initc[1:-1, 1:, 1]
 
         term3[1:-1, 1:, 4] = -kSO2pOH * SO2conc * initc[1:-1, 1:, 4] - kOHpHO2 * initc[1:-1, 1:, 2] * initc[\
-            1:-1, 1:, 4] - kOHpOH * initc[1:-1, 1:, 4] * initc[1:-1, 1:, 4] # kOHpOH should not be multiplied by two
+            1:-1, 1:, 4] - 2 * kOHpOH * initc[1:-1, 1:, 4] * initc[1:-1, 1:, 4] # kOHpOH should not be multiplied by two
 
         c = dt * (term1 - term2 + term3) + initc
 
