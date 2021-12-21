@@ -1,4 +1,4 @@
-def cmd_calib1(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, time):
+def cmd_calib2(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, time, c):
     ## parameters (that can be changed by the user)
     #import packages
     import numpy as np
@@ -54,9 +54,9 @@ def cmd_calib1(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, t
 
     # initial conditions
     # order in c is: HSO3, SO3, HO2, H2SO4, OH
-    c = np.zeros([Rgrid, Zgrid, 5])
-    c[:, 0, 4] = OHconc  # set [OH] at z = 0
-    c[:, 0, 2] = OHconc  # set [HO2] at z = 0. This equals OH conc
+    # c = np.zeros([Rgrid, Zgrid, 5])
+    # c[:, 0, 4] = OHconc  # set [OH] at z = 0
+    # c[:, 0, 2] = OHconc  # set [HO2] at z = 0. This equals OH conc
     ## check and output parameters to file
 
 
@@ -73,19 +73,19 @@ def cmd_calib1(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, t
         tim = j * timesteps * dt
         print(['time: ' + str(tim)])
 
-        # for i in range(5): # plot
-        #     plt.subplot(2, 3, i + 1)
-        #     plt.pcolor(np.linspace(0, L, Zgrid), np.linspace(-R, R, Rgrid), c[:, : ,i], shading = 'nearest')
-        #     # plt.pcolor(c[:, : , i])
-        #     #colorbar
-        #     plt.xlabel('L [cm]')
-        #     plt.ylabel('r [cm]')
-        #     if i == 2:
-        #         plt.title(['t =' + str(tim) + t[i]]) # also print time in subplot 2 (top-middle)
-        #     else:
-        #         plt.title(t[i])
-        # plt.draw()
-        # plt.pause(1)
+        for i in range(5): # plot
+            plt.subplot(2, 3, i + 1)
+            plt.pcolor(np.linspace(0, L, Zgrid), np.linspace(-R, R, Rgrid), c[:, : ,i], shading = 'nearest')
+            # plt.pcolor(c[:, : , i])
+            #colorbar
+            plt.xlabel('L [cm]')
+            plt.ylabel('r [cm]')
+            if i == 2:
+                plt.title(['t =' + str(tim) + t[i]]) # also print time in subplot 2 (top-middle)
+            else:
+                plt.title(t[i])
+        plt.draw()
+        plt.pause(1)
 
 
         newH2SO4 = c[:, -1, 3]
@@ -101,11 +101,13 @@ def cmd_calib1(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, t
         splineres = interpolate.splrep(x, y)
         splineres_HO2 = interpolate.splrep(x, y1)
         # plot concentration profile
-        # plt.subplot(2,3,6)
-        # plt.plot(np.arange(0, R, dr), interpolate.splev(np.arange(0, R, dr), splineres))
-        # plt.title('[H2SO4] at end of tube')
-        # plt.xlabel('r [cm]')
-        # plt.ylabel('Concentration, [cm**{-3}]')
+        plt.subplot(2,3,6)
+        plt.plot(np.arange(0, R, dr), interpolate.splev(np.arange(0, R, dr), splineres))
+        plt.title('[H2SO4] at end of tube')
+        plt.xlabel('r [cm]')
+        plt.ylabel('Concentration, [cm**{-3}]')
+        
+
 
         rVec = np.arange(0, R, 0.001)
         cVec = interpolate.splev(rVec, splineres)
@@ -119,4 +121,4 @@ def cmd_calib1(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, t
         print(np.sum(cVec * rVec))
         print(np. sum(cVec * rVec * (1 - rVec ** 2 / R ** 2)))
 
-    return(meanWeightedH2SO4,meanWeightedHO2,c)
+    return(meanWeightedH2SO4,meanWeightedHO2)
