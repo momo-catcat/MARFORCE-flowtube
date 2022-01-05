@@ -1,4 +1,4 @@
-unction meanWeightedH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSimpleModel) 
+function meanWeightedH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSimpleModel) 
     %% parameters (that can be changed by the user)
 
     if H2Oconc==0
