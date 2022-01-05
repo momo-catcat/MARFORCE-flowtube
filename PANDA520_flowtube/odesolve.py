@@ -20,7 +20,7 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, k
     term3 = np.zeros([int(Rgrid), int(Zgrid), 5])
 
     for m in range(timesteps):
-
+        # Diffusion term
         # The equation is based on Fick's first law: https://en.wikipedia.org/wiki/Fick%27s_laws_of_diffusion
         # calculate central grids
         # p_a = 1. / r[1:-1, 1:-1, :] * (initc[1:-1, 1:-1, :] - initc[0:-2, 1:-1, :]) / (-dr). # This doesn't seem to be necessary since we are considering two dimensional problem.
@@ -29,8 +29,11 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, k
 
         term1[1:-1, 1:-1, :] = D[1:-1, 1:-1, :] * (p_b + p_c) #diffusion of gas molecules
 
-        term2[1:-1, 1:-1, :] = (2. * Q) / (np.pi * R ** 2) * (1. - r[1:-1, 1:-1, :] ** 2 / (R ** 2)) *\
-                               (initc[1:-1, 1:-1, :] - initc[1:-1, 0:-2, :]) / dx #carried by main flow
+        # Advection; carried by main flow
+        # Refs: 1. https://en.wikipedia.org/wiki/Advection
+        #       2. Gormley & Kennedy, 1948, Diffusion from a stream flowing through a cylindrical tube
+        term2[1:-1, 1:-1, :] = (2. * Q) / (np.pi * R ** 4) * (R ** 2 - r[1:-1, 1:-1, :] ** 2) *\
+                               (initc[1:-1, 1:-1, :] - initc[1:-1, 0:-2, :]) / dx
 
         #calculate the last column (measured by the instrument)
         p_b_end = (initc[2:, -1, :] - 2. * initc[1:-1, -1, :] + initc[0:-2, -1, :]) / (dr * dr)
@@ -38,7 +41,7 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, k
 
         term1[1:-1, -1, :] = D[1:-1, -1, :] * (p_b_end + p_c_end) #diffusion of gas molecules
 
-        term2[1:-1, -1, :] = (2. * Q) / (np.pi * R ** 2) * (1. - r[1:-1, -1, :] ** 2 / (R ** 2)) *\
+        term2[1:-1, -1, :] = (2. * Q) / (np.pi * R ** 4) * (R ** 2 - r[1:-1, -1, :] ** 2) *\
                                (initc[1:-1, -1, :] - initc[1:-1, -2, :]) / dx #carried by main flow
 
         # t = ['HSO_3', 'SO_3', 'HO_2', 'H_2SO_4', 'OH']

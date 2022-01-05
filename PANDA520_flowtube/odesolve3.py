@@ -20,30 +20,34 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, k
     # SO2tot = c[:,:,comp_namelist.index('SO2')]
     # O2tot = c[:,:,comp_namelist.index('O2')]
     # H2Otot = c[:,:,comp_namelist.index('H2O')]
+    
     const_comp = ['SO2','O2','H2O']
     u = [0,2,3,6,7,8]
 
     for m in range(timesteps):
-        # u = [0,2,3,6,7,8]
+        # Diffusion term
         # The equation is based on Fick's first law: https://en.wikipedia.org/wiki/Fick%27s_laws_of_diffusion
         # calculate central grids
         # p_a = 1. / r[1:-1, 1:-1, :] * (initc[1:-1, 1:-1, :] - initc[0:-2, 1:-1, :]) / (-dr). # This doesn't seem to be necessary since we are considering two dimensional problem.
-        p_b = (initc[2:, 1:-1, :] - 2. * initc[1:-1, 1:-1, :] + initc[0:-2, 1:-1, :]) / (dr[2:, 1:-1, :] * dr[2:, 1:-1, :])
+        p_b = (initc[2:, 1:-1, :] - 2. * initc[1:-1, 1:-1, :] + initc[0:-2, 1:-1, :]) / (dr * dr)
         p_c = (initc[1:-1, 2:, :] - 2. * initc[1:-1, 1:-1, :] + initc[1:-1, 0:-2,: ]) / (dx * dx)
-    
-        term1[1:-1, 1:-1, :] = D[1:-1, 1:-1, :] * (p_b + p_c) # diffusion of gas molecules
-    
-        term2[1:-1, 1:-1, :] = (2. * Qtot[1:-1, 1:-1,:]) / (np.pi * Rtot[1:-1, 1:-1,:] ** 2) * (1. - r[1:-1, 1:-1, :] ** 2 / (Rtot[1:-1, 1:-1,:] ** 2)) *\
-                           (initc[1:-1, 1:-1, :] - initc[1:-1, 0:-2, :]) / dx # carried by main flow
-    
-         #calculate the last column (measured by the instrument)
-        p_b_end = (initc[2:, -1, :] - 2. * initc[1:-1, -1, :] + initc[0:-2, -1, :]) / (dr[2:, -1, :] * dr[2:, -1, :])
+
+        term1[1:-1, 1:-1, :] = D[1:-1, 1:-1, :] * (p_b + p_c) #diffusion of gas molecules
+
+        # Advection; carried by main flow
+        # Refs: 1. https://en.wikipedia.org/wiki/Advection
+        #       2. Gormley & Kennedy, 1948, Diffusion from a stream flowing through a cylindrical tube
+        term2[1:-1, 1:-1, :] = (2. * Q) / (np.pi * R ** 4) * (R ** 2 - r[1:-1, 1:-1, :] ** 2) *\
+                               (initc[1:-1, 1:-1, :] - initc[1:-1, 0:-2, :]) / dx
+
+        #calculate the last column (measured by the instrument)
+        p_b_end = (initc[2:, -1, :] - 2. * initc[1:-1, -1, :] + initc[0:-2, -1, :]) / (dr * dr)
         p_c_end = (initc[1:-1, -1, :] - 2. * initc[1:-1, -2, :] + initc[1:-1, -2,: ]) / (dx * dx)
-    
-        term1[1:-1, -1, :] = D[1:-1, -1, :] * (p_b_end + p_c_end) #diffusion of gas molecules
-    
-        term2[1:-1, -1, :] = (2. * Qtot[1:-1, -1,:]) / (np.pi * Rtot[1:-1, -1,:] ** 2) * (1. - r[1:-1, -1, :] ** 2 / (Rtot[1:-1, -1,:] ** 2)) *\
-                           (initc[1:-1, -1, :] - initc[1:-1, -2, :]) / dx #carried by main flow
+
+        term1[1:-1, -1, :] = D[1:-1, -1, :] * (p_b_end + p_c_end)
+
+        term2[1:-1, -1, :] = (2. * Q) / (np.pi * R ** 4) * (R ** 2 - r[1:-1, -1, :] ** 2) *\
+                               (initc[1:-1, -1, :] - initc[1:-1, -2, :]) / dx
 
         # t = ['HSO_3', 'SO_3', 'HO_2', 'H_2SO_4', 'OH']
         # term3[1:-1, 1:, comp_namelist.index('HSO3')] = kSO2pOH *  SO2tot[1:-1, 1:] * initc[1:-1, 1:, comp_namelist.index('OH')] - kHSO3pO2 * initc[1:-1, 1:, comp_namelist.index('HSO3')] * O2tot[1:-1, 1:]
