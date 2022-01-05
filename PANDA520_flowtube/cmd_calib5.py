@@ -319,12 +319,12 @@ def cmd_calib5(O2conc, H2Oconc, H2Oconc_1, SO2conc, R, L, Q, R1, L1, Q1, It, T, 
         cVec = interpolate.splev(rVec, splineres)
         cVec_HO2 = interpolate.splev(rVec, splineres_HO2)
         meanH2SO4 = 2 * 0.001 / R1 ** 2 * np.sum(cVec * rVec) #calculate average concentration over the cross section
-        meanWeightedH2SO4 = 4 * 0.001 / R1 ** 2 * np.sum(cVec * rVec * (1 - rVec ** 2 / R1 ** 2)) #the inner layer shoul have large chance to get into the pinhole
+        meanWeightedH2SO4 = 4 * 0.001 / R1 ** 2 * np.sum(cVec * rVec * (1 - rVec ** 2 / R1 ** 2)) #not sure about the formulation. Needs to be checked
         
         meanHO2 = 2 * 0.001 / R1 ** 2 * np.sum(cVec_HO2 * rVec) #calculate average concentration over the cross section
-        meanWeightedHO2 = 4 * 0.001 / R1 ** 2 * np.sum(cVec_HO2 * rVec * (1 - rVec ** 2 / R1 ** 2)) #the inner layer shoul have large chance to get into the pinhole
+        meanWeightedHO2 = 4 * 0.001 / R1 ** 2 * np.sum(cVec_HO2 * rVec * (1 - rVec ** 2 / R1 ** 2)) #not sure about the formulation. Needs to be checked
         
         # print(np.sum(cVec * rVec))
         # print(np. sum(cVec * rVec * (1 - rVec ** 2 / R1 ** 2)))
 
-    return(meanWeightedH2SO4,meanWeightedHO2)
+    return(meanH2SO4,meanHO2)
