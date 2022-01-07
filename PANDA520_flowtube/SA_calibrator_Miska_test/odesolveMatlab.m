@@ -9,7 +9,8 @@ function cout = odesolveMatlab(timesteps,Zgrid,Rgrid,dt,kSO2pOH,kOHpHO2,kOHpOH,k
     end
 
     initc=c;
-    
+
+
     dz=L/(Zgrid-1);
     dr=R/(Rgrid-1);
     
@@ -24,20 +25,22 @@ function cout = odesolveMatlab(timesteps,Zgrid,Rgrid,dt,kSO2pOH,kOHpHO2,kOHpOH,k
                     end
 %                     disp(l),disp(i),disp(j),disp(r), disp(R)
 %                     term1 = D(l) * (1. / r * (initc(l,j,i) - initc(l,j - 1,i)) / (-2*dr) + (initc(l,j + 1,i) - 2. * initc(l,j,i) + initc(l,j - 1,i)) / (4 * dr * dr) + (initc(l,j,i + 1) - 2. * initc(l,j,i) + initc(l,j,i - 1)) / (dz * dz));
-                    term1 = D(l) * ((initc(l,j + 1,i) - 2. * initc(l,j,i) + initc(l,j - 1,i)) / (4 * dr * dr) + (initc(l,j,i + 1) - 2. * initc(l,j,i) + initc(l,j,i - 1)) / (dz * dz));
+                      term1 = D(l) * ((initc(l,j + 1,i) - 2. * initc(l,j,i) + initc(l,j - 1,i)) / (4 * dr * dr) + (initc(l,j,i + 1) - 2. * initc(l,j,i) + initc(l,j,i - 1)) / (dz * dz));
+                      
+%                     term1 = 0;
                     term2 = (2. * Q) / (pi * R^2) * (1. - r^2 / (R^2)) * (initc(l,j,i) - initc(l,j,i - 1)) / dz;
-                    
+%                       term2 = 0;
                     
                     if l==1
-                        term3=kSO2pOH * SO2conc * initc(5,j,i) - kHSO3pO2 * initc(1,j,i) * O2conc;
+                        term3=0;
                     elseif l==2
-                        term3=kHSO3pO2 * O2conc * initc(1,j,i) - kSO3p2H2O * H2Oconc * H2Oconc * initc(2,j,i);
+                        term3=0;
                     elseif l==3
-                        term3=kHSO3pO2 * O2conc * initc(1,j,i) - kOHpHO2 * initc(3,j,i) * initc(5,j,i);
+                        term3=0;
                     elseif l==4
-                        term3=kSO3p2H2O * H2Oconc * H2Oconc * initc(2,j,i);
+                        term3=0;
                     elseif l==5
-                        term3=-kSO2pOH * SO2conc * initc(5,j,i) - kOHpHO2 * initc(3,j,i) * initc(5,j,i) - 2*kOHpOH * initc(5,j,i) * initc(5,j,i);
+                        term3=0;
                     end
                     
                     c(l,j,i) = dt * (term1 - term2 + term3) + initc(l,j,i);
@@ -53,18 +56,20 @@ function cout = odesolveMatlab(timesteps,Zgrid,Rgrid,dt,kSO2pOH,kOHpHO2,kOHpOH,k
                 r = abs(2. * r - R);
 %                 term1 = D(l) * (1. / r * (initc(l,j,i) - initc(l,j - 1,i)) / (-2*dr) + (initc(l,j + 1,i) - 2. * initc(l,j,i) + initc(l,j - 1,i)) / (4* dr * dr) + (initc(l,j,i) - 2. * initc(l,j,i-1) + initc(l,j,i - 2)) / (dz * dz));
                 term1 = D(l) * ((initc(l,j + 1,i) - 2. * initc(l,j,i) + initc(l,j - 1,i)) / (4* dr * dr) + (initc(l,j,i) - 2. * initc(l,j,i-1) + initc(l,j,i - 2)) / (dz * dz));
-                term2 = (2. * Q) / (pi * R^2) * (1. - r^2 / (R^2)) * (initc(l,j,i) - initc(l,j,i - 1)) / dz;
+%                 term1 = 0;
+                    term2 = (2. * Q) / (pi * R^2) * (1. - r^2 / (R^2)) * (initc(l,j,i) - initc(l,j,i - 1)) / dz;
+%                 term2 = 0;
 
                 if l==1
-                    term3=kSO2pOH * SO2conc * initc(5,j,i) - kHSO3pO2 * initc(1,j,i) * O2conc;
+                    term3=0;
                 elseif l==2
-                    term3=kHSO3pO2 * O2conc * initc(1,j,i) - kSO3p2H2O * H2Oconc * H2Oconc * initc(2,j,i);
+                    term3=0;
                 elseif l==3
-                    term3=kHSO3pO2 * O2conc * initc(1,j,i) - kOHpHO2 * initc(3,j,i) * initc(5,j,i);
+                    term3=0;
                 elseif l==4
-                    term3=kSO3p2H2O * H2Oconc * H2Oconc * initc(2,j,i);
+                    term3=0;
                 elseif l==5
-                    term3=-kSO2pOH * SO2conc * initc(5,j,i) - kOHpHO2 * initc(3,j,i) * initc(5,j,i) - 2*kOHpOH * initc(5,j,i) * initc(5,j,i);
+                    term3=0;
                 end
 
                 c(l,j,i) = dt * (term1 - term2 + term3) + initc(l,j,i);
@@ -77,11 +82,12 @@ function cout = odesolveMatlab(timesteps,Zgrid,Rgrid,dt,kSO2pOH,kOHpHO2,kOHpOH,k
         initc=c;
     end
             
-    
+
     cout = cell(1, 5);
     cout = cellfun(@(x)zeros(Rgrid, Zgrid), cout, 'UniformOutput', false);
     for i=1:5
         cout{i}=squeeze(c(i,:,:));
     end
+
 end
 

@@ -35,6 +35,7 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, k
 
         term1[1:-1, 1:-1, :] = D[1:-1, 1:-1, :] * (p_b + p_c) #diffusion of gas molecules
 
+        print(term1)
         # Advection; carried by main flow
         # Refs: 1. https://en.wikipedia.org/wiki/Advection
         #       2. Gormley & Kennedy, 1948, Diffusion from a stream flowing through a cylindrical tube
