@@ -112,7 +112,7 @@ def cmd_calib5(O2conc, H2Oconc, H2Oconc_1, SO2conc, R, L, Q, R1, L1, Q1, It, T, 
     # NA = si.Avogadro
     H2O, Psat_water, H2O_mw = water_calc.water_calc(T, rh)
 
-    dt = 0.00001                        # timestep [s]
+    dt = 0.0001                        # timestep [s]
     numLoop = 500                      # number of times to run to reach the pinhole of the instrument
     timesteps = 10000                    # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
 
@@ -255,11 +255,11 @@ def cmd_calib5(O2conc, H2Oconc, H2Oconc_1, SO2conc, R, L, Q, R1, L1, Q1, It, T, 
         
         # t = ['HSO_3', 'SO_3', 'HO_2', 'H_2SO_4', 'OH']
         # ['OH', 'SO2', 'HSO3', 'HO2', 'H2O', 'O2', 'H2O2', 'SO3', 'SA']
-        t= ['OH','HSO3','HO2','SO3','SA']
+        t = ['OH','HSO3','HO2','SO3','SA']
         # for i in range(5):
         #     c[int(c[:, 0, i].size / 2) : -1, :, i] = np.flipud(c[1 : int(c[:, 0, i].size / 2), :, i]) # symmetry, program only returns values for 0..R
 
-        tim = j * timesteps* dt
+        tim = (j + 1) * timesteps * dt
         
         # y = np.linspace(-R, R, Rgrid)
         

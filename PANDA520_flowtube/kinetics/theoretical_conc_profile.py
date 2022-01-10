@@ -30,14 +30,13 @@ def conc_profile_Alonso(R, r, MM, rho, L, Q, P = 101000, T = 298.15):
     print(beta)
 
     # for beta * x >= 0.2
-    conc_prof = 1.477 * np.exp(-3.659 * beta) * (1 - 1 / 11 * (18 * norm_r ** 2 - 9 * norm_r ** 4 + 2 * norm_r
-                                                                   ** 6))
+    conc_prof = 1.477 * np.exp(-3.659 * beta) * (1 - 1 / 11 * (18 * norm_r ** 2 - 9 * norm_r ** 4 + 2 * norm_r ** 6))
 
     return(conc_prof)
 
 
 R = 0.0125
-conc_prof = conc_profile_Alonso(R, np.linspace(0, R, 100), 176, 4600, 2, 22 / 60 / 1000)
+conc_prof = conc_profile_Alonso(R, np.linspace(0, R, 100), 176, 4600, 5, 22 / 60 / 1000)
 
 # print(conc_prof)
 

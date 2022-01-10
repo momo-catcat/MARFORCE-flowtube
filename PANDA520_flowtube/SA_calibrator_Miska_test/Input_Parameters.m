@@ -6,7 +6,7 @@ T = 298.15; % K
 p = 101000; % Pa
 
 ID = 25; % mm
-L = 1000; % mm
+L = 5000; % mm
 Q = 22; % lpm, not slpm
 
 Itx = 5.2009e10; % at Qx flow rate

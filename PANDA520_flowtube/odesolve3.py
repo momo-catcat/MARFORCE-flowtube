@@ -28,29 +28,36 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, k
         # Diffusion term
         # The equation is based on Fick's first law: https://en.wikipedia.org/wiki/Fick%27s_laws_of_diffusion
         # calculate central grids
-        # p_a = 1. / r[1:-1, 1:-1, :] * (initc[1:-1, 1:-1, :] - initc[0:-2, 1:-1, :]) / (-dr). # This doesn't seem to be necessary since we are considering two dimensional problem.
-        p_b = (initc[2:, 1:-1, :] - 2. * initc[1:-1, 1:-1, :] + initc[0:-2, 1:-1, :]) / (dr[1:-1, 1:-1, :] ** 2)
 
-        p_c = (initc[1:-1, 2:, :] - 2. * initc[1:-1, 1:-1, :] + initc[1:-1, 0:-2,: ]) / (dx * dx)
+        p_a = - 1. / r[1:Rgrid // 2, 1:-1, :] * (initc[1:Rgrid // 2, 1:-1, :] - initc[0:Rgrid // 2 - 1, 1:-1, :]) / dr[1:Rgrid // 2, 1:-1, :]
 
-        term1[1:-1, 1:-1, :] = D[1:-1, 1:-1, :] * (p_b + p_c) #diffusion of gas molecules
+        p_b = (initc[2:Rgrid // 2 + 1, 1:-1, :] - 2. * initc[1:Rgrid // 2, 1:-1, :] + initc[0:Rgrid // 2 - 1, 1:-1, :]) / (dr[1:Rgrid // 2, 1:-1, :] ** 2)
 
-        print(term1)
-        # Advection; carried by main flow
+        p_c = (initc[1:Rgrid // 2, 2:, :] - 2. * initc[1:Rgrid // 2, 1:-1, :] + initc[1:Rgrid // 2, 0:-2,: ]) / (dx * dx)
+
+        term1[1:Rgrid // 2, 1:-1, :] = D[1:Rgrid // 2, 1:-1, :] * (p_a + p_b + p_c) #diffusion of gas molecules
+
+        # convection; carried by main flow
         # Refs: 1. https://en.wikipedia.org/wiki/Advection
         #       2. Gormley & Kennedy, 1948, Diffusion from a stream flowing through a cylindrical tube
-        term2[1:-1, 1:-1, :] = (2. * Qtot[1:-1, 1:-1,:]) / (np.pi * Rtot[1:-1, 1:-1,:] ** 4) * (Rtot[1:-1, 1:-1,:] ** 2 - r[1:-1, 1:-1, :] ** 2) *\
-                            (initc[1:-1, 1:-1, :] - initc[1:-1, 0:-2, :]) / dx # carried by main flow
+        term2[1:Rgrid // 2, 1:-1, :] = (2. * Qtot[1:Rgrid // 2, 1:-1,:]) / (np.pi * Rtot[1:Rgrid // 2, 1:-1,:] ** 4) * \
+                                          (Rtot[1:Rgrid // 2, 1:-1,:] ** 2 - r[1:Rgrid // 2, 1:-1, :] ** 2) *\
+                            (initc[1:Rgrid // 2, 1:-1, :] - initc[1:Rgrid // 2, 0:-2, :]) / dx # carried by main flow
 
         #calculate the last column (measured by the instrument)
 
-        p_b_end = (initc[2:, -1, :] - 2. * initc[1:-1, -1, :] + initc[0:-2, -1, :]) / (dr[1:-1, -1, :] ** 2)
-        p_c_end = (initc[1:-1, -1, :] - 2. * initc[1:-1, -2, :] + initc[1:-1, -2,: ]) / (dx * dx)
+        p_a_end = - 1. / r[1:Rgrid // 2, -1, :] * (
+                    initc[1:Rgrid // 2, -1, :] - initc[0:Rgrid // 2 - 1, -1, :]) / dr[1:Rgrid // 2, -1, :]
 
-        term1[1:-1, -1, :] = D[1:-1, -1, :] * (p_b_end + p_c_end)
+        p_b_end = (initc[2:Rgrid // 2 + 1, -1, :] - 2. * initc[1:Rgrid // 2, -1, :] + initc[0:Rgrid // 2 - 1, -1, :]) / (dr[1:Rgrid // 2, -1, :] ** 2)
 
-        term2[1:-1, -1, :] = (2. * Qtot[1:-1, -1,:]) / (np.pi * Rtot[1:-1, -1,:] ** 4) * (Rtot[1:-1, -1,:] ** 2 - r[1:-1, -1, :] ** 2) *\
-                            (initc[1:-1, -1, :] - initc[1:-1, -2, :]) / dx #carried by main flow
+        p_c_end = (initc[1:Rgrid // 2, -1, :] - 2. * initc[1:Rgrid // 2, -2, :] + initc[1:Rgrid // 2, -2,: ]) / (dx * dx)
+
+        term1[1:Rgrid // 2, -1, :] = D[1:Rgrid // 2, -1, :] * (p_a_end + p_b_end + p_c_end)
+
+        term2[1:Rgrid // 2, -1, :] = (2. * Qtot[1:Rgrid // 2, -1,:]) / (np.pi * Rtot[1:Rgrid // 2, -1,:] ** 4) * \
+                                        (Rtot[1:Rgrid // 2, -1,:] ** 2 - r[1:Rgrid // 2, -1, :] ** 2) *\
+                            (initc[1:Rgrid // 2, -1, :] - initc[1:Rgrid // 2, -2, :]) / dx #carried by main flow
 
         # t = ['HSO_3', 'SO_3', 'HO_2', 'H_2SO_4', 'OH']
         # term3[1:-1, 1:, comp_namelist.index('HSO3')] = kSO2pOH *  SO2tot[1:-1, 1:] * initc[1:-1, 1:, comp_namelist.index('OH')] - kHSO3pO2 * initc[1:-1, 1:, comp_namelist.index('HSO3')] * O2tot[1:-1, 1:]
@@ -78,9 +85,10 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, k
                 reac_count = 0
                 for i in dydt_rec[0,:]:
                     i = int(i) # ensure reaction index is integer - this necessary because the dydt_rec array is float (the tendency to change records beneath its first row are float)
-                    gprate = initc[1:-1, 1:,rindx[i, 0:nreac[i]]]**rstoi[i, 0:nreac[i]]
-                    gprate1= gprate[:,:,0] * gprate[:, :,-1] *rate_values[i]
-                    term3[1:-1, 1:, compi] += reac_sign[reac_count]*((gprate1))
+                    # print(rstoi[i, 0:nreac[i]])
+                    gprate = initc[1:Rgrid // 2, 1:,rindx[i, 0:nreac[i]]] ** rstoi[i, 0:nreac[i]]
+                    gprate1= gprate[:,:,0] * gprate[:, :,-1] * rate_values[i]
+                    term3[1:Rgrid // 2, 1:, compi] += reac_sign[reac_count]*((gprate1))
                     reac_count += 1
                 
         # hso31= term3[:,:,compi]
@@ -95,7 +103,10 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, k
         # term3[1:-1, 1:, compi] += reac_sign[reac_count]*((gp6))
         
         # c = dt * (term1 - term2 + term3) + initc
-        c[:,:,u] = dt * (term1[:,:,u] - term2[:,:,u] + term3[:,:,u]) + initc[:,:,u]
+        c[0:Rgrid // 2,:,u] = dt * (term1[0:Rgrid // 2,:,u] - term2[0:Rgrid // 2,:,u] + term3[0:Rgrid // 2,:,u]) + initc[0:Rgrid // 2,:,u]
+        # c[0:Rgrid // 2, :, u] = dt * (term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u])  + initc[0:Rgrid // 2,:, u]
+
+        c[Rgrid // 2:, :, u] = np.flipud(c[0:Rgrid // 2,:,u])
 
         initc = c
 # hso3 = c[:,:,comp_namelist.index('HSO3')]

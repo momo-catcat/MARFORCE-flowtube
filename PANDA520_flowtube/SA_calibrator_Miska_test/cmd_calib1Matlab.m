@@ -28,7 +28,7 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
     csH2O=7.22e-20; %cm2
     qyH2O=1;
     %It=1.84e10;
-    OHconc=It*csH2O*qyH2O*H2Oconc;
+    OHconc=It*csH2O*qyH2O*H2Oconc
     
     % diffusion constants, [cm^2/s]
     % order is: HSO3, SO3, HO2, H2SO4, OH
@@ -51,7 +51,7 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
     %Q = 125; % Q = 167;                            % flow rate [cm^3/s]
 
     % solving parameters
-    dt = 0.0001;                       % timestep [s]
+    dt = 0.00001;                       % timestep [s]
     numLoop = 500;                       % number of times to run, a higher number than 1 will plot intermediate results
     timesteps = 10000;                   % number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
     Zgrid = 40;                         % number of grid points in tube length direction
