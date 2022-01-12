@@ -7,12 +7,12 @@ p = 96060*1.005; % Pa
 
 ID = 24; % mm
 L = 930; % mm
-Q = 22; % lpm, not slpm
+Q = 11; % lpm, not slpm
 
 Itx = 5.2009e10; % at Qx flow rate
 Qx = 20; % lpm
 
-N2Flow = 22; % slpm
+N2Flow = 11; % slpm
 AirFlow = 50; % smlpm
 WaterFlow = [50]'; % smlpm
 SO2Flow = 5; % smlpm

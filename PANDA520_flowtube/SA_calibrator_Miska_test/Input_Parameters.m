@@ -6,15 +6,15 @@ T = 298.15; % K
 p = 101000; % Pa
 
 ID = 25; % mm
-L = 5000; % mm
-Q = 22; % lpm, not slpm
+L = 500; % mm
+Q = 11; % lpm, not slpm
 
 Itx = 5.2009e10; % at Qx flow rate
 Qx = 20; % lpm
 
-N2Flow = 22; % slpm
+N2Flow = 11; % slpm
 AirFlow = 50; % smlpm
-WaterFlow = [50]'; % smlpm
+WaterFlow = [100]'; % smlpm
 SO2Flow = 5; % smlpm
 SO2BottlePpm = 5000; % ppm
 

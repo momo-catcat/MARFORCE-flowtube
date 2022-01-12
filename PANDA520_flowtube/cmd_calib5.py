@@ -1,5 +1,5 @@
 def cmd_calib5(O2conc, H2Oconc, H2Oconc_1, SO2conc, R, L, Q, R1, L1, Q1, It, T, p, fullOrSimpleModel, time):
-    #% parameters (that can be changed by the user)
+    #%% parameters (that can be changed by the user)
     #import packages
     import numpy as np
     import os 
@@ -20,12 +20,12 @@ def cmd_calib5(O2conc, H2Oconc, H2Oconc_1, SO2conc, R, L, Q, R1, L1, Q1, It, T, 
     import matplotlib.pyplot as plt
     from scipy import interpolate
     from odesolve3 import odesolve as odesolve
-    R= 0.78
-    R1= 1.04
-    L= 55
-    L1= 68
-    Q= 11*1000/60
-    Q1=22*1000/60
+    # R= 0.78
+    # R1= 0.78
+    # L= 55
+    # L1= 68
+    # Q=11*1000/60
+    # Q1=11*1000/60
 
     # save all the parameters in to the pickle file 
     def_mod_var.def_mod_var(0)
@@ -85,7 +85,7 @@ def cmd_calib5(O2conc, H2Oconc, H2Oconc_1, SO2conc, R, L, Q, R1, L1, Q1, It, T, 
         
     if H2Oconc_1 == 0:
         H2Oconc_1 = H2Oconc*Q/Q1
-    # # reaction constants (using cm**3 and s)
+    # reaction constants (using cm**3 and s)
     kSO2pOH = 1.32e-12 * (T / 300) ** -0.7
     kOHpHO2 = 4.8e-11 * np.exp(250 / T)
     kOHpOH = 6.9e-31 * (T / 300) ** -0.8 * p / 1.3806488e-23 / T / 1e6
@@ -142,12 +142,12 @@ def cmd_calib5(O2conc, H2Oconc, H2Oconc_1, SO2conc, R, L, Q, R1, L1, Q1, It, T, 
     
     SO2tot = np.zeros([int(Rgrid),int(Zgrid)])
     SO2tot[:,0:int(Rgrid*L/(L+L1))] = SO2conc
-    SO2tot[:,int(Zgrid*L/(L+L1)):] =  SO2conc/2
-    
+    # SO2tot[:,int(Zgrid*L/(L+L1)):] =  SO2conc/2
+    SO2tot[:,int(Zgrid*L/(L+L1)):] =  SO2conc
     O2tot = np.zeros([int(Rgrid),int(Zgrid)])
     O2tot[:,0:int(Rgrid*L/(L+L1))] = O2conc
-    O2tot[:,int(Zgrid*L/(L+L1)):] =  O2conc/2
-    
+    # O2tot[:,int(Zgrid*L/(L+L1)):] =  O2conc/2
+    O2tot[:,int(Zgrid*L/(L+L1)):] =  O2conc
     Rtot = np.zeros([int(Rgrid),int(Zgrid),comp_num])
     Rtot[:,0:int(Rgrid*L/(L+L1)),:] = R
     Rtot[:,int(Zgrid*L/(L+L1)):,:] =  R1
@@ -157,6 +157,7 @@ def cmd_calib5(O2conc, H2Oconc, H2Oconc_1, SO2conc, R, L, Q, R1, L1, Q1, It, T, 
     c[:, 0, 0] = OHconc  # set [OH] at z = 0
     c[:, 0, 3] = OHconc  # set [HO2] at z = 0. This equals OH conc
     c[:,:,1] = SO2tot
+    
     c[:,:,5] = O2tot
     c[:,:,4] = H2Otot
     
@@ -181,7 +182,7 @@ def cmd_calib5(O2conc, H2Oconc, H2Oconc_1, SO2conc, R, L, Q, R1, L1, Q1, It, T, 
     RO2conc = RO2_conc.RO2_conc(RO2_indices,y)
     rate_values, erf, err_mess = rate_coeffs.evaluate_rates(RO2conc, y[comp_namelist.index('H2O')], T, 0, M, M*0.7809, y[comp_namelist.index('O2')], 0,  y[comp_namelist.index('HO2')],0,p)
 
-#%
+#%%
 
 
     '''
@@ -232,7 +233,7 @@ def cmd_calib5(O2conc, H2Oconc, H2Oconc_1, SO2conc, R, L, Q, R1, L1, Q1, It, T, 
         # gp3 = gp1 **gp2
         # gp3.prod()
         # c = odesolve(timesteps, Zgrid, Rgrid, dt, D, Rtot, dr, r, dx, Qtot,c,num_comp,comp_namelist,rstoi,dydt_vst,rindx,nreac,RO2_indices,T,M,p,rate_values,SO2tot,O2tot,H2Otot)
-        c = odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, kHSO3pO2,  D, Rtot, dr, dx, Qtot,c,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values)
+        c = odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, kHSO3pO2,  D, Rtot, dr, dx, Qtot,c,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values,SO2tot,H2Otot,O2tot)
 
         # tspan = 0
         # c= odeint(model,c0,tspan,args=(Zgrid, Rgrid,  kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, kHSO3pO2, O2tot, H2Otot, SO2tot, D, Rtot, dr, dx, Qtot,T,M,p))
@@ -256,6 +257,7 @@ def cmd_calib5(O2conc, H2Oconc, H2Oconc_1, SO2conc, R, L, Q, R1, L1, Q1, It, T, 
         # t = ['HSO_3', 'SO_3', 'HO_2', 'H_2SO_4', 'OH']
         # ['OH', 'SO2', 'HSO3', 'HO2', 'H2O', 'O2', 'H2O2', 'SO3', 'SA']
         t = ['OH','HSO3','HO2','SO3','SA']
+        # t= comp_namelist
         # for i in range(5):
         #     c[int(c[:, 0, i].size / 2) : -1, :, i] = np.flipud(c[1 : int(c[:, 0, i].size / 2), :, i]) # symmetry, program only returns values for 0..R
 
@@ -269,7 +271,8 @@ def cmd_calib5(O2conc, H2Oconc, H2Oconc_1, SO2conc, R, L, Q, R1, L1, Q1, It, T, 
             # ct = c[:, : ,i]
         order= [0,2,3,7,8]
         for i in range(5):
-            plt.subplot(2, 3, i + 1)
+            # plt.figure(figsize=(10,8))
+            plt.subplot(2,3, i + 1)
             plt.pcolor(np.linspace(0, L+L1, Zgrid),np.linspace(-R, R, Rgrid), c[:, : ,order[i]], shading = 'nearest')
             plt.pcolor(np.linspace(0, L+L1, Zgrid),np.linspace(-R1, R1, Rgrid), c[:, : , order[i]], shading = 'nearest')
             # plt.pcolor(c[:, : , i])

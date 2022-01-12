@@ -68,9 +68,11 @@ SO2conc = SO2Flow / 1000 / totFlow * SO2BottlePpm * 1e-6 * p / 1.3806488e-23 / T
 
 It = Itx * Qx / Q
 # second tube 
-ID1 = 0.78*10*2/3*4
+# ID1 = 0.78*10*2/3*4
+ID1 = 0.78*10*2
 L1 = 68 *10
-Q1 = 23
+# L1 = 0 *10
+Q1 =  11
 
 WaterFlow1 =np.array([0])    #H2O_data['H2O_free']
 
