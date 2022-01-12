@@ -28,14 +28,15 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
     csH2O=7.22e-20; %cm2
     qyH2O=1;
     %It=1.84e10;
-    OHconc=It*csH2O*qyH2O*H2Oconc;
+    OHconc=It*csH2O*qyH2O*H2Oconc
     
     % diffusion constants, [cm^2/s]
     % order is: HSO3, SO3, HO2, H2SO4, OH
     % (TODO: check D(H2SO4) RH dependance! we go up to 70% for our calibration)
     rh=H2Oconc*1e6*1.3806488e-23*T/vappresw(T);
     D = [0.126 0.126 0.141 diff_sa_rh(298,rh)*1e4 0.215];
-
+    
+    
     T0=[300 300 298 298 298];
     D=101325/p*D.*((T.^(3/2))./(T0.^(3/2)));
 
@@ -50,9 +51,9 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
     %Q = 125; % Q = 167;                            % flow rate [cm^3/s]
 
     % solving parameters
-    dt = 0.0001;                       % timestep [s]
+    dt = 0.00001;                       % timestep [s]
     numLoop = 500;                       % number of times to run, a higher number than 1 will plot intermediate results
-    timesteps = 1000;                   % number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
+    timesteps = 10000;                   % number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
     Zgrid = 40;                         % number of grid points in tube length direction
     Rgrid = 80;                         % number of grid points in tube radius direction
 
@@ -67,6 +68,7 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
     c = cellfun(@(x)zeros(Rgrid, Zgrid), c, 'UniformOutput', false);
     c{5}(:, 1) = OHconc;                % set [OH] at z = 0
     c{3}(:, 1) = OHconc;                % set [HO2] at z = 0
+    c{4}(:, 1) = OHconc;
 
     %% check and output parameters to file
 
@@ -92,10 +94,13 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
         c=odesolveMatlab(timesteps,Zgrid,Rgrid,dt,kSO2pOH,kOHpHO2,kOHpOH,kSO3p2H2O,kHSO3pO2,O2conc,H2Oconc,SO2conc,D,R,L,Q,c);
         t = {'HSO_3', 'SO_3', 'HO_2', 'H_2SO_4', 'OH'};
         
+
+
         for i = 1:5
 %             c{i} = load(sprintf('c%d.dat', i - 1)); % read concentrations calculated by C-program
             c{i}(size(c{i},1)/2+1:end-1,:)=flipud(c{i}(2:size(c{i},1)/2,:)); % symmetry, program only returns values for 0..R
         end
+        
         tim = j * timesteps * dt;
         for i = 1:5 % plot
             subplot(2,3,i);pcolor(linspace(0,L,Zgrid),linspace(-R,R,Rgrid),c{i});shading flat
@@ -112,7 +117,7 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
         newH2SO4 = c{4}(:,end);
         disp(sprintf('t = %f, [H2SO4] change = %g', tim, sum(newH2SO4 - oldH2SO4)));
         
-        if j>15&&sum(newH2SO4 - oldH2SO4)/sum(oldH2SO4)<1e-5
+        if j>3 && sum(newH2SO4 - oldH2SO4)/sum(oldH2SO4)<1e-5
             break
         end
         
@@ -127,7 +132,7 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
 
     % plot concentration profile
     subplot(2,3,6);
-    plot(0:0.01:R,ppval(splineres, 0:0.01:R));
+    plot(0:0.01:R,ppval(splineres, 0:0.01:R) / OHconc(1));
     title('[H2SO4] at end of tube');
     xlabel('r [cm]');
     ylabel('Concentration, [cm^{-3}]');

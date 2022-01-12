@@ -30,7 +30,7 @@ def cmd_calib1(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, t
     # order is: HSO3, SO3, HO2, H2SO4, OH
 
     rh = H2Oconc * 1e6 * 1.3806488e-23 * T / H2O_conc(T - 273.15, 1).SatP[0]
-    D = np.array([0.126, 0.126, 0.141, 0.8, 0.215]) #todo need to calculate Diffusion coefficient properly
+    D = np.array([0.126, 0.126, 0.141, 0.08, 0.215]) #todo need to calculate Diffusion coefficient properly
     # D = np.array([0.4, 0.4, 0.4, 0.4, 0.4])
     T0 = np.array([300, 300, 298, 298, 298])
     D = 101325 / p * D * ((T ** (3 / 2)) / (T0 ** (3 / 2)))
@@ -38,7 +38,7 @@ def cmd_calib1(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, t
 
     dt = 0.00001                        # timestep [s]
     numLoop = 500                      # number of times to run to reach the pinhole of the instrument
-    timesteps = 1000                   # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
+    timesteps = 10000                   # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
 
     Zgrid = np.array(40).astype(int)                         # number of grid points in tube length direction
     Rgrid = np.array(80)                         # number of grid points in tube radius direction
@@ -65,6 +65,7 @@ def cmd_calib1(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, t
         oldH2SO4 = c[:, -1 , 3]
         c = odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, kHSO3pO2, O2conc, H2Oconc, SO2conc, D, R, L, Q, c)
 
+        print(['OH conc1: ' + str(c[40,0,4]) + 'OH conc2: ' + str(c[40,1,4]) + 'OH conc5: ' + str(c[40,10,4])])
         t = ['HSO_3', 'SO_3', 'HO_2', 'H_2SO_4', 'OH']
 
         # for i in range(5):

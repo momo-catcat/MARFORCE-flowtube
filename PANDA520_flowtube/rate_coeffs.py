@@ -1,6 +1,6 @@
 '''module for calculating reaction rate coefficients (automatically generated)'''
 # module to hold expressions for calculating rate coefficients # 
-# created at 2021-12-21 14:39:38.769957
+# created at 2022-01-12 11:40:01.564803
 
 import numpy
 
@@ -48,7 +48,7 @@ def evaluate_rates(RO2, H2O, TEMP, lightm, M, N2, O2, NO, HO2, NO3,p):
 	# gas-phase reactions
 	rate_values[0] = 1.32e-12 * (TEMP / 300) ** -0.7
 	rate_values[1] = 4.8e-11*numpy.exp(250/TEMP)
-	rate_values[2] = 6.9e-31 * (TEMP / 300) ** -0.8 * p / 1.3806488e-23 / TEMP / 1e6
+	rate_values[2] = 2*6.9e-31 * (TEMP / 300) ** -0.8 * p / 1.3806488e-23 / TEMP / 1e6
 	rate_values[3] = 1.3e-12*numpy.exp(-330/TEMP)
 	rate_values[4] = 3.9e-41 * numpy.exp(6830.6 / TEMP)
 	

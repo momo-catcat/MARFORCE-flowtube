@@ -5,6 +5,7 @@ import numpy as np
 from Vapour_calc import H2O_conc as H2O_conc
 from cmd_calib5 import cmd_calib5
 
+
 #calculate vapor pressure
 
 
@@ -27,7 +28,7 @@ T_cel = 25 #k
 T = T0 + T_cel # K
 p = 101000 * 1.005 # Pa
 
-ID = 0.78*10*2 # mm the inner diamaters of the tube 
+ID = 0.78*10*2 # mm the inner diameters of the tube
 L = 50 * 10 # mm
 Q = 11 # lpm
 
@@ -67,9 +68,11 @@ SO2conc = SO2Flow / 1000 / totFlow * SO2BottlePpm * 1e-6 * p / 1.3806488e-23 / T
 
 It = Itx * Qx / Q
 # second tube 
-ID1 = 0.78*10*2/3*4
+# ID1 = 0.78*10*2/3*4
+ID1 = 0.78*10*2
 L1 = 68 *10
-Q1 = 23
+# L1 = 0 *10
+Q1 =  11
 
 WaterFlow1 =np.array([0])    #H2O_data['H2O_free']
 
@@ -78,9 +81,9 @@ totFlow1 =Q1 * np.ones(WaterFlow.shape)
 H2Oconc_1 =WaterFlow1 / 1000 / totFlow1 * H2O_conc(T_cel, 1).SatP[0] / 1.3806488e-23 / T / 1e6
 
 H2SO4 = np.zeros(WaterFlow.shape)
-Ho2 = np.zeros(WaterFlow.shape)
+HO2 = np.zeros(WaterFlow.shape)
 for i in range(H2SO4.size):#range(H2SO4.size):
-    H2SO4[i],Ho2[i]= cmd_calib5(O2conc[i], H2Oconc[i], H2Oconc_1[i], SO2conc[i], ID / 10 / 2, L / 10, Q * 1000 / 60, ID1 / 10 / 2, L1 / 10, Q1 * 1000 / 60, It, T, p, fullOrSimpleModel, time)
+    H2SO4[i],HO2[i]= cmd_calib5(O2conc[i], H2Oconc[i], H2Oconc_1[i], SO2conc[i], ID / 10 / 2, L / 10, Q * 1000 / 60, ID1 / 10 / 2, L1 / 10, Q1 * 1000 / 60, It, T, p, fullOrSimpleModel, time)
     # H2SO4[i],Ho2[i] = cmd_calib2(O2conc[i], H2Oconc[i], H2Oconc_1[i], SO2conc[i], ID / 10 / 2, L / 10, Q * 1000 / 60, ID1 / 10 / 2, L1 / 10, Q1 * 1000 / 60, It, T, p, fullOrSimpleModel, time )
 
 print(H2SO4)
