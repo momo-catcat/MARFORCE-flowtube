@@ -52,6 +52,7 @@ fullOrSimpleModel = 'full' # simple: Gormley&Kennedy approximation, full: flow m
 time = L / (Q * 1e6 / 60 / np.pi / (ID / 2) ** 2)
 
 
+
 # computation begins
 
 if outflowLocation in 'after':

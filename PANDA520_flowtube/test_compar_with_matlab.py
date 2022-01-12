@@ -137,7 +137,7 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,   D, R,  Q,c,comp_namelist,dydt_vst,ri
         # NEW VERSION        
         # c = dt * (term1 - term2 + term3) + initc
         c[0:Rgrid // 2,:,u] = dt * (term1[0:Rgrid // 2,:,u] - term2[0:Rgrid // 2,:,u] + term3[0:Rgrid // 2,:,u]) + initc[0:Rgrid // 2,:,u]
-        #c[0:Rgrid // 2, :, u] = dt * (term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u])  + initc[0:Rgrid // 2,:, u]
+        # c[0:Rgrid // 2, :, u] = dt * (term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u])  + initc[0:Rgrid // 2,:, u]
         
         c[Rgrid // 2:, :, u] = np.flipud(c[0:Rgrid // 2,:,u])
         # c[:,:,1] = SO2tot

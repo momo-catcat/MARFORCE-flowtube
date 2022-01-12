@@ -81,7 +81,7 @@ def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, 
                                                                     
                                                                         
     if H2Oconc == 0:
-        meanWeightedH2SO4 = 0
+        meanWeightedH2SO4 = 0 ## change the value
         
     # if H2Oconc_1 == 0:
     #     H2Oconc_1 = H2Oconc*Q/Q1
@@ -112,9 +112,9 @@ def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, 
     # NA = si.Avogadro
     H2O, Psat_water, H2O_mw = water_calc.water_calc(T, rh)
 
-    dt = 0.00001                        # timestep [s]
+    dt = 0.0001                        # timestep [s]
     numLoop = 500                      # number of times to run to reach the pinhole of the instrument
-    timesteps = 10000                    # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
+    timesteps = 1000                    # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
 
     Zgrid = np.array(40).astype(int)                         # number of grid points in tube length direction
     Rgrid = np.array(80)                       # number of grid points in tube radius direction
@@ -191,12 +191,13 @@ def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, 
 
     '''
 
-    
 
     # plt.figure(1, figsize = [8,6])
     for j in range(numLoop):
         oldH2SO4 = c[:, -1 ,comp_namelist.index('SA')]
-        # print('old H2SO4',oldH2SO4)
+
+        print('old H2SO4',oldH2SO4)
+
         # c = odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, kHSO3pO2, O2conc, H2Oconc, SO2conc, D, R, L, Q, c)
         # v = 0.1
         # tspan= np.linspace(0, v, 2)
@@ -299,7 +300,8 @@ def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, 
         # plt.xlabel('r [cm]')
         # plt.ylabel('Concentration, [cm**{-3}]')
         newH2SO4 = c[:, -1, comp_namelist.index('SA')]
-        # print('new H2SO4',newH2SO4)
+        print('old H2SO4', oldH2SO4)
+        print('new H2SO4',newH2SO4)
         print(['time: ' + str(tim)])
         print(['t = ' + str(tim) + "  H2SO4 difference: " + str(np.sum(newH2SO4 - oldH2SO4))])
             
