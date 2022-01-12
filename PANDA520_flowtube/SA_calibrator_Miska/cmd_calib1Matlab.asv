@@ -28,7 +28,7 @@ function [meanH2SO4,meanOH]=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p
     csH2O=7.22e-20; %cm2
     qyH2O=1;
     %It=1.84e10;
-    OHconc=It*csH2O*qyH2O*H2Oconc
+    OHconc=It*csH2O*qyH2O*H2Oconc;
     
     % diffusion constants, [cm^2/s]
     % order is: HSO3, SO3, HO2, H2SO4, OH
@@ -67,7 +67,6 @@ function [meanH2SO4,meanOH]=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p
     c = cellfun(@(x)zeros(Rgrid, Zgrid), c, 'UniformOutput', false);
     c{5}(:, 1) = OHconc;                % set [OH] at z = 0
     c{3}(:, 1) = OHconc;                % set [HO2] at z = 0
-    c{4}(:, 1) = OHconc;
 
     %% check and output parameters to file
 

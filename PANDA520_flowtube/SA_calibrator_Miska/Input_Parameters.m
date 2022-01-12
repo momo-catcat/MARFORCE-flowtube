@@ -40,5 +40,5 @@ It = Itx*Qx/Q;
 H2SO4 = zeros(size(WaterFlow));
 
 for i=1:numel(H2SO4)
-    H2SO4(i)=cmd_calib1Matlab(O2conc(i),H2Oconc(i),SO2conc(i),ID/10/2,L/10,Q*1000/60,It,T,p,fullOrSimpleModel);
+    [H2SO4(i),OH(i)]=cmd_calib1Matlab(O2conc(i),H2Oconc(i),SO2conc(i),ID/10/2,L/10,Q*1000/60,It,T,p,fullOrSimpleModel);
 end

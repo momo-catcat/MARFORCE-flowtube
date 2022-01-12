@@ -40,7 +40,7 @@ function cout = odesolveMatlab(timesteps,Zgrid,Rgrid,dt,kSO2pOH,kOHpHO2,kOHpOH,k
                         term3=-kSO2pOH * SO2conc * initc(5,j,i) - kOHpHO2 * initc(3,j,i) * initc(5,j,i) - 2*kOHpOH * initc(5,j,i) * initc(5,j,i);
                     end
                     
-                    c(l,j,i) = dt * (term1 - term2 + term3) + initc(l,j,i);
+                    c(l,j,i) = dt * (term1 - term2 ) + initc(l,j,i);
                 end
                 
                 c(l,Rgrid / 2 + 1,i) = c(l,Rgrid / 2,i);
@@ -67,8 +67,8 @@ function cout = odesolveMatlab(timesteps,Zgrid,Rgrid,dt,kSO2pOH,kOHpHO2,kOHpOH,k
                     term3=-kSO2pOH * SO2conc * initc(5,j,i) - kOHpHO2 * initc(3,j,i) * initc(5,j,i) - 2*kOHpOH * initc(5,j,i) * initc(5,j,i);
                 end
 
-                c(l,j,i) = dt * (term1 - term2 + term3) + initc(l,j,i);
-
+%                 c(l,j,i) = dt * (term1 - term2 + term3) + initc(l,j,i);
+                c(l,j,i) = dt * (term1 - term2 ) + initc(l,j,i);
             end
 
             c(l,Rgrid / 2 + 1,i) = c(l,Rgrid / 2,i);
