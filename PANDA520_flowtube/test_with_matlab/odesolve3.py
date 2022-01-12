@@ -33,34 +33,34 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, R, L, Q,comp_namelist,dydt_vst,rind
         # The equation is based on Fick's first law: https://en.wikipedia.org/wiki/Fick%27s_laws_of_diffusion
         # calculate central grids
 #%
-        p_a = - 1. / r[1:Rgrid // 2, 1:-1, :] * (initc[1:Rgrid // 2, 1:-1, :] - initc[0:Rgrid // 2 - 1, 1:-1, :]) / dr
+        p_a = - 1. / r[1:Rgrid // 2, 1:-1, u] * (initc[1:Rgrid // 2, 1:-1, u] - initc[0:Rgrid // 2 - 1, 1:-1, u]) / dr
 
-        p_b = (initc[2:Rgrid // 2 + 1, 1:-1, :] - 2. * initc[1:Rgrid // 2, 1:-1, :] + initc[0:Rgrid // 2 - 1, 1:-1, :]) / (dr * dr)
+        p_b = (initc[2:Rgrid // 2 + 1, 1:-1, u] - 2. * initc[1:Rgrid // 2, 1:-1, u] + initc[0:Rgrid // 2 - 1, 1:-1, u]) / (dr * dr)
 
-        p_c = (initc[1:Rgrid // 2, 2:, :] - 2. * initc[1:Rgrid // 2, 1:-1, :] + initc[1:Rgrid // 2, 0:-2,: ]) / (dx * dx)
+        p_c = (initc[1:Rgrid // 2, 2:, u] - 2. * initc[1:Rgrid // 2, 1:-1, u] + initc[1:Rgrid // 2, 0:-2,u ]) / (dx * dx)
 
-        term1[1:Rgrid // 2, 1:-1, :] = D[1:Rgrid // 2, 1:-1, :] * (p_a + p_b + p_c) #diffusion of gas molecules
+        term1[1:Rgrid // 2, 1:-1, u] = D[1:Rgrid // 2, 1:-1, u] * (p_a + p_b + p_c) #diffusion of gas molecules
 
         # convection; carried by main flow
         # Refs: 1. https://en.wikipedia.org/wiki/Advection
         #       2. Gormley & Kennedy, 1948, Diffusion from a stream flowing through a cylindrical tube
-        term2[1:Rgrid // 2, 1:-1, :] = (2. * Q) / (np.pi * R ** 4) * \
-                                          (R ** 2 - r[1:Rgrid // 2, 1:-1, :] ** 2) *\
-                            (initc[1:Rgrid // 2, 1:-1, :] - initc[1:Rgrid // 2, 0:-2, :]) / dx # carried by main flow
+        term2[1:Rgrid // 2, 1:-1, u] = (2. * Q) / (np.pi * R ** 4) * \
+                                          (R ** 2 - r[1:Rgrid // 2, 1:-1, u] ** 2) *\
+                            (initc[1:Rgrid // 2, 1:-1, u] - initc[1:Rgrid // 2, 0:-2, u]) / dx # carried by main flow
 
         #calculate the last column (measured by the instrument)
 
-        p_a_end = - 1. / r[1:Rgrid // 2, -1, :] * (initc[1:Rgrid // 2, -1, :] - initc[0:Rgrid // 2 - 1, -1, :]) / dr
+        p_a_end = - 1. / r[1:Rgrid // 2, -1, u] * (initc[1:Rgrid // 2, -1, u] - initc[0:Rgrid // 2 - 1, -1, u]) / dr
 
-        p_b_end = (initc[2:Rgrid // 2 + 1, -1, :] - 2. * initc[1:Rgrid // 2, -1, :] + initc[0:Rgrid // 2 - 1, -1, :]) / (dr ** 2)
+        p_b_end = (initc[2:Rgrid // 2 + 1, -1, u] - 2. * initc[1:Rgrid // 2, -1, u] + initc[0:Rgrid // 2 - 1, -1, u]) / (dr ** 2)
 
-        p_c_end = (initc[1:Rgrid // 2, -1, :] - 2. * initc[1:Rgrid // 2, -2, :] + initc[1:Rgrid // 2, -2,: ]) / (dx * dx)
+        p_c_end = (initc[1:Rgrid // 2, -1, u] - 2. * initc[1:Rgrid // 2, -2, u] + initc[1:Rgrid // 2, -2,u]) / (dx * dx)
 
-        term1[1:Rgrid // 2, -1, :] = D[1:Rgrid // 2, -1, :] * (p_a_end + p_b_end + p_c_end)
+        term1[1:Rgrid // 2, -1, u] = D[1:Rgrid // 2, -1, u] * (p_a_end + p_b_end + p_c_end)
 
-        term2[1:Rgrid // 2, -1, :] = (2. * Q) / (np.pi * R ** 4) * \
-                                        (R ** 2 - r[1:Rgrid // 2, -1, :] ** 2) *\
-                            (initc[1:Rgrid // 2, -1, :] - initc[1:Rgrid // 2, -2, :]) / dx #carried by main flow
+        term2[1:Rgrid // 2, -1, u] = (2. * Q) / (np.pi * R ** 4) * \
+                                        (R ** 2 - r[1:Rgrid // 2, -1, u] ** 2) *\
+                            (initc[1:Rgrid // 2, -1, u] - initc[1:Rgrid // 2, -2, u]) / dx #carried by main flow
 
         # t = ['HSO_3', 'SO_3', 'HO_2', 'H_2SO_4', 'OH']
 #         term3[1:-1, 1:, comp_namelist.index('HSO3')] = kSO2pOH *  SO2tot[1:-1, 1:] * initc[1:-1, 1:, comp_namelist.index('OH')] - kHSO3pO2 * initc[1:-1, 1:, comp_namelist.index('HSO3')] * O2tot[1:-1, 1:]
