@@ -20,7 +20,7 @@ SO2BottlePpm = 5000; % ppm
 
 O2inAir = 0.209;
 
-outflowLocation = 'after'; % outflow tube located before or after injecting air, water, and so2
+outflowLocation = 'before'; % outflow tube located before or after injecting air, water, and so2
 
 fullOrSimpleModel = 'full'; % simple: Gormley&Kennedy approximation, full: flow model (much slower)
 
