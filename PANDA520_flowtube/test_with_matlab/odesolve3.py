@@ -1,9 +1,9 @@
-def odesolve(timesteps, Zgrid, Rgrid, dt, D, R, L, Q,c,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values):
+def odesolve(timesteps, Zgrid, Rgrid, dt, D, R, L, Q,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values,c):
     #%import packages
     import numpy as np
     import matplotlib.pyplot as plt
     initc = c
-    num = 9
+    num = len(comp_namelist)
     
     dx = L / (Zgrid - 1)
     dr = 2 * R / (Rgrid - 1)
@@ -102,36 +102,15 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, R, L, Q,c,comp_namelist,dydt_vst,ri
                     term3[1:Rgrid // 2, 1:, compi] += reac_sign[reac_count]*(gprate1)
                     # print(reac_sign[reac_count])
                     reac_count += 1
-        # comp_na = 'OH'
-        # key_name = str(str(comp_na)+ '_comp_indx')  # get index of this component
-        # compi = dydt_vst[key_name]
-        # oh1 = initc[:,:,compi]
-        # ohso3 = initc[:,:,2]
-        
-        # hso31= term3[:,:,compi]
-        # gp1 = c[1:-1, 1:,0]
-        # gp11 = c[1:-1,1:,1]
-        # gp2 = rstoi[i, 0:nreac[i]]
-        # gp3 = (gp1**gp2[0])
-        # gp33 = (gp11**gp2[1])
-        # gp4= gp3[:,:]
-        # gp5= gp3[:,:]
-        # gp6 = gp3*gp33*rate_values[0]
-        # term3[1:-1, 1:, compi] += reac_sign[reac_count]*((gp6))
-# NEW VERSION        
+       
         # c = dt * (term1 - term2 + term3) + initc
         c[0:Rgrid // 2,:,u] = dt * (term1[0:Rgrid // 2,:,u] - term2[0:Rgrid // 2,:,u] + term3[0:Rgrid // 2,:,u]) + initc[0:Rgrid // 2,:,u]
         #c[0:Rgrid // 2, :, u] = dt * (term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u])  + initc[0:Rgrid // 2,:, u]
 
         c[Rgrid // 2:, :, u] = np.flipud(c[0:Rgrid // 2,:,u])
-        # c[:,:,1] = SO2tot
-        # c[:,:,5] = O2tot
-        # c[:,:,4] = H2Otot
+
         initc = c
-        # oh1 = initc[:,:,0]
-        # ohso3 = initc[:,:,2]
-        # ohso3 = initc[:,:,7]
-#% hso3 = c[:,:,comp_namelist.index('HSO3')]
+
     return(c)
 
 
