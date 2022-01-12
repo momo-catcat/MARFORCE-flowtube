@@ -33,7 +33,6 @@ else
 end
 O2conc = O2inAir*AirFlow/1000./totFlow*p/1.3806488e-23/T/1e6;
 H2Oconc = WaterFlow/1000./totFlow*vappresw(T)/1.3806488e-23/T/1e6;
-disp(['H2O: ', num2str(H2Oconc)])
 SO2conc = SO2Flow/1000./totFlow*SO2BottlePpm*1e-6*p/1.3806488e-23/T/1e6;
 
 It = Itx*Qx/Q;
@@ -44,4 +43,4 @@ for i=1:numel(H2SO4)
     H2SO4(i)=cmd_calib1Matlab(O2conc(i),H2Oconc(i),SO2conc(i),ID/10/2,L/10,Q*1000/60,It,T,p,fullOrSimpleModel);
 end
 
-disp(H2SO4)
+dis

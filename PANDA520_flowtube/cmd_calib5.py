@@ -308,8 +308,8 @@ def cmd_calib5(O2conc, H2Oconc, H2Oconc_1, SO2conc, R, L, Q, R1, L1, Q1, It, T, 
 
         dr_final = R1 / (Rgrid - 1) * 2
         x = np.arange(0, R1, dr_final)
-        y = c[0 : int(Rgrid / 2), -1,comp_namelist.index('SA')]
-        y1 = c[0: int(Rgrid /2 ),-1, comp_namelist.index('HO2')]
+        y = np.flip(c[0 : int(Rgrid / 2), -1,comp_namelist.index('SA')])
+        y1 = np.flip(c[0: int(Rgrid /2 ),-1, comp_namelist.index('HO2')])
         splineres = interpolate.splrep(x, y)
         splineres_HO2 = interpolate.splrep(x, y1)
         

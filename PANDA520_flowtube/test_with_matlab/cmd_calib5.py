@@ -27,7 +27,7 @@ def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, 
     # Q=11*1000/60
     # Q1=11*1000/60
     R = 24/10/2 # mm the inner diameters of the tube
-    L = 93 # mm
+    L = 200 # mm
     Q = 11*1000/60 # lpm
 
     # save all the parameters in to the pickle file 
@@ -101,12 +101,14 @@ def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, 
     #It=1.84e10
     OHconc = It * csH2O * qyH2O * H2Oconc
 
+    print(['OH conc: ' + str(OHconc)])
+
     # diffusion constants, [cm**2/s]
     # order is: HSO3, SO3, HO2, H2SO4, OH
 
     rh = H2Oconc * 1e6 * 1.3806488e-23 * T / H2O_conc(T - 273.15, 1).SatP[0]
     # ['OH', 'SO2', 'HSO3', 'HO2', 'H2O', 'O2', 'H2O2', 'SO3', 'SA']
-    D = np.array([0.215,0.1, 0.126, 0.141, 0.1, 0.126, 0.1,0.126, 0.08])
+    D = np.array([0.215,0.1, 0.126, 0.141, 0.1, 0.126, 0.1,0.126, 0.0913])
     # ['HSO_3', 'SO_3', 'HO_2', 'H_2SO_4', 'OH']
     # D = np.array([0.126, 0.126, 0.141, 0.08, 0.215]) #todo need to calculate Diffusion coefficient properly
     # D = np.array([0.4, 0.4, 0.4, 0.4, 0.4])
@@ -163,7 +165,7 @@ def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, 
     c[:,0,8] = OHconc
     c[:,:,5] = O2conc
     c[:,:,4] = H2Oconc
-    
+    print(['OH conc: ' + str(OHconc)])
     # c[:,0:int(Rgrid*L/(L+L1)),:] = c [:,0:int(Rgrid*L/(L+L1)),:]
     ## check and output parameters to file
     # D_temp = np.tile(D, (Rgrid * Zgrid))
@@ -257,29 +259,30 @@ def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, 
         if (j > 15) & (np.sum(newH2SO4 - oldH2SO4) / np.sum(oldH2SO4) < 1e-5):
             break
 
-        dr_final = R / (Rgrid - 1) * 2
-        x = np.arange(0, R, dr_final)
-        y = c[0 : int(Rgrid / 2), -1,comp_namelist.index('SA')]
-        y1 = c[0: int(Rgrid /2 ),-1, comp_namelist.index('HO2')]
-        splineres = interpolate.splrep(x, y)
-        splineres_HO2 = interpolate.splrep(x, y1)
+    dr_final = R / (Rgrid - 1) * 2
+    x = np.arange(0, R, dr_final) + dr_final
+    y = np.flip(c[0 : int(Rgrid / 2), -1, comp_namelist.index('SA')])
+    y1 = np.flip(c[0 : int(Rgrid /2),-1, comp_namelist.index('HO2')])
+    splineres = interpolate.splrep(x, y)
+    splineres_HO2 = interpolate.splrep(x, y1)
         
-        plt.subplot(2,3,6)
-        plt.plot(np.arange(0, R, dr_final), interpolate.splev(np.arange(0, R, dr_final), splineres))
-        plt.title('[H2SO4] at end of tube')
-        plt.xlabel('r [cm]')
-        plt.ylabel('Concentration, [cm**{-3}]')
+    plt.subplot(2,3,6)
+    plt.plot(np.arange(0, R, dr_final), interpolate.splev(np.arange(0, R, dr_final), splineres) / OHconc)
+    plt.title('[H2SO4] at end of tube')
+    plt.xlabel('r [cm]')
+    plt.ylabel('Concentration, [cm**{-3}]')
 
-        rVec = np.arange(0, R, 0.001)
-        cVec = interpolate.splev(rVec, splineres)
-        cVec_HO2 = interpolate.splev(rVec, splineres_HO2)
-        meanH2SO4 = 2 * 0.001 / R ** 2 * np.sum(cVec * rVec) #calculate average concentration over the cross section
-        meanWeightedH2SO4 = 4 * 0.001 / R ** 2 * np.sum(cVec * rVec * (1 - rVec ** 2 / R ** 2)) #not sure about the formulation. Needs to be checked
-        
-        meanHO2 = 2 * 0.001 / R ** 2 * np.sum(cVec_HO2 * rVec) #calculate average concentration over the cross section
-        meanWeightedHO2 = 4 * 0.001 / R ** 2 * np.sum(cVec_HO2 * rVec * (1 - rVec ** 2 / R ** 2)) #not sure about the formulation. Needs to be checked
-        
-        # print(np.sum(cVec * rVec))
-        # print(np. sum(cVec * rVec * (1 - rVec ** 2 / R1 ** 2)))
+    print(interpolate.splev(np.arange(0, R, dr_final), splineres) / OHconc)
+    rVec = np.arange(0, R, 0.001)
+    cVec = interpolate.splev(rVec, splineres)
+    cVec_HO2 = interpolate.splev(rVec, splineres_HO2)
+    meanH2SO4 = 2 * 0.001 / R ** 2 * np.sum(cVec * rVec) #calculate average concentration over the cross section
+    meanWeightedH2SO4 = 4 * 0.001 / R ** 2 * np.sum(cVec * rVec * (1 - rVec ** 2 / R ** 2)) #not sure about the formulation. Needs to be checked
+
+    meanHO2 = 2 * 0.001 / R ** 2 * np.sum(cVec_HO2 * rVec) #calculate average concentration over the cross section
+    meanWeightedHO2 = 4 * 0.001 / R ** 2 * np.sum(cVec_HO2 * rVec * (1 - rVec ** 2 / R ** 2)) #not sure about the formulation. Needs to be checked
+
+    # print(np.sum(cVec * rVec))
+    # print(np. sum(cVec * rVec * (1 - rVec ** 2 / R1 ** 2)))
 
     return(meanH2SO4,meanHO2)

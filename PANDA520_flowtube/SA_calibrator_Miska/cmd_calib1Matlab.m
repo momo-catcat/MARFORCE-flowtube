@@ -34,7 +34,7 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
     % order is: HSO3, SO3, HO2, H2SO4, OH
     % (TODO: check D(H2SO4) RH dependance! we go up to 70% for our calibration)
     rh=H2Oconc*1e6*1.3806488e-23*T/vappresw(T);
-    D = [0.126 0.126 0.141 diff_sa_rh(298,rh)*1e4 0.215];
+    D = [0.126 0.126 0.141 diff_sa_rh(298,rh)*1e4 0.215]
 
     T0=[300 300 298 298 298];
     D=101325/p*D.*((T.^(3/2))./(T0.^(3/2)));
@@ -68,7 +68,7 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
     c{5}(:, 1) = OHconc;                % set [OH] at z = 0
     c{3}(:, 1) = OHconc;                % set [HO2] at z = 0
     c{4}(:, 1) = OHconc;
-
+    disp(['OH conc: ', num2str(OHconc)])
     %% check and output parameters to file
 
     dr = R / (Rgrid - 1) * 2;
@@ -122,6 +122,7 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
     %% finally, calculate mean [H2SO4]
     y = cell(1, 5);
     x = R:-dr:0;
+    disp(x)
     for i = 1:5
         y{i} =c{i}(1:size(c{i},1)/2,end)';
     end
@@ -137,6 +138,7 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
     xlabel('r [cm]');
     ylabel('Concentration, [cm^{-3}]');
 
+    disp(ppval(splineres, 0:0.01:R) ./ OHconc)
 %     numpoints = 400; % grid to use for integration, larger => greater accuracy
 %     xy = zeros(numpoints, numpoints);
 %     di = R / numpoints;
