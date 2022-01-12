@@ -1,5 +1,5 @@
 def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, time):
-    #% parameters (that can be changed by the user)
+    #%% parameters (that can be changed by the user)
     #import packages
     import numpy as np
     import os 
@@ -26,6 +26,9 @@ def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, 
     # L1= 68
     # Q=11*1000/60
     # Q1=11*1000/60
+    R = 24/10/2 # mm the inner diameters of the tube
+    L = 93 # mm
+    Q = 11*1000/60 # lpm
 
     # save all the parameters in to the pickle file 
     def_mod_var.def_mod_var(0)
@@ -182,79 +185,21 @@ def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, 
     RO2conc = RO2_conc.RO2_conc(RO2_indices,y)
     rate_values, erf, err_mess = rate_coeffs.evaluate_rates(RO2conc, y[comp_namelist.index('H2O')], T, 0, M, M*0.7809, y[comp_namelist.index('O2')], 0,  y[comp_namelist.index('HO2')],0,p)
 
-#%
-
-
-    '''
-    eqn_list_on
-    reac_coef_g
-
-    '''
-
-
-    # plt.figure(1, figsize = [8,6])
+    #%% plt.figure(1, figsize = [8,6])
     for j in range(numLoop):
-        oldH2SO4 = c[:, -1 ,comp_namelist.index('SA')]
 
-        print('old H2SO4',oldH2SO4)
-
-        # c = odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, kHSO3pO2, O2conc, H2Oconc, SO2conc, D, R, L, Q, c)
-        # v = 0.1
-        # tspan= np.linspace(0, v, 2)
-        # y = c[-1,-1,:]                                                                                                                                                      
-     #    Comp0 = comp_namelist
-     #    C0 = c[0,0,:] 
-     #    # C0 = c[-1,-1,:] 
-
-     #    [y, H2Oi, y_mw, num_comp, M, y_indx_plot, dydt_vst, 
-     #    comp_namelist, sat_water,  erf, err_mess, NOi, HO2i, NO3i]=init_conc.init_conc(comp_num, Comp0, C0, temp, rh, Press, Pybel_objects,
-    	# testf, dydt_trak, rindx, pindx, num_eqn[0], nreac, nprod, comp_namelist, Compt, comp_namelist, comp_smil, comp_namelist, RO2_indx, HOMRO2_indx, rstoi, pstoi)                                                                                              
-    
+        c1 = c.copy()
+        oldH2SO4 = c1[:, -1 ,comp_namelist.index('SA')]
+        # print('oldH2SO4',oldH2SO4)
 
 
-        # term1 = np.zeros([int(Rgrid), int(Zgrid), num_comp])
-        # term2 = np.zeros([int(Rgrid), int(Zgrid), num_comp])
-        # term3 = np.zeros([int(Rgrid), int(Zgrid), num_comp])
-
-        # for comp_name in comp_namelist: # get name of this component
-        #     key_name = str(str(comp_name)+ '_comp_indx')  # get index of this component
-        #     compi = dydt_vst[key_name]
-        #     key_name = str(str(comp_name)+'_res')
-        #     dydt_rec = dydt_vst[key_name]
-        #     key_name = str(str(comp_name) + '_reac_sign')
-        #     reac_sign = dydt_vst[key_name]
-        #     # dydt_for = np.zeros(comp_num)
-        #     reac_count = 0
-        #     for i in dydt_rec[0,:]:
-        #         i = int(i) # ensure reaction index is integer - this necessary because the dydt_rec array is float (the tendency to change records beneath its first row are float)
-        #         gprate = ((c[1:-1, 1:,rindx[i, 0:nreac[i]]]**rstoi[i, 0:nreac[i]]).prod())*rate_values[i]
-        #         term3[1:-1, 1:, compi] += reac_sign[reac_count]*((gprate))
-        #         reac_count += 1
-        # gp1 = c[1:-1, 1:,rindx[i, 0:nreac[i]]]
-        # gp2 = rstoi[i, 0:nreac[i]]
-        # gp3 = gp1 **gp2
-        # gp3.prod()
-        # c = odesolve(timesteps, Zgrid, Rgrid, dt, D, Rtot, dr, r, dx, Qtot,c,num_comp,comp_namelist,rstoi,dydt_vst,rindx,nreac,RO2_indices,T,M,p,rate_values,SO2tot,O2tot,H2Otot)
-        c = odesolve(timesteps, Zgrid, Rgrid, dt, D, R, L, Q,c,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values)
-
-        # tspan = 0
-        # c= odeint(model,c0,tspan,args=(Zgrid, Rgrid,  kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, kHSO3pO2, O2tot, H2Otot, SO2tot, D, Rtot, dr, dx, Qtot,T,M,p))
+        c = odesolve(timesteps, Zgrid, Rgrid, dt, D, R, L, Q,  comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values,c)
+       
+        newH2SO4 = c[:, -1, comp_namelist.index('SA')]
         
-        # c0=c.ravel()
-        # c= odeint(model,c0,tspan,args=(Zgrid, Rgrid,  kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, kHSO3pO2, O2tot, H2Otot, SO2tot, D, Rtot, dr, dx, Qtot), hmax= v/10000,  rtol=1.0e-3)
-        # c = ode.RK45(model,tspan,c0,t_bound= 0.1,first_step=1.04e-4, max_step=0.1/10000,rtol=1.0e-3)
-        # c= ode.RK45.dense_output(c)
-        # oh = c [:,:,4]
-        # for i in range(0,10000):
-        #     c.step()
-        #     if c.t > 0.1:
-        #         break
-        # c.y
-        # c.t
-        # c1=c[0]
-        # c=c[-1,:]
-        # [-1,:]
-        # c= np.reshape(c,(Rgrid, Zgrid, 5))
+        # print('newH2SO4',newH2SO4)
+        # print('oldH2SO4',oldH2SO4)
+
         
         # t = ['HSO_3', 'SO_3', 'HO_2', 'H_2SO_4', 'OH']
         # ['OH', 'SO2', 'HSO3', 'HO2', 'H2O', 'O2', 'H2O2', 'SO3', 'SA']
@@ -300,8 +245,11 @@ def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, 
         # plt.xlabel('r [cm]')
         # plt.ylabel('Concentration, [cm**{-3}]')
         newH2SO4 = c[:, -1, comp_namelist.index('SA')]
-        print('old H2SO4', oldH2SO4)
-        print('new H2SO4',newH2SO4)
+
+        # print('newH2SO4',newH2SO4)
+        # print('oldH2SO4',oldH2SO4)
+        # print('H2SO4',newH2SO4 - oldH2SO4)
+
         print(['time: ' + str(tim)])
         print(['t = ' + str(tim) + "  H2SO4 difference: " + str(np.sum(newH2SO4 - oldH2SO4))])
             

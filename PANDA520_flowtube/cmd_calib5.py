@@ -195,6 +195,7 @@ def cmd_calib5(O2conc, H2Oconc, H2Oconc_1, SO2conc, R, L, Q, R1, L1, Q1, It, T, 
 
     # plt.figure(1, figsize = [8,6])
     for j in range(numLoop):
+        c1 = c.copy()
         oldH2SO4 = c[:, -1 ,comp_namelist.index('SA')]
         # c = odesolve(timesteps, Zgrid, Rgrid, dt, kSO2pOH, kOHpHO2, kOHpOH, kSO3p2H2O, kHSO3pO2, O2conc, H2Oconc, SO2conc, D, R, L, Q, c)
         # v = 0.1
