@@ -1,4 +1,4 @@
-function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSimpleModel)  %don't use mean weighted H2SO4. The method is not understood yet.
+function [meanH2SO4,meanOH]=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSimpleModel)  %don't use mean weighted H2SO4. The method is not understood yet.
     %% parameters (that can be changed by the user)
 
     if H2Oconc==0
@@ -28,7 +28,7 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
     csH2O=7.22e-20; %cm2
     qyH2O=1;
     %It=1.84e10;
-    OHconc=It*csH2O*qyH2O*H2Oconc
+    OHconc=It*csH2O*qyH2O*H2Oconc;
     
     % diffusion constants, [cm^2/s]
     % order is: HSO3, SO3, HO2, H2SO4, OH
@@ -67,7 +67,6 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
     c = cellfun(@(x)zeros(Rgrid, Zgrid), c, 'UniformOutput', false);
     c{5}(:, 1) = OHconc;                % set [OH] at z = 0
     c{3}(:, 1) = OHconc;                % set [HO2] at z = 0
-    c{4}(:, 1) = OHconc;
 
     %% check and output parameters to file
 
@@ -132,7 +131,7 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
 %     splineres1 = spline(x, y1);
     % plot concentration profile
     subplot(2,3,6);
-    plot(0:0.01:R,ppval(splineres, 0:0.01:R) ./ OHconc);
+    plot(0:0.01:R,ppval(splineres, 0:0.01:R));
     title('[H2SO4] at end of tube');
     xlabel('r [cm]');
     ylabel('Concentration, [cm^{-3}]');

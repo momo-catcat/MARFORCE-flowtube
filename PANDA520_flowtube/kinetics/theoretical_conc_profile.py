@@ -36,7 +36,7 @@ def conc_profile_Alonso(R, r, MM, rho, L, Q, P = 101000, T = 298.15):
 
 
 R = 0.0125
-conc_prof = conc_profile_Alonso(R, np.linspace(0, R, 100), 176, 4600, 5, 22 / 60 / 1000)
+conc_prof = conc_profile_Alonso(R, np.linspace(0, R, 100), 176, 4600, 2, 11 / 60 / 1000)
 
 # print(conc_prof)
 

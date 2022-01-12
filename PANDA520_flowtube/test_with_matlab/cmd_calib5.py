@@ -160,7 +160,7 @@ def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, 
     c[:, 0, 0] = OHconc  # set [OH] at z = 0
     c[:, 0, 3] = OHconc  # set [HO2] at z = 0. This equals OH conc
     c[:,:,1] = SO2conc
-    
+    c[:,0,8] = OHconc
     c[:,:,5] = O2conc
     c[:,:,4] = H2Oconc
     
