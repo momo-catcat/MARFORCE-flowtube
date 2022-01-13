@@ -1,4 +1,4 @@
-function [meanH2SO4,meanOH]=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSimpleModel)  %don't use mean weighted H2SO4. The method is not understood yet.
+function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSimpleModel)  %don't use mean weighted H2SO4. The method is not understood yet.
     %% parameters (that can be changed by the user)
 
     if H2Oconc==0
@@ -34,7 +34,7 @@ function [meanH2SO4,meanOH]=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p
     % order is: HSO3, SO3, HO2, H2SO4, OH
     % (TODO: check D(H2SO4) RH dependance! we go up to 70% for our calibration)
     rh=H2Oconc*1e6*1.3806488e-23*T/vappresw(T);
-    D = [0.126 0.126 0.141 diff_sa_rh(298,rh)*1e4 0.215];
+    D = [0.126 0.126 0.141 diff_sa_rh(298,rh)*1e4 0.215]
 
     T0=[300 300 298 298 298];
     D=101325/p*D.*((T.^(3/2))./(T0.^(3/2)));
@@ -68,7 +68,7 @@ function [meanH2SO4,meanOH]=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p
     c{5}(:, 1) = OHconc;                % set [OH] at z = 0
     c{3}(:, 1) = OHconc;                % set [HO2] at z = 0
     c{4}(:, 1) = OHconc;
-
+    disp(['OH conc: ', num2str(OHconc)])
     %% check and output parameters to file
 
     dr = R / (Rgrid - 1) * 2;
@@ -122,6 +122,7 @@ function [meanH2SO4,meanOH]=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p
     %% finally, calculate mean [H2SO4]
     y = cell(1, 5);
     x = R:-dr:0;
+    disp(x)
     for i = 1:5
         y{i} =c{i}(1:size(c{i},1)/2,end)';
     end
@@ -132,11 +133,12 @@ function [meanH2SO4,meanOH]=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p
 %     splineres1 = spline(x, y1);
     % plot concentration profile
     subplot(2,3,6);
-    plot(0:0.01:R,ppval(splineres, 0:0.01:R));
+    plot(0:0.01:R,ppval(splineres, 0:0.01:R) ./ OHconc);
     title('[H2SO4] at end of tube');
     xlabel('r [cm]');
     ylabel('Concentration, [cm^{-3}]');
 
+    disp(ppval(splineres, 0:0.01:R) ./ OHconc)
 %     numpoints = 400; % grid to use for integration, larger => greater accuracy
 %     xy = zeros(numpoints, numpoints);
 %     di = R / numpoints;

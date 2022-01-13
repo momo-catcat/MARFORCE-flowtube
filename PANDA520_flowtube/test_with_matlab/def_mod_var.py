@@ -13,8 +13,10 @@ def def_mod_var(caller): # define function
 
 	# default input files ------------------------------
 	# default chemical scheme
-	sch_name = 'C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/input_mechanism/SO2_SA.txt'
-	xml_name = 'C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/input_mechanism/ex_xml_SO2.xml' # xml file path
+	# sch_name = 'C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/input_mechanism/SO2_SA.txt'
+	sch_name = '/Users/momo/Documents/science/coding/git/Projects/PANDA520-flowtube/PANDA520_flowtube/input_mechanism/SO2_SA.txt'
+	# xml_name = 'C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/input_mechanism/ex_xml_SO2.xml' # xml file path
+	xml_name = '/Users/momo/Documents/science/coding/git/Projects/PANDA520-flowtube/PANDA520_flowtube/input_mechanism/ex_xml_SO2.xml'  # xml file path
 	inname = 'Default' # model variables file name
 	
 	# general ---------------------------------------------------------------------------------

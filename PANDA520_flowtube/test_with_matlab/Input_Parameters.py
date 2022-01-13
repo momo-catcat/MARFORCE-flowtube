@@ -29,7 +29,7 @@ T = T0 + T_cel # K
 p = 96060 * 1.005 # Pa
 
 ID = 24 # mm the inner diameters of the tube
-L = 930 # mm
+L = 2000 # mm
 Q = 11 # lpm
 
 Itx = 5.2009e10 # at Qx flow rate
@@ -64,6 +64,7 @@ O2conc = O2inAir * AirFlow / 1000 / totFlow * p / 1.3806488e-23 / T / 1e6
 
 H2Oconc = WaterFlow / 1000 / totFlow * H2O_conc(T_cel, 1).SatP[0] / 1.3806488e-23 / T / 1e6
 
+print(['H2O conc: ' + str(H2Oconc)])
 SO2conc = SO2Flow / 1000 / totFlow * SO2BottlePpm * 1e-6 * p / 1.3806488e-23 / T / 1e6
 
 It = Itx * Qx / Q
