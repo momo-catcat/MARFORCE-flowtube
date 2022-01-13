@@ -104,8 +104,8 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, R, L, Q,comp_namelist,dydt_vst,rind
                     reac_count += 1
        
         # c = dt * (term1 - term2 + term3) + initc
-        # c[0:Rgrid // 2,:,u] = dt * (term1[0:Rgrid // 2,:,u] - term2[0:Rgrid // 2,:,u] + term3[0:Rgrid // 2,:,u]) + initc[0:Rgrid // 2,:,u]
-        c[0:Rgrid // 2, :, u] = dt * (term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u])  + initc[0:Rgrid // 2,:, u]
+        c[0:Rgrid // 2,:,u] = dt * (term1[0:Rgrid // 2,:,u] - term2[0:Rgrid // 2,:,u] + term3[0:Rgrid // 2,:,u]) + initc[0:Rgrid // 2,:,u]
+        # c[0:Rgrid // 2, :, u] = dt * (term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u])  + initc[0:Rgrid // 2,:, u]
 
         c[Rgrid // 2:, :, u] = np.flipud(c[0:Rgrid // 2,:,u])
 
