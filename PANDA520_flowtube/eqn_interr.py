@@ -8,8 +8,7 @@ import formatting
 from openbabel import pybel
 import sys
 
-def eqn_interr(num_eqn, eqn_list, aqeqn_list, chem_scheme_markers, comp_name, 
-		comp_smil):
+def eqn_interr(num_eqn, eqn_list, aqeqn_list, chem_scheme_markers):
 	
 	# inputs: ----------------------------------------------------------------------------
 	# num_eqn - number of equations
@@ -41,7 +40,7 @@ def eqn_interr(num_eqn, eqn_list, aqeqn_list, chem_scheme_markers, comp_name,
 	pindx = np.zeros((num_eqn[0], 1)).astype(int)
 	# matrix to record stoichiometries of reactants (cols) in each equation (rows)
 	rstoi = np.zeros((num_eqn[0], 1))
-	jac_stoi = np.zeros((num_eqn[0], 1))
+# 	jac_stoi = np.zeros((num_eqn[0], 1))
 	# 1D array to record stoichiometries of reactants per equarion
 	rstoi_flat = np.empty((0))
 	# 1D array to record stoichiometries of products per equarion
@@ -58,18 +57,18 @@ def eqn_interr(num_eqn, eqn_list, aqeqn_list, chem_scheme_markers, comp_name,
 	reac_coef = []
 	# matrix containing index of components who are denominators in the
 	# calculation of equation derivatives in the Jacobian
-	jac_den_indx = np.zeros((num_eqn[0], 1))
+# 	jac_den_indx = np.zeros((num_eqn[0], 1))
 	# total number of Jacobian elements per equation
-	njac = np.zeros((num_eqn[0], 1))
+# 	njac = np.zeros((num_eqn[0], 1))
 	# indices of Jacobian to affect per equation (rows)
-	jac_indx = np.zeros((num_eqn[0], 1))
+# 	jac_indx = np.zeros((num_eqn[0], 1))
 	# a new list for the name strings of components presented in the scheme (not SMILES)
 	comp_namelist = []
 	comp_list = [] # list for the SMILE strings of components present in the chemical scheme
 	# list of Pybel objects of components in chemical scheme
 	Pybel_objects = []
 	comp_num = 0 # count the number of unique components in the chemical scheme
-	RO_indx = [] # empty list for holding indices of alkoxy components
+# 	RO_indx = [] # empty list for holding indices of alkoxy components
 	# ---------------------------------------------------------------------
 
 	max_no_reac = 0. # log maximum number of reactants in a reaction
@@ -131,10 +130,10 @@ def eqn_interr(num_eqn, eqn_list, aqeqn_list, chem_scheme_markers, comp_name,
 		while (max_no_prod > np.minimum(pindx.shape[1], pstoi.shape[1])): 
 			pindx = np.append(pindx, (np.zeros((num_eqn[0], 1))).astype(int), axis=1)
 			pstoi = np.append(pstoi, (np.zeros((num_eqn[0], 1))), axis=1)
-		while ((len(reactants)**2.0+len(reactants)*len(products))>jac_indx.shape[1]):
-			jac_indx = np.append(jac_indx, (np.zeros((num_eqn[0], 1))), axis=1)
-			jac_den_indx = np.append(jac_den_indx, (np.zeros((num_eqn[0], 1))), axis=1)		
-			jac_stoi = np.append(jac_stoi, (np.zeros((num_eqn[0], 1))), axis=1)
+# 		while ((len(reactants)**2.0+len(reactants)*len(products))>jac_indx.shape[1]):
+# 			jac_indx = np.append(jac_indx, (np.zeros((num_eqn[0], 1))), axis=1)
+# 			jac_den_indx = np.append(jac_den_indx, (np.zeros((num_eqn[0], 1))), axis=1)		
+# 			jac_stoi = np.append(jac_stoi, (np.zeros((num_eqn[0], 1))), axis=1)
 
 		# .* means occurs anywhere in line and, first \ means second \ can be interpreted 
 		# and second \ ensures recognition of marker
@@ -185,29 +184,29 @@ def eqn_interr(num_eqn, eqn_list, aqeqn_list, chem_scheme_markers, comp_name,
 			
 			# store stoichiometry
 			rstoi[eqn_step, reactant_step] = stoich_num
-			jac_stoi[eqn_step, reactant_step] = -1*stoich_num
+# 			jac_stoi[eqn_step, reactant_step] = -1*stoich_num
 
 			if name_only not in comp_namelist: # if new component encountered
 				comp_namelist.append(name_only) # add to chemical scheme name list
 			
 				# convert MCM chemical names to SMILES
 				# index where xml file name matches reaction component name
-				name_indx = comp_name.index(name_only)
-				name_SMILE = comp_smil[name_indx] # SMILES of component
+# 				name_indx = comp_name.index(name_only)
+# 				name_SMILE = comp_smil[name_indx] # SMILES of component
 			
-				comp_list.append(name_SMILE) # list SMILE names
+# 				comp_list.append(name_SMILE) # list SMILE names
 				name_indx = comp_num # allocate index to this species
 				# generate pybel object
 # 				Pybel_object = pybel.readstring('smi', name_SMILE)
 				# append to Pybel object list
 # 				Pybel_objects.append(Pybel_object)
 				
-				# check if alkoxy radical present in this component and that component is organic
-				if ('[O]' in name_SMILE):
-					if ('C' in name_SMILE or 'C' in name_SMILE):
-						if (name_SMILE != 'C[O]'): # ensure it's not carbon monoxide
-							# if it is an organic alkoxy radical add its index to list
-							RO_indx.append(comp_num)			
+# 				# check if alkoxy radical present in this component and that component is organic
+# 				if ('[O]' in name_SMILE):
+# 					if ('C' in name_SMILE or 'C' in name_SMILE):
+# 						if (name_SMILE != 'C[O]'): # ensure it's not carbon monoxide
+# 							# if it is an organic alkoxy radical add its index to list
+# 							RO_indx.append(comp_num)			
 
 				comp_num += 1 # number of unique species
 				
@@ -223,10 +222,10 @@ def eqn_interr(num_eqn, eqn_list, aqeqn_list, chem_scheme_markers, comp_name,
 				exist_indx = (np.where(rindx[eqn_step, 0:reactant_step]==(int(name_indx))))[0]
 				# add to existing stoichiometry
 				rstoi[eqn_step, exist_indx] += rstoi[eqn_step, reactant_step]
-				jac_stoi[eqn_step, exist_indx] += -1*rstoi[eqn_step, reactant_step]
+# 				jac_stoi[eqn_step, exist_indx] += -1*rstoi[eqn_step, reactant_step]
 				# remove stoichiometry added above
 				rstoi[eqn_step, reactant_step] = 0
-				jac_stoi[eqn_step, reactant_step] = 0
+# 				jac_stoi[eqn_step, reactant_step] = 0
 				reactant_step -= 1 # ignore this duplicate
 			else:
 				rindx[eqn_step, reactant_step] = int(name_indx)
@@ -255,17 +254,17 @@ def eqn_interr(num_eqn, eqn_list, aqeqn_list, chem_scheme_markers, comp_name,
 			
 			# store stoichiometry
 			pstoi[eqn_step, product_step] = stoich_num
-			jac_stoi[eqn_step, reactant_step+product_step] = 1*stoich_num
+# 			jac_stoi[eqn_step, reactant_step+product_step] = 1*stoich_num
 			
 			if name_only not in comp_namelist: # if new component encountered
 				comp_namelist.append(name_only)
 				
 				# convert MCM chemical names to SMILES
 				# index where xml file name matches reaction component name
-				name_indx = comp_name.index(name_only)
-				name_SMILE = comp_smil[name_indx]
+# 				name_indx = comp_name.index(name_only)
+# 				name_SMILE = comp_smil[name_indx]
 				
-				comp_list.append(name_SMILE) # list SMILE string of parsed species
+# 				comp_list.append(name_SMILE) # list SMILE string of parsed species
 				name_indx = comp_num # allocate index to this species
 				# Generate pybel
 				
@@ -274,11 +273,11 @@ def eqn_interr(num_eqn, eqn_list, aqeqn_list, chem_scheme_markers, comp_name,
 # 				Pybel_objects.append(Pybel_object)
 				
 				# check if alkoxy radical present in this component and that component is organic
-				if ('[O]' in name_SMILE):
-					if ('C' in name_SMILE or 'C' in name_SMILE):
-						if (name_SMILE != 'C[O]'): # ensure it's not carbon monoxide
-							# if it is an organic alkoxy radical add its index to list
-							RO_indx.append(comp_num)				
+# 				if ('[O]' in name_SMILE):
+# 					if ('C' in name_SMILE or 'C' in name_SMILE):
+# 						if (name_SMILE != 'C[O]'): # ensure it's not carbon monoxide
+# 							# if it is an organic alkoxy radical add its index to list
+# 							RO_indx.append(comp_num)				
 
 				comp_num += 1 # number of unique species
 				
@@ -295,10 +294,10 @@ def eqn_interr(num_eqn, eqn_list, aqeqn_list, chem_scheme_markers, comp_name,
 				exist_indx = (np.where(pindx[eqn_step, 0:product_step]==(int(name_indx))))[0]
 				# add to existing stoichiometry
 				pstoi[eqn_step, exist_indx] += pstoi[eqn_step, product_step]
-				jac_stoi[eqn_step, reactant_step+exist_indx] += 1*pstoi[eqn_step, product_step]
+# 				jac_stoi[eqn_step, reactant_step+exist_indx] += 1*pstoi[eqn_step, product_step]
 				# remove stoichiometry added above
 				pstoi[eqn_step, product_step] = 0
-				jac_stoi[eqn_step, reactant_step+product_step] = 0
+# 				jac_stoi[eqn_step, reactant_step+product_step] = 0
 				product_step -= 1 # ignore this duplicate
 			else:
 				pindx[eqn_step, product_step] = int(name_indx)
@@ -316,13 +315,13 @@ def eqn_interr(num_eqn, eqn_list, aqeqn_list, chem_scheme_markers, comp_name,
 		# in an equation is known, replicate the reactant indices over all 
 		# components
 		tot_comp = nreac[eqn_step]+nprod[eqn_step]
-		for i in range(nreac[eqn_step]):
-			jac_den_indx[eqn_step, i*tot_comp:(i+1)*tot_comp] = rindx[eqn_step, i]
+# 		for i in range(nreac[eqn_step]):
+# 			jac_den_indx[eqn_step, i*tot_comp:(i+1)*tot_comp] = rindx[eqn_step, i]
 			# also replicate the stoichiometries for every reactant
-			if (i > 0):
-				jac_stoi[eqn_step, i*tot_comp:(i+1)*tot_comp] = jac_stoi[eqn_step, 0:tot_comp] 
+# 			if (i > 0):
+# 				jac_stoi[eqn_step, i*tot_comp:(i+1)*tot_comp] = jac_stoi[eqn_step, 0:tot_comp] 
  		# number of Jacobian elements affected by this equation
-		njac[eqn_step, 0] = tot_comp*nreac[eqn_step]
+# 		njac[eqn_step, 0] = tot_comp*nreac[eqn_step]
 	
 	# remove fillers and flatten index for arranging concentrations 
 	# ready for reaction rate coefficient calculation
@@ -347,16 +346,16 @@ def eqn_interr(num_eqn, eqn_list, aqeqn_list, chem_scheme_markers, comp_name,
 	pindx_g = pindx
 	rstoi_g = rstoi
 	pstoi_g = pstoi
-	jac_stoi_g = jac_stoi
+# 	jac_stoi_g = jac_stoi
 	rstoi_flat_g = rstoi_flat
 	pstoi_flat_g = pstoi_flat
 	nreac_g = nreac
 	nprod_g = nprod
 	reac_coef_g = reac_coef
-	jac_den_indx_g = jac_den_indx.astype(int)
-	njac_g = njac.astype(int)
-	jac_indx_g = jac_indx
-	jac_indx_g = jac_indx_g.astype(int)
+# 	jac_den_indx_g = jac_den_indx.astype(int)
+# 	njac_g = njac.astype(int)
+# 	jac_indx_g = jac_indx
+# 	jac_indx_g = jac_indx_g.astype(int)
 
 # 	# same for aqueous-phase reactions ----------------------------------
 # 	# preparatory part ----------------------------------------------------
@@ -695,9 +694,7 @@ def eqn_interr(num_eqn, eqn_list, aqeqn_list, chem_scheme_markers, comp_name,
 
 
 	return(rindx_g, rstoi_g, pindx_g, pstoi_g, reac_coef_g, 
-			nreac_g, nprod_g, jac_stoi_g, 
-			jac_den_indx_g, njac_g, jac_indx_g, 				
-			y_arr_g, y_rind_g, uni_y_rind_g, y_pind_g, 
+			nreac_g, nprod_g, y_arr_g, y_rind_g, uni_y_rind_g, y_pind_g, 
 			uni_y_pind_g, reac_col_g, prod_col_g, rstoi_flat_g, pstoi_flat_g, 
 			rr_arr_g, rr_arr_p_g, comp_namelist, comp_list, Pybel_objects, 
-			comp_num, RO_indx)
+			comp_num)

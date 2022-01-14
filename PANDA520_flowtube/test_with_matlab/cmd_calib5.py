@@ -26,9 +26,9 @@ def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, 
     # L1= 68
     # Q=11*1000/60
     # Q1=11*1000/60
-    R = 24/10/2 # mm the inner diameters of the tube
-    L = 200 # mm
-    Q = 11*1000/60 # lpm
+    # R = 24/10/2 # mm the inner diameters of the tube
+    # L = 200 # mm
+    # Q = 11*1000/60 # lpm
 
     # save all the parameters in to the pickle file 
     def_mod_var.def_mod_var(0)
@@ -165,7 +165,7 @@ def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, 
     c[:,0,8] = OHconc
     c[:,:,5] = O2conc
     c[:,:,4] = H2Oconc
-    print(['OH conc: ' + str(OHconc)])
+    # print(['OH conc: ' + str(OHconc)])
     # c[:,0:int(Rgrid*L/(L+L1)),:] = c [:,0:int(Rgrid*L/(L+L1)),:]
     ## check and output parameters to file
     # D_temp = np.tile(D, (Rgrid * Zgrid))
@@ -270,9 +270,9 @@ def cmd_calib5(O2conc, H2Oconc, SO2conc, R, L, Q,  It, T, p, fullOrSimpleModel, 
     plt.plot(np.arange(0, R, dr_final), interpolate.splev(np.arange(0, R, dr_final), splineres) / OHconc)
     plt.title('[H2SO4] at end of tube')
     plt.xlabel('r [cm]')
-    plt.ylabel('Concentration, [cm**{-3}]')
+    plt.ylabel('Concentration, [cm$^{-3}$]')
 
-    print(interpolate.splev(np.arange(0, R, dr_final), splineres) / OHconc)
+    # print(interpolate.splev(np.arange(0, R, dr_final), splineres) / OHconc)
     rVec = np.arange(0, R, 0.001)
     cVec = interpolate.splev(rVec, splineres)
     cVec_HO2 = interpolate.splev(rVec, splineres_HO2)

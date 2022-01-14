@@ -12,8 +12,8 @@ import write_dydt_rec
 def init_conc(num_comp, Comp0, init_conc, TEMP, C_H2O, PInit, Pybel_objects,
 	testf, dydt_trak, 
 	rindx, pindx, num_eqn, nreac, nprod, 
-	comp_namelist, Compt,
-	comp_xmlname, comp_smil, rel_SMILES,
+	comp_namelist, 
+	comp_xmlname,  rel_SMILES,
 	RO2_indx, HOMRO2_indx, rstoi, pstoi):
 # def init_conc(num_comp, Comp0, init_conc, TEMP, RH, PInit, Pybel_objects,
 # 	testf, pconc, dydt_trak, end_sim_time, save_step, 
