@@ -10,7 +10,7 @@ import write_dydt_rec
 
 
 def init_conc(num_comp, Comp0, init_conc, TEMP, C_H2O, PInit, Pybel_objects,
-	testf, dydt_trak, 
+	 dydt_trak, 
 	rindx, pindx, num_eqn, nreac, nprod, 
 	comp_namelist, 
 	comp_xmlname,  rel_SMILES,
@@ -59,9 +59,9 @@ def init_conc(num_comp, Comp0, init_conc, TEMP, C_H2O, PInit, Pybel_objects,
 	erf = 0
 	err_mess = ''
 	
-	if testf==1: # testing mode
-		# return dummies
-		return(0,0,0,0,0,0,0,0)
+# 	if testf==1: # testing mode
+# 		# return dummies
+# 		return(0,0,0,0,0,0,0,0)
 
 	NA = si.Avogadro # Avogadro's number (molecules/mol)
 	# empty array for storing species' concentrations, must be an array

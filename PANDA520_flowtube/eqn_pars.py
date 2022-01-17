@@ -16,7 +16,7 @@ import jac_setup
 import aq_mat_prep
 
 # define function to extract the chemical mechanism
-def extr_mech(sch_name, chem_sch_mrk, xml_name, 
+def extr_mech(sch_name, chem_sch_mrk,
         con_infl_nam,  const_comp,
 		drh_str, erh_str):
 
