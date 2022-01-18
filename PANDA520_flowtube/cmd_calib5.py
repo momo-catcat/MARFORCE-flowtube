@@ -1,4 +1,4 @@
-def cmd_calib5(const_comp_conc,params,rh,OHconc):       
+def cmd_calib5(const_comp_conc, params, rh, Init_comp_conc):       
     #%% import packages
     import numpy as np
     # import os 
@@ -8,11 +8,12 @@ def cmd_calib5(const_comp_conc,params,rh,OHconc):
     import sch_interr
     import eqn_interr
     import eqn_pars
-    import water_calc
+    # import water_calc
     import init_conc
     import RO2_indices  
     import write_rate_file
     import cal_const_comp_conc
+    from judg_spe_reac_rates import jude_species as jude_species
     # from Vapour_calc import H2O_conc
     import matplotlib.pyplot as plt
     from scipy import interpolate
@@ -30,7 +31,7 @@ def cmd_calib5(const_comp_conc,params,rh,OHconc):
     Q1 = params['Q1'] *1000/ 60 # flow for frist tube 
     Q2 = params['Q2'] *1000/ 60 # flow for second tube
     # It = params['It'] # it product for calculation 
-    fullOrSimpleModel = params['fullOrSimpleModel'] #Gormley&Kennedy approximation, full: flow model (much slower)
+    # fullOrSimpleModel = params['fullOrSimpleModel'] #Gormley&Kennedy approximation, full: flow model (much slower)
     sch_name =  params['sch_name'] # file for the MCM file
     chm_sch_mrk = params['chm_sch_mrk']# markers to isolate sections of chemical scheme based on MCM KPP format
     drh_str = params['drh_str']
@@ -44,21 +45,24 @@ def cmd_calib5(const_comp_conc,params,rh,OHconc):
     formula = params['formula'] # the formula for the plots
     key_spe_for_plot = params['key_spe_for_plot'] # key species for ploting 
     plot_spec = params['plot_spec'] # plot species 
+    # rate_values= params['rate_values'] # diffusion 
+
+    # comp_plot_index = params['comp_plot_index']
+    H2Oconc = const_comp_conc[:,const_comp.index('H2O')]  
     
-    
-	# read the file and store everything into a list   
+ 	# read the file and store everything into a list   
     f_open_eqn = open(sch_name, mode='r') # open the chemical scheme file
 
     total_list_eqn = f_open_eqn.readlines()
     f_open_eqn.close() # close file
-
-    eqn_list, aqeqn_list, num_eqn, rrc, rrc_name, RO2_names, eqn_list_on=sch_interr.sch_interr(total_list_eqn, chm_sch_mrk)
+    # read the 
+    eqn_list, num_eqn, rrc, rrc_name, RO2_names, eqn_list_on=sch_interr.sch_interr(total_list_eqn, chm_sch_mrk)
     
     [rindx, rstoi, pindx, pstoi, reac_coef, 
-			nreac, nprod, y_arr, y_rind, uni_y_rind, y_pind, 
-			uni_y_pind, reac_col, prod_col, rstoi_flat, pstoi_flat, 
-			rr_arr, rr_arr_p, comp_namelist, comp_list, Pybel_objects, 
-			comp_num] = eqn_interr.eqn_interr(num_eqn, eqn_list, aqeqn_list, chm_sch_mrk)
+ 			nreac, nprod, y_arr, y_rind, uni_y_rind, y_pind, 
+ 			uni_y_pind, reac_col, prod_col, rstoi_flat, pstoi_flat, 
+ 			rr_arr, rr_arr_p, comp_namelist, comp_list, Pybel_objects, 
+ 			comp_num] = eqn_interr.eqn_interr(num_eqn, eqn_list, chm_sch_mrk)
     
     # comp_namelist, comp_list
     # nreac :  number of the reactant 
@@ -78,18 +82,16 @@ def cmd_calib5(const_comp_conc,params,rh,OHconc):
                                                                                   
     RO2_indi = RO2_indices.RO2_indices(comp_namelist, RO2_names)
 
-    const_comp_index = [comp_namelist.index(const_comp[i]) for i in range(len(const_comp))]
+    # const_comp_index = [comp_namelist.index(const_comp[i]) for i in range(len(const_comp))]
     
     u = list(range(len(comp_namelist))) #% u is the index of species in C except constant compounds 
-    for i in reversed(const_comp_index):
+    for i in reversed(con_C_indx):
         del u[i]                                                                     
-              
-    H2Oconc = const_comp_conc[:,const_comp.index('H2O')]                                                       
         
     if H2Oconc[1] == 0:
         H2Oconc[1] = H2Oconc[0]*Q1/Q2
     
-    H2O, Psat_water, H2O_mw = water_calc.water_calc(T, rh)
+    # H2O, Psat_water, H2O_mw = water_calc.water_calc(T, rh)
 
     dt = 0.00001                        # timestep [s]
     numLoop = 500                      # number of times to run to reach the pinhole of the instrument
@@ -114,31 +116,33 @@ def cmd_calib5(const_comp_conc,params,rh,OHconc):
     Rtot[:,int(Zgrid*L1/(L2+L1)):,:] =  R2
     
     # make the const comp to one 
-    const_comp_gird = cal_const_comp_conc.cal_const_comp_conc(Rgrid, Zgrid,const_comp_conc ,L1,L2,const_comp)
+    const_comp_gird = cal_const_comp_conc.cal_const_comp_conc(Rgrid, Zgrid, const_comp_conc, L1,L2, const_comp)
           
     #% initial conditions and set the const_comp conc
 
     c = np.zeros([Rgrid, Zgrid, comp_num])
     for i in Init_comp:
-        c[:, 0, comp_namelist.index(i)] = OHconc  # set [OH] at z = 0 # set [HO2] at z = 0. This equals OH conc
+        c[:, 0, comp_namelist.index(i)] = Init_comp_conc[Init_comp.index(i)]  # set [OH] at z = 0 # set [HO2] at z = 0. This equals OH conc
     for i in const_comp:
         c[:,:,comp_namelist.index(i)] = const_comp_gird[const_comp.index(i)]  
 
-
-    write_rate_file.write_rate_file(reac_coef,p, rrc, rrc_name, 0)
+    write_rate_file.write_rate_file(reac_coef, p, rrc, rrc_name, 0)
     
     # Comp0 = comp_namelist
 
     C0 = c[0,0,:] 
 
     [y,  y_mw, num_comp, M, y_indx_plot, dydt_vst, 
-    comp_namelist,  erf, err_mess, NOi, HO2i, NO3i]=init_conc.init_conc(comp_num, comp_namelist, C0, T, C0[comp_namelist.index('H2O')], p, Pybel_objects,
-    dydt_trak, rindx, pindx, num_eqn[0], nreac, nprod, comp_namelist,  comp_namelist,  comp_namelist, RO2_indx, HOMRO2_indx, rstoi, pstoi)                                                                                              
+    comp_namelist,  erf, err_mess]=init_conc.init_conc(comp_num, comp_namelist, C0, T, \
+                                p, Pybel_objects,dydt_trak, rindx, pindx, \
+                                        num_eqn[0], nreac, nprod, comp_namelist, \
+                                            RO2_indx, HOMRO2_indx, rstoi, pstoi)                                                                                              
     
-    # y = c[0,0,:]
+    y = c[0,0,:]
 
-    RO2conc = RO2_conc.RO2_conc(RO2_indi,y)
-    rate_values, erf, err_mess = rate_coeffs.evaluate_rates(RO2conc, y[comp_namelist.index('H2O')], T, 0, M, M*0.7809, y[comp_namelist.index('O2')], 0,  y[comp_namelist.index('HO2')],0,p)
+    RO2conc = RO2_conc.RO2_conc(RO2_indi,y)    
+    op = jude_species(y,comp_namelist)
+    rate_values, erf, err_mess = rate_coeffs.evaluate_rates(RO2conc, T, 0, M, M*0.7809, op[0],op[1],op[2],op[3],op[4], p)
 
     #%% plot
 
@@ -146,7 +150,7 @@ def cmd_calib5(const_comp_conc,params,rh,OHconc):
         c1 = c.copy()
         old = c1[:, -1 ,comp_namelist.index( key_spe_for_plot)]
 
-        c = odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u)
+        c = odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist, dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u)
 
         # t = ['OH','HSO3','HO2','SO3','SA'] # 
 

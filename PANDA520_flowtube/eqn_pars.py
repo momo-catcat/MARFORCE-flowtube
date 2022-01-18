@@ -4,16 +4,16 @@
 
 import numpy as np
 import sch_interr
-import xml_interr
+# import xml_interr
 import eqn_interr
 # import photo_num
 import RO2_indices
 import write_dydt_rec
-import write_ode_solv
-import write_rate_file
+# import write_ode_solv
+# import write_rate_file
 import write_hyst_eq
-import jac_setup
-import aq_mat_prep
+# import jac_setup
+# import aq_mat_prep
 
 # define function to extract the chemical mechanism
 def extr_mech(sch_name, chem_sch_mrk,
@@ -54,7 +54,7 @@ def extr_mech(sch_name, chem_sch_mrk,
 	f_open_eqn.close() # close file
 	
 	# interrogate scheme to list equations
-	[eqn_list, aqeqn_list, eqn_num, rrc, rrc_name, 
+	[eqn_list,eqn_num, rrc, rrc_name, 
 		RO2_names,eqn_list_on] = sch_interr.sch_interr(total_list_eqn, chem_sch_mrk)
 	
 	# interrogate xml to list all component names and SMILES
@@ -66,7 +66,7 @@ def extr_mech(sch_name, chem_sch_mrk,
 			uni_y_pind_g, reac_col_g, prod_col_g, rstoi_flat_g, pstoi_flat_g, 
 			rr_arr_g, rr_arr_p_g, comp_namelist, comp_list, Pybel_objects, 
 			comp_num] = eqn_interr.eqn_interr(eqn_num, 
-		eqn_list, aqeqn_list, chem_sch_mrk)
+		eqn_list,  chem_sch_mrk)
         
 		
 # 	[rowvals, colptrs, jac_indx_g, jac_indx_aq, jac_part_indx, jac_wall_indx, jac_extr_indx] = jac_setup.jac_setup(jac_den_indx_g, njac_g, comp_num, num_sb, eqn_num, nreac_g, nprod_g, rindx_g, pindx_g, jac_indx_g, wall_on, nreac_aq, nprod_aq, rindx_aq, pindx_aq, jac_indx_aq, (num_sb-wall_on), dil_fac)

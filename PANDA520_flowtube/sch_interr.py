@@ -17,7 +17,7 @@ def sch_interr(total_list_eqn, chm_sch_mrk):
 	# preparatory part ---------------------------------------------------------
 	eqn_list = [] # empty list for gas-phase reaction equation
 	eqn_list_on = [] # empty list for gas-phase only reaction equation
-	aqeqn_list = [] # empty list for particle-phase reaction equation
+# 	aqeqn_list = [] # empty list for particle-phase reaction equation
 	RO2_names = [] # empty list for peroxy radicals
 	rrc = [] # empty list for reaction rate coefficients
 	rrc_name = [] # empty list for reaction rate coefficient labels
@@ -185,11 +185,11 @@ def sch_interr(total_list_eqn, chm_sch_mrk):
 				# second check is whether markers for starting reaction rate coefficients
 				# part, and markers for end of equation lines, are present
 				eqn_markers = [str('.*\\' +  chm_sch_mrk[9]), str('.*\\' +  chm_sch_mrk[11])]
-				if (re.match(eqn_markers[0], line1) != None and 
-					re.match(eqn_markers[1], line1) != None):
-					aqeqn_list.append(line1) # store reaction equations
+# 				if (re.match(eqn_markers[0], line1) != None and 
+# 					re.match(eqn_markers[1], line1) != None):
+# 					aqeqn_list.append(line1) # store reaction equations
 
 	# number of equations
-	eqn_num = np.array((len(eqn_list), len(aqeqn_list)))
+	eqn_num = np.array((len(eqn_list),0))
 	
-	return(eqn_list, aqeqn_list, eqn_num, rrc, rrc_name, RO2_names,eqn_list_on)
+	return(eqn_list, eqn_num, rrc, rrc_name, RO2_names,eqn_list_on)

@@ -4,6 +4,9 @@ import numpy as np
 from Vapor_calc import Air_density as Air_density
 from Vapor_calc import Dp as Dp
 import pandas as pd
+from molmass import Formula
+from thermo.chemical import Chemical
+
 
 # Reynolds number of fluid
 def cal_Re(dens, v, d, vis):
@@ -17,12 +20,12 @@ def cal_Re(dens, v, d, vis):
 
 # Dynamic viscosity (rather than kinetic viscosity which is divided by density)
 # of air using Sutherland equation, Eq. 2-8, P18, Aerosol Measurement, Third Edition
-def cal_vis(T = 293.15):
+def cal_vis(T ):
     return 18.203 * 10e-6 * (293.15 + 110.4) / (T + 110.4) * (T / 293.15) ** 1.5  # Pa*s
 
 
 # Mean free path of air, Eq. 2-10, P19, Aerosol Measurement, Third Edition
-def cal_mfp(T=293.15, P=101325):
+def cal_mfp(T, P):
     return 66.5 * 10e-9 * (101325 / P) * (T / 293.15) * (1 + 110.4 / 293.15) / (1 + 110.4 / T)  # in m
 
 
@@ -40,7 +43,7 @@ def cal_Cs(Kn):
     return 1 + Kn * (alpha + beta * np.exp(- gamma / Kn))
 
 # Diffusion coefficient
-def cal_diffusivity(dp, Cs, vis, T = 293.15):
+def cal_diffusivity(dp, Cs, vis, T ):
     kB = 1.38064852e-23  # m2 kg s-2 K-1
     return kB * T * Cs / (3 * np.pi * vis * dp)  # in m2/s
 
@@ -88,3 +91,23 @@ def cal_pene_rate(P, T, MM, rho, L, Q, Dia):
 
     return(export)
 
+
+def cal_diffu(A,p,T):
+    mass = Formula(A).mass
+    
+    tol = Chemical(A)
+    
+    tol.calculate(T=T, P=p)
+    
+    vis = cal_vis(T)
+
+    dp = Dp(mass, tol.rho) + 0.3e-9  # correction for mass diameter to mobility diameter
+
+    mfp = cal_mfp(T, p)  # mean free path
+
+    Kn = cal_Kn(dp, mfp)
+
+    Cs = cal_Cs(Kn)
+    
+    d = cal_diffusivity(dp, Cs, vis, T)
+    return d*100**2

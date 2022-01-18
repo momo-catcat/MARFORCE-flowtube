@@ -8,7 +8,7 @@ import formatting
 from openbabel import pybel
 import sys
 
-def eqn_interr(num_eqn, eqn_list, aqeqn_list, chem_scheme_markers):
+def eqn_interr(num_eqn, eqn_list,  chem_scheme_markers):
 	
 	# inputs: ----------------------------------------------------------------------------
 	# num_eqn - number of equations

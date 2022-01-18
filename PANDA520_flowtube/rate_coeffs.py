@@ -1,10 +1,10 @@
 '''module for calculating reaction rate coefficients (automatically generated)'''
 # module to hold expressions for calculating rate coefficients # 
-# created at 2022-01-17 17:51:44.421861
+# created at 2022-01-18 15:20:08.857649
 
 import numpy
 
-def evaluate_rates(RO2, H2O, TEMP, lightm, M, N2, O2, NO, HO2, NO3,p):
+def evaluate_rates(RO2, TEMP, lightm, M, N2, H2O,  O2, NO, HO2, NO3,p):
 
 	# inputs: ------------------------------------------------------------------
 	# RO2 - names of components included in peroxy radical list

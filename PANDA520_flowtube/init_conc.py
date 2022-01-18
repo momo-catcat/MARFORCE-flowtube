@@ -9,12 +9,9 @@ from water_calc import water_calc
 import write_dydt_rec
 
 
-def init_conc(num_comp, Comp0, init_conc, TEMP, C_H2O, PInit, Pybel_objects,
-	 dydt_trak, 
-	rindx, pindx, num_eqn, nreac, nprod, 
-	comp_namelist, 
-	comp_xmlname,  rel_SMILES,
-	RO2_indx, HOMRO2_indx, rstoi, pstoi):
+def init_conc(num_comp, Comp0, init_conc, TEMP, PInit, Pybel_objects,
+	 dydt_trak, rindx, pindx, num_eqn, nreac, nprod, 
+	comp_namelist, RO2_indx, HOMRO2_indx, rstoi, pstoi):
 # def init_conc(num_comp, Comp0, init_conc, TEMP, RH, PInit, Pybel_objects,
 # 	testf, pconc, dydt_trak, end_sim_time, save_step, 
 # 	rindx, pindx, num_eqn, nreac, nprod, 
@@ -290,20 +287,18 @@ def init_conc(num_comp, Comp0, init_conc, TEMP, C_H2O, PInit, Pybel_objects,
 	
 	# get indices of NO, HO2 and NO3 (for reaction rate calculations)
 	
-	try:
-		NOi = comp_namelist.index('NO')
-	except:
-		NOi = 0 # filler
-	try:
-		HO2i = comp_namelist.index('HO2')
-	except:
-		HO2i = 0 # filler
-	try:
-		NO3i = comp_namelist.index('NO3')
-	except:
-		NO3i = 0 # filler
+# 	try:
+# 		NOi = comp_namelist.index('NO')
+# 	except:
+# 		NOi = 0 # filler
+# 	try:
+# 		HO2i = comp_namelist.index('HO2')
+# 	except:
+# 		HO2i = 0 # filler
+# 	try:
+# 		NO3i = comp_namelist.index('NO3')
+# 	except:
+# 		NO3i = 0 # filler
 # 	RO2i = comp_namelist.index('RO2')
 	return (y, y_mw, num_comp, Cfactor, y_indx_plot,  dydt_vst, 
-			comp_namelist,
-			 erf, err_mess, NOi, 
-			HO2i, NO3i)
+			comp_namelist, erf, err_mess)

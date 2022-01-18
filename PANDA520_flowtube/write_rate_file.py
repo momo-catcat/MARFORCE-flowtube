@@ -32,7 +32,7 @@ def write_rate_file(reac_coef_g, p, rrc, rrc_name, testf): # define function
 
 	# following part is the function (there should be an indent at the start of each line)
 	# suggest using one tab
-	f.write('def evaluate_rates(RO2, H2O, TEMP, lightm, M, N2, O2, NO, HO2, NO3,p):\n')
+	f.write('def evaluate_rates(RO2, TEMP, lightm, M, N2, H2O,  O2, NO, HO2, NO3,p):\n')
 	f.write('\n')
 	f.write('	# inputs: ------------------------------------------------------------------\n')
 	f.write('	# RO2 - names of components included in peroxy radical list\n')	

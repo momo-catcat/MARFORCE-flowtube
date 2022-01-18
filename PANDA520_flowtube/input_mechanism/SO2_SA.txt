@@ -70,7 +70,7 @@ CH3O2NO2 = IGNORE ;
 DMS = IGNORE ;
 DMSO2OH = IGNORE ;
 CH3OOH = IGNORE ;
-SA = IGNORE ;
+H2SO4 = IGNORE ;
 DMSO = IGNORE ;
 CH3O2 = IGNORE ;
 { Peroxy radicals. }
@@ -105,5 +105,5 @@ CALL mcm_constants(time, temp, M, N2, O2, RO2, H2O)
 {4.} OH + OH = H2O2 : 2*6.9D-31 * (TEMP / 300) ** -0.8 * p / 1.3806488D-23 / TEMP / 1D6 ;
  OH + OH  = H2O  : 6.2D-14 * (TEMP / 298)**2.6 * EXP(945/TEMP) 
 {6.} HSO3 + O2 = HO2 + SO3 : 1.3D-12*EXP(-330/TEMP) ;
-{7.} SO3 + 2H2O = SA :  3.9D-41 * EXP(6830.6 / TEMP);
+{7.} SO3 + 2H2O = H2SO4 :  3.9D-41 * EXP(6830.6 / TEMP);
 
