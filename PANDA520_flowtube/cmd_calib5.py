@@ -301,7 +301,6 @@ def cmd_calib5(O2conc, H2Oconc, H2Oconc_1, SO2conc, R, L, Q, R1, L1, Q1, It, T, 
         newH2SO4 = c[:, -1, comp_namelist.index('SA')]
         print(['time: ' + str(tim)])
         print(['t = ' + str(tim) + "  H2SO4 difference: " + str(np.sum(newH2SO4 - oldH2SO4))])
-            
         
         if (j > 15) & (np.sum(newH2SO4 - oldH2SO4) / np.sum(oldH2SO4) < 1e-5):
             break
