@@ -1,4 +1,4 @@
-def cmd_calib5(const_comp_conc, params, rh, Init_comp_conc):       
+def cmd_calib5(const_comp_conc, params, Init_comp_conc):       
     #%% import packages
     import numpy as np
     # import os 
@@ -198,8 +198,9 @@ def cmd_calib5(const_comp_conc, params, rh, Init_comp_conc):
     for i in plot_spec:
         y_x = np.flip(c[0 : int(Rgrid / 2), -1,comp_namelist.index(i)]) # 'SA'
         y2.append(y_x)
-        splineres.append(interpolate.splrep(x, y_x))
-        cVec.append(interpolate.splev(rVec, splineres))
+        splineres1 = interpolate.splrep(x, y_x)
+        splineres.append(splineres1)
+        cVec.append(interpolate.splev(rVec, splineres1))
         meanConc.append(2 * 0.001 / R2 ** 2 * np.sum(cVec * rVec))
     # y1 = np.flip(c[0: int(Rgrid /2 ),-1, comp_namelist.index('HO2')])
     # splineres = interpolate.splrep(x, y)

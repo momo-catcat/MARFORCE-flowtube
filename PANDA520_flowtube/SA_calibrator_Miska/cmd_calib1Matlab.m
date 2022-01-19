@@ -67,7 +67,7 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
     c = cellfun(@(x)zeros(Rgrid, Zgrid), c, 'UniformOutput', false);
     c{5}(:, 1) = OHconc;                % set [OH] at z = 0
     c{3}(:, 1) = OHconc;                % set [HO2] at z = 0
-    c{4}(:, 1) = OHconc;
+    %c{4}(:, 1) = OHconc;
     disp(['OH conc: ', num2str(OHconc)])
     %% check and output parameters to file
 

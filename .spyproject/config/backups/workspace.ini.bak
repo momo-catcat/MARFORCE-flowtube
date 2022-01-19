@@ -4,7 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['..\\.spyder-py3\\temp.py', 'PANDA520_flowtube\\input_mechanism\\SO2_SA.txt', 'PANDA520_flowtube\\Input_Parameters.py']
+recent_files = ['..\\.spyder-py3\\temp.py', 'PANDA520_flowtube\\Input_Parameters.py', 'PANDA520_flowtube\\cmd_calib5.py']
 
 [main]
 version = 0.2.0
