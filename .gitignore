@@ -3,4 +3,4 @@
 .spyproject
 
 #ignore cache directory
-/PANDA520_flowtube/__pycache__/
+/PANDA520_flowtube/__pycache__
