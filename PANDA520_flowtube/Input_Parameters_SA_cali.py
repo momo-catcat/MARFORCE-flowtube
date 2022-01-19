@@ -54,7 +54,7 @@ fullOrSimpleModel = 'full' # simple: Gormley&Kennedy approximation, full: flow m
  
 R1 = 0.78 # cm the inner diameters of the tube
 L1 = 50  # cm
-Q1 = H2O_data['Q1'] # lpm
+Q1 = H2O_data['Q1'][0] # lpm
 
 
 WaterFlow1 =H2O_data['H2O_1']
@@ -82,11 +82,11 @@ R2 = 0.78/3*4
 
 L2 = 68 
 
-Q2 =  H2O_data['Q2']
+Q2 =  H2O_data['Q2'][1]
 
 Q2 = Q1 + Q2
 
-WaterFlow2 =H2O_data['H2O_2']    # second H2O flow 
+WaterFlow2 =H2O_data['H2O_2']   # second H2O flow 
 
 totFlow2 =Q2 * np.ones(WaterFlow1.shape)
 
