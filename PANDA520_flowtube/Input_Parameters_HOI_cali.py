@@ -112,7 +112,7 @@ Rgrid = np.array(80).astype(int)           # number of grid points in tube radiu
 
 
 # chemistry part 
-sch_name = os.getcwd()+ '/input_mechanism/SO2_SA.txt'
+sch_name = os.getcwd()+ '/input_mechanism/HOI_cali_chem.txt'
 chm_sch_mrk = ['{', 'RO2', '+', '', '', ';', '+', ';', '$', '{', ':', ';','}']
 formula = ['OH','$\mathdefault{HSO_3}$','$\mathdefault{HO_2}$','$\mathdefault{SO_3}$','SA']
 key_spe_for_plot = 'SA'
