@@ -1,5 +1,5 @@
 # this file is used for all the inputs 
-#%% import functions
+
 #%% import functions
 
 %reset -f
@@ -29,7 +29,8 @@ is 2.54 cm, 0.2 for the tube wall
 '''
 #% Prepare the inputs 
 # load H2O Q  
-file= "C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/H2O_2.csv"
+file = os.getcwd()+ '/input_files/H2O_2.csv'
+
 H2O_data=pd.read_csv(file)
  
 T_cel = 25  # C
