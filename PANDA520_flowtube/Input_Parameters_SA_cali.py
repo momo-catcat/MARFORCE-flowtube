@@ -2,7 +2,6 @@
 #%% import functions
 #%% import functions
 
-%reset -f
 import numpy as np
 import pandas as pd
 from Vapour_calc import H2O_conc as H2O_conc
@@ -29,7 +28,8 @@ is 2.54 cm, 0.2 for the tube wall
 '''
 #% Prepare the inputs 
 # load H2O Q  
-file= "C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/H2O_2.csv"
+# file= "C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/H2O_2.csv"
+file = '/Users/momo/Documents/science/publication/IO3_measurement/script/SA_cali/input_files/H2O_2.csv'
 H2O_data=pd.read_csv(file)
  
 T_cel = 25  # C
