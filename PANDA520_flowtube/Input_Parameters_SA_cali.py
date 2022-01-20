@@ -90,7 +90,7 @@ WaterFlow2 =H2O_data['H2O_2']   # second H2O flow
 
 totFlow2 =Q2 * np.ones(WaterFlow1.shape)
 
-H2Oconc2 =WaterFlow2 / 1000 / totFlow2 * H2O_conc(T_cel, 1).SatP[0] / 1.3806488e-23 / T / 1e6
+H2Oconc2 = (WaterFlow2+WaterFlow1) / 1000 / totFlow2 * H2O_conc(T_cel, 1).SatP[0] / 1.3806488e-23 / T / 1e6
 O2conc2 =  O2conc1 * Q1/Q2
 SO2conc2 = SO2conc1* Q1/Q2
 
