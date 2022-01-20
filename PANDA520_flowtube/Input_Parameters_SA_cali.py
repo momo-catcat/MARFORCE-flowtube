@@ -211,8 +211,8 @@ for i in range(WaterFlow1.size):#range(H2SO4.size):
     else:
         meanConc1 = 0
         c1 = 0
-    meanconc = [meanconc,meanConc1]
-    c = [c,c1]
+    meanconc.append(meanConc1) 
+    c.append(c1)
     
 #%% save the modelled SA, HO2
 h2so4_model = pd.DataFrame([])

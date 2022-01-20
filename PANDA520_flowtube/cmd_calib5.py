@@ -167,8 +167,8 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
         axs = axs.ravel()
         
         for i in range(len(plot_spec)):
-            axs[i].pcolor(np.linspace(0, L2+L1, Zgrid),np.linspace(-R1, R1, Rgrid), c[:, : , comp_plot_index[i]], shading = 'nearest')
-            axs[i].pcolor(np.linspace(0, L2+L1, Zgrid),np.linspace(-R1, R2, Rgrid), c[:, : , comp_plot_index[i]], shading = 'nearest')
+            axs[i].pcolor(np.linspace(0, L2+L1, Zgrid),np.linspace(-R1, R1, Rgrid), c[:, : , comp_plot_index[i]], shading = 'nearest',cmap='jet')
+            axs[i].pcolor(np.linspace(0, L2+L1, Zgrid),np.linspace(-R1, R2, Rgrid), c[:, : , comp_plot_index[i]], shading = 'nearest',cmap='jet')
 
             axs[i].set_xlabel('L [cm]')
             axs[i].set_ylabel('R [cm]')
