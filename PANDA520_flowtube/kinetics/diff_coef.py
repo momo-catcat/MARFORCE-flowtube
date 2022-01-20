@@ -35,7 +35,6 @@ def diff_coef(Mole, T, P, carrier_type):
     f_mole = s("[()',]", '', str(eval(s(',?(\d+)', r'*\1,', s('([A-Z][a-z]*)', r'("\1",),', Mole))))).split()
     for c in set(f_mole): atom_count_mole[c] = [f_mole.count(c)]
 
-    print(atom_count_mole.columns)
     #calculate D for Mole
     V_A = np.array([0])
     for a in atom_count_mole.columns:

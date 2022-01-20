@@ -28,7 +28,7 @@ is 2.54 cm, 0.2 for the tube wall
 '''
 #% Prepare the inputs 
 # load H2O Q  
-file = os.getcwd()+ '/input_files/H2O_2.csv'
+file = os.getcwd() + '/input_files/H2O_2.csv'
 
 H2O_data=pd.read_csv(file)
  
