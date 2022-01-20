@@ -1,6 +1,6 @@
 '''module for calculating reaction rate coefficients (automatically generated)'''
 # module to hold expressions for calculating rate coefficients # 
-# created at 2022-01-19 17:55:36.278290
+# created at 2022-01-20 13:53:57.664339
 
 import numpy
 
