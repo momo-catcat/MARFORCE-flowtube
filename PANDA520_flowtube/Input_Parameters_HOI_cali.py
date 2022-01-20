@@ -1,6 +1,4 @@
-<<<<<<< HEAD:PANDA520_flowtube/Input_Parameters.py
-# this file is used for all the inputs 
-#%% import functions
+# this file is used for all the inputs
 
 %reset -f
 import numpy as np
