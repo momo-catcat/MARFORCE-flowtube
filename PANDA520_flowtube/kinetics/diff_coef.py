@@ -45,4 +45,4 @@ def diff_coef(Mole, T, P, carrier_type):
     D_torr = 1.0868 * T ** 1.75 / (m_AB ** 0.5 * (V_A ** (1/3) + V_B ** (1/3)) ** 2) # torr cm2 s-1
     D = D_torr / (P / 133.3)
 
-    return(D)
+    return(float(D))
