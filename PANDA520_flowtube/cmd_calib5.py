@@ -73,7 +73,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     u, Diff_vals = get_diff_and_u(comp_namelist,Diff_setname,con_C_indx,Diff_set,T,p)
     
     
-    dt = 0.00001                        # timestep [s]
+    dt = 0.0001                        # timestep [s]
     numLoop = 500                      # number of times to run to reach the pinhole of the instrument
     timesteps = 10000                    # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
 
@@ -121,7 +121,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     #%% plot
     for j in range(numLoop):
         c1 = c.copy()
-        old = c1[:, -1 ,comp_namelist.index( key_spe_for_plot)]
+        old = c1[:, -1 , comp_namelist.index( key_spe_for_plot)]
 
         c = odesolve(timesteps, Zgrid, Rgrid, dt, Diff_vals, Rtot, dr, dx, Qtot,c,comp_namelist, dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u)
 
@@ -152,7 +152,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
 
         print(['t = ' + str(tim) + str(key_spe_for_plot) + " difference: " + str(np.sum(new - old))])         
         
-        if (j > 15) & (np.sum(new - old) / np.sum(old) < 1e-5):
+        if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):
             break
 
     dr_final = R2 / (Rgrid - 1) * 2
