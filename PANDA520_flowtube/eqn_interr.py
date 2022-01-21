@@ -5,7 +5,7 @@
 import numpy as np
 import re
 import formatting
-import pybel
+# import pybel
 import sys
 
 def eqn_interr(num_eqn, eqn_list,  chem_scheme_markers):
@@ -66,7 +66,7 @@ def eqn_interr(num_eqn, eqn_list,  chem_scheme_markers):
 	comp_namelist = []
 	comp_list = [] # list for the SMILE strings of components present in the chemical scheme
 	# list of Pybel objects of components in chemical scheme
-	Pybel_objects = []
+# 	Pybel_objects = []
 	comp_num = 0 # count the number of unique components in the chemical scheme
 # 	RO_indx = [] # empty list for holding indices of alkoxy components
 
@@ -697,5 +697,5 @@ def eqn_interr(num_eqn, eqn_list,  chem_scheme_markers):
 	return(rindx_g, rstoi_g, pindx_g, pstoi_g, reac_coef_g, 
 			nreac_g, nprod_g, y_arr_g, y_rind_g, uni_y_rind_g, y_pind_g, 
 			uni_y_pind_g, reac_col_g, prod_col_g, rstoi_flat_g, pstoi_flat_g, 
-			rr_arr_g, rr_arr_p_g, comp_namelist, comp_list, Pybel_objects, 
+			rr_arr_g, rr_arr_p_g, comp_namelist, comp_list, 
 			comp_num)

@@ -185,9 +185,8 @@ c = []
 for i in range(WaterFlow1.size):#range(H2SO4.size):
     if H2Oconc1[i]>0:
         meanConc1,c1= cmd_calib5(const_comp_conc[:,i,:], params, Init_comp_conc[i])
-    else:
-        meanConc1 = 0
-        c1 = 0
-    meanconc = [meanconc,meanConc1]
-    c = [c,c1]
+        meanconc = [meanconc,meanConc1]
+        c = [c,c1]
 
+meanconc_s = pd.DataFrame(np.transpose(meanconc)) 
+meanconc_s.index = plot_spec

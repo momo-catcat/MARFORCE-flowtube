@@ -181,9 +181,9 @@ params = {'T' : UnitFloat(T, "K"), # temperaure
   
 for i in range(8):
     print(list(params.keys())[i], list(params.values())[i], list(params.values())[i].unit)
-# i =1 
-# const_comp_conc= const_comp_conc[:,i,:]
-# Init_comp_conc=Init_comp_conc[i]
+i =1 
+const_comp_conc= const_comp_conc[:,i,:]
+Init_comp_conc=Init_comp_conc[i]
 #% computation begins
 meanconc = []
 c = []
@@ -193,10 +193,13 @@ for i in range(WaterFlow1.size):#range(H2SO4.size):
         meanConc1,c1= cmd_calib5(const_comp_conc[:,i,:], params, Init_comp_conc[i])
         meanconc.append(meanConc1) 
         c.append(c1)
+
+meanconc_s = pd.DataFrame(np.transpose(meanconc)) 
+meanconc_s.index = plot_spec
     
 #%% save the modelled SA, HO2
 
-meanconc_s = pd.DataFrame(np.transpose(meanconc[1:])) 
+meanconc_s = pd.DataFrame(np.transpose(meanconc)) 
 meanconc_s.index = plot_spec
 meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_mean.csv')
 

@@ -64,7 +64,7 @@ def extr_mech(sch_name, chem_sch_mrk,
 	[rindx_g, rstoi_g, pindx_g, pstoi_g, reac_coef_g, 
 			nreac_g, nprod_g, y_arr_g, y_rind_g, uni_y_rind_g, y_pind_g, 
 			uni_y_pind_g, reac_col_g, prod_col_g, rstoi_flat_g, pstoi_flat_g, 
-			rr_arr_g, rr_arr_p_g, comp_namelist, comp_list, Pybel_objects, 
+			rr_arr_g, rr_arr_p_g, comp_namelist, comp_list, 
 			comp_num] = eqn_interr.eqn_interr(eqn_num, 
 		eqn_list,  chem_sch_mrk)
         
@@ -143,5 +143,5 @@ def extr_mech(sch_name, chem_sch_mrk,
 		rstoi_flat_g, pstoi_flat_g, rr_arr_g, rr_arr_p_g, 
 		comp_num, RO2_indx,
 		HOMRO2_indx, comp_list, 
-		Pybel_objects, eqn_num, comp_namelist, 
+		 eqn_num, comp_namelist, 
 		erf, err_mess, con_C_indx)

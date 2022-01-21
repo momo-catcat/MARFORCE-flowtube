@@ -9,7 +9,7 @@ from water_calc import water_calc
 import write_dydt_rec
 
 
-def init_conc(num_comp, Comp0, init_conc, TEMP, PInit, Pybel_objects,
+def init_conc(num_comp, Comp0, init_conc, TEMP, PInit, 
 	 dydt_trak, rindx, pindx, num_eqn, nreac, nprod, 
 	comp_namelist, RO2_indx, HOMRO2_indx, rstoi, pstoi):
 # def init_conc(num_comp, Comp0, init_conc, TEMP, RH, PInit, Pybel_objects,
