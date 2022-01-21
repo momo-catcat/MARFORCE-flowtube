@@ -158,16 +158,14 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     dr_final = R2 / (Rgrid - 1) * 2
     x = np.arange(0, R2, dr_final) + dr_final
     rVec = np.arange(0, R2, 0.001)
-    y2 = []
-    splineres = []
-    cVec = []
+
     meanConc =[]
     for i in plot_spec:
         y_x = np.flip(c[0 : int(Rgrid / 2), -1,comp_namelist.index(i)]) # 'SA'
-        y2.append(y_x)
+
         splineres1 = interpolate.splrep(x, y_x)
-        splineres.append(splineres1)
-        cVec.append(interpolate.splev(rVec, splineres1))
+
+        cVec=interpolate.splev(rVec, splineres1)
         meanConc.append(2 * 0.001 / R2 ** 2 * np.sum(cVec * rVec))
     
     return(meanConc,c)

@@ -5,7 +5,7 @@
 import numpy as np
 import re
 import formatting
-from openbabel import pybel
+import pybel
 import sys
 
 def eqn_interr(num_eqn, eqn_list,  chem_scheme_markers):

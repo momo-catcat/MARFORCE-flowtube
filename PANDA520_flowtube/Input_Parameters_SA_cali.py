@@ -32,7 +32,7 @@ is 2.54 cm, 0.2 for the tube wall
 ''' Prepare the inputs'''
  
 # load H2O Q  
-file = os.getcwd() + '/input_files/H2O_2.csv'
+file = os.getcwd() + '/input_files/H2O_4.csv'
 
 H2O_data=pd.read_csv(file)
 
@@ -59,7 +59,7 @@ fullOrSimpleModel = 'full' # simple: Gormley&Kennedy approximation, full: flow m
 #% set the parameters for the first tube 
  
 R1 = 0.78 # cm the inner diameters of the tube
-L1 = 50  # cm
+L1 = 10  # cm
 Q1 = H2O_data['Q1'][0] # lpm
 
 #% set the parameters for the second tube 
@@ -67,7 +67,7 @@ Q1 = H2O_data['Q1'][0] # lpm
 
 R2 = 0.78/3*4
 L2 = 68 
-Q2 =  H2O_data['Q2'][1]
+Q2 =  H2O_data['Q2'][2]
 Q2 = Q1 + Q2
 
 
@@ -186,22 +186,21 @@ for i in range(8):
 # Init_comp_conc=Init_comp_conc[i]
 #% computation begins
 meanconc = []
-
 c = []
 
 for i in range(WaterFlow1.size):#range(H2SO4.size):
     if H2Oconc1[i]>0:  
         meanConc1,c1= cmd_calib5(const_comp_conc[:,i,:], params, Init_comp_conc[i])
-    meanconc.append(meanConc1) 
-    c.append(c1)
+        meanconc.append(meanConc1) 
+        c.append(c1)
     
 #%% save the modelled SA, HO2
 
 meanconc_s = pd.DataFrame(np.transpose(meanconc[1:])) 
 meanconc_s.index = plot_spec
-meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_2_mean.csv')
+meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_mean.csv')
 
-with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_2_c.txt', 'w') as f:
+with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_c.txt', 'w') as f:
     for item in c:
         f.write("%s\n" % item)
 
