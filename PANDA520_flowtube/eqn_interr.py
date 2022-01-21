@@ -69,6 +69,7 @@ def eqn_interr(num_eqn, eqn_list,  chem_scheme_markers):
 	Pybel_objects = []
 	comp_num = 0 # count the number of unique components in the chemical scheme
 # 	RO_indx = [] # empty list for holding indices of alkoxy components
+
 	# ---------------------------------------------------------------------
 
 	max_no_reac = 0. # log maximum number of reactants in a reaction
@@ -346,16 +347,16 @@ def eqn_interr(num_eqn, eqn_list,  chem_scheme_markers):
 	pindx_g = pindx
 	rstoi_g = rstoi
 	pstoi_g = pstoi
-# 	jac_stoi_g = jac_stoi
 	rstoi_flat_g = rstoi_flat
 	pstoi_flat_g = pstoi_flat
 	nreac_g = nreac
 	nprod_g = nprod
 	reac_coef_g = reac_coef
-# 	jac_den_indx_g = jac_den_indx.astype(int)
-# 	njac_g = njac.astype(int)
-# 	jac_indx_g = jac_indx
-# 	jac_indx_g = jac_indx_g.astype(int)
+
+    # jac_den_indx_g = jac_den_indx.astype(int)
+ 	# njac_g = njac.astype(int)
+ 	# jac_indx_g = jac_indx
+ 	# jac_indx_g = jac_indx_g.astype(int)
 
 # 	# same for aqueous-phase reactions ----------------------------------
 # 	# preparatory part ----------------------------------------------------
@@ -676,8 +677,8 @@ def eqn_interr(num_eqn, eqn_list,  chem_scheme_markers):
 # 		reac_col_aq = np.append(reac_col_aq, reac_col_aq[-1]+nreac[-1])
 # 		prod_col_aq = np.append(prod_col_aq, prod_col_aq[-1]+nprod[-1])
 # 	
-# 	# tag other aqueous-phase arrays
-# 	rindx_aq = rindx
+ 	# tag other aqueous-phase arrays
+ 	# rindx_aq = rindx
 # 	pindx_aq = pindx
 # 	rstoi_aq = rstoi
 # 	pstoi_aq = pstoi
