@@ -30,7 +30,7 @@ is 2.54 cm, 0.2 for the tube wall
 ''' Prepare the inputs'''
  
 # load H2O Q  
-file = os.getcwd() + '/input_files/H2O_2.csv'
+file = os.getcwd() + '/input_files/HOI_cali1.csv'
 
 H2O_data=pd.read_csv(file)
 
@@ -47,8 +47,6 @@ Qx = 20 # lpm
 N2Flow = 22 # slpm
 AirFlow = 50 #  synthetic air slpm
 O2inAir = 0.209
-SO2Flow = 5 # slpm
-SO2BottlePpm = 5000 # ppm
 
 outflowLocation = 'before' # outflow tube located before or after injecting air, water, and so2
 
@@ -58,14 +56,13 @@ fullOrSimpleModel = 'full' # simple: Gormley&Kennedy approximation, full: flow m
  
 R1 = 0.78 # cm the inner diameters of the tube
 L1 = 50  # cm
-Q1 = H2O_data['Q1'][0] # lpm
-
-#% set the parameters for the second tube 
+Q1 = H2O_data['Q1'] # lpm
+#% set the parameters for the second tube
 # if there is no second tube, then set to 0
 
 R2 = 0.78/3*4
 L2 = 68 
-Q2 =  H2O_data['Q2'][1]
+Q2 =  H2O_data['Q2']
 Q2 = Q1 + Q2
 
 
@@ -76,25 +73,21 @@ WaterFlow1 = H2O_data['H2O_1']
 if outflowLocation in 'after':
     totFlow = N2Flow + AirFlow / 1000 + WaterFlow1 / 1000 + SO2Flow / 1000
 else:
-    print(WaterFlow1.shape)
     totFlow = Q1 * np.ones(WaterFlow1.shape)
 
 O2conc1 = O2inAir * AirFlow / 1000 / totFlow * p / 1.3806488e-23 / T / 1e6
 H2Oconc1 = WaterFlow1 / 1000 / totFlow * H2O_conc(T_cel, 1).SatP[0] / 1.3806488e-23 / T / 1e6
-SO2conc1 = SO2Flow / 1000 / totFlow * SO2BottlePpm * 1e-6 * p / 1.3806488e-23 / T / 1e6
-I2conc1 =1e12 * np.ones(WaterFlow1.shape)
+I2conc1 = 6e9 * np.ones(WaterFlow1.shape)
 WaterFlow2 = H2O_data['H2O_2']   # second H2O flow 
 
 totFlow2 =Q2 * np.ones(WaterFlow1.shape)
 
 H2Oconc2 = (WaterFlow2+WaterFlow1) / 1000 / totFlow2 * H2O_conc(T_cel, 1).SatP[0] / 1.3806488e-23 / T / 1e6
 O2conc2 =  O2conc1 * Q1/Q2
-SO2conc2 = SO2conc1* Q1/Q2
 I2conc2 = I2conc1*Q1/Q2
 
 H2Oconc = np.transpose([H2Oconc1,H2Oconc2])
 O2conc =  np.transpose([O2conc1,O2conc2])
-SO2conc =  np.transpose([SO2conc1,SO2conc2])
 I2conc = np.transpose([I2conc1,I2conc2])
 #% store all the const species to const_comp_conc
 const_comp_conc = np.transpose([I2conc,H2Oconc,O2conc])
@@ -107,7 +100,8 @@ qyH2O = 1
 It = Itx * Qx / Q1
 
 OHconc = It * csH2O * qyH2O * H2Oconc1
-OHconc = OHconc.reset_index()['H2O_1']
+print(OHconc)
+# OHconc = OHconc.reset_index()['H2O_1']
 
 # store initial concentration
 Init_comp = ['OH','HO2'] # species have inital concentration 
@@ -187,9 +181,7 @@ for i in range(8):
 
 #% computation begins
 meanconc = []
-
 c = []
-
 for i in range(WaterFlow1.size):#range(H2SO4.size):
     if H2Oconc1[i]>0:
         meanConc1,c1= cmd_calib5(const_comp_conc[:,i,:], params, Init_comp_conc[i])
