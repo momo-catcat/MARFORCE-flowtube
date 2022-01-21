@@ -53,7 +53,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     [rindx, rstoi, pindx, pstoi, reac_coef, 
  			nreac, nprod, y_arr, y_rind, uni_y_rind, y_pind, 
  			uni_y_pind, reac_col, prod_col, rstoi_flat, pstoi_flat, 
- 			rr_arr, rr_arr_p, comp_namelist, comp_list, Pybel_objects, 
+ 			rr_arr, rr_arr_p, comp_namelist, comp_list,  
  			comp_num] = eqn_interr.eqn_interr(num_eqn, eqn_list, chm_sch_mrk)
     
        
@@ -63,7 +63,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     		rstoi_flat, pstoi_flat, rr_arr, rr_arr_p, 
     		comp_num, RO2_indx, 
     		HOMRO2_indx, comp_list, 
-    		Pybel_objects, eqn_num, comp_namelist, 
+    		 eqn_num, comp_namelist, 
     		erf, err_mess, con_C_indx] = eqn_pars.extr_mech(sch_name, chm_sch_mrk,
                     con_infl_nam,  const_comp,
             		drh_str, erh_str)                                                                   
@@ -109,7 +109,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
 
     [y,  y_mw, num_comp, M, y_indx_plot, dydt_vst, 
     comp_namelist,  erf, err_mess]=init_conc.init_conc(comp_num, comp_namelist, C0, T, \
-                                p, Pybel_objects, comp_namelist, rindx, pindx, \
+                                p,  comp_namelist, rindx, pindx, \
                                         num_eqn[0], nreac, nprod, comp_namelist, \
                                             RO2_indx, HOMRO2_indx, rstoi, pstoi)                                                                                                  
     # y = c[0,0,:]

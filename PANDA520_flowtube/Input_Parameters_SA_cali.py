@@ -196,7 +196,7 @@ for i in range(WaterFlow1.size):#range(H2SO4.size):
     
 #%% save the modelled SA, HO2
 
-meanconc_s = pd.DataFrame(np.transpose(meanconc[1:])) 
+meanconc_s = pd.DataFrame(np.transpose(meanconc)) 
 meanconc_s.index = plot_spec
 meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_mean.csv')
 
