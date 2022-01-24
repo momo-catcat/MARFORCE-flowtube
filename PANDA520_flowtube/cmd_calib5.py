@@ -73,7 +73,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     u, Diff_vals = get_diff_and_u(comp_namelist,Diff_setname,con_C_indx,Diff_set,T,p)
     
     
-    dt = 0.0001                        # timestep [s]
+    dt = 0.00001                        # timestep [s]
     numLoop = 500                      # number of times to run to reach the pinhole of the instrument
     timesteps = 10000                    # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
 

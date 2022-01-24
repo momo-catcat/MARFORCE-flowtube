@@ -1,6 +1,6 @@
 # this file is used for all the inputs 
-
-''' first clear all the variable that you already have'''
+#%% first clear all the variable that you
+# already have 
 for name in dir():
     if not name.startswith('_'):
         del globals()[name]
@@ -29,22 +29,53 @@ class UnitFloat(float):
 1 inch inner diamerters is 0.78/4*3
 is 2.54 cm, 0.2 for the tube wall
 '''
-''' Prepare the inputs'''
- 
+#%%Prepare the inputs
+  
 # load H2O Q  
-file = os.getcwd() + '/input_files/H2O_4.csv'
+file = os.getcwd() + '/input_files/H2O_3.csv'
 
 H2O_data=pd.read_csv(file)
 
 ''' set temperature and press '''
-T_cel = 25  # C
+# T_cel = 25  # C
+
+T_cel = float(input('temperaure C:'))
 T = T_cel + 273.15 # K
-p =96060 * 1.005 # pressure Pa
+p = 96060 * 1.005 # pressure Pa
+
+#% set the parameters for the first tube 
+flag_tube = input('how much tube you have:')
+
+if flag_tube == '2':
+    R1 = float(input('1st tube diameter:'))
+    L1 = float(input('1st tube length:'))
+    R2 = float(input('2nd tube diameter:')) 
+    L2 = float(input('2nd tube length:'))
+    Q1 = H2O_data['Q1'][0] # lpm
+    Q2 =  H2O_data['Q2'][2]
+    Q2 = Q1 + Q2
+else:
+    R1 = float(input('tube diameter:'))
+    L1 = float(input('tube length:'))
+    R2 = 0 
+    L2 = 0
+    Q1 = H2O_data['Q1'][0] # lpm
+    Q2 = 0
+#% set the parameters for the first tube 
+# R1 = 0.78 # cm the inner diameters of the tube
+# L1 = 10  # cm
+# Q1 = H2O_data['Q1'][0] # lpm
+
+#% set the parameters for the second tube 
+# if there is no second tube, then set to 0
+# R2 = 0.78/3*4
+# L2 = 68 
+# Q2 =  H2O_data['Q2'][2]
+# Q2 = Q1 + Q2
 
 # It product for cali box 
 Itx = 5.2009e10 # at Qx flow rate
 Qx = 20 # lpm
-
 
 N2Flow = 22 # slpm
 AirFlow = 50 #  synthetic air slpm
@@ -55,21 +86,6 @@ SO2BottlePpm = 5000 # ppm
 outflowLocation = 'before' # outflow tube located before or after injecting air, water, and so2
 
 fullOrSimpleModel = 'full' # simple: Gormley&Kennedy approximation, full: flow model (much slower)
-
-#% set the parameters for the first tube 
- 
-R1 = 0.78 # cm the inner diameters of the tube
-L1 = 10  # cm
-Q1 = H2O_data['Q1'][0] # lpm
-
-#% set the parameters for the second tube 
-# if there is no second tube, then set to 0
-
-R2 = 0.78/3*4
-L2 = 68 
-Q2 =  H2O_data['Q2'][2]
-Q2 = Q1 + Q2
-
 
 # calculate the conc for const species here, this file is SO2, O2, H2O 
 
@@ -85,13 +101,17 @@ O2conc1 = O2inAir * AirFlow / 1000 / totFlow * p / 1.3806488e-23 / T / 1e6
 H2Oconc1 = WaterFlow1 / 1000 / totFlow * H2O_conc(T_cel, 1).SatP[0] / 1.3806488e-23 / T / 1e6
 SO2conc1 = SO2Flow / 1000 / totFlow * SO2BottlePpm * 1e-6 * p / 1.3806488e-23 / T / 1e6
 
+
 WaterFlow2 = H2O_data['H2O_2']   # second H2O flow 
-
-totFlow2 =Q2 * np.ones(WaterFlow1.shape)
-
-H2Oconc2 = (WaterFlow2+WaterFlow1) / 1000 / totFlow2 * H2O_conc(T_cel, 1).SatP[0] / 1.3806488e-23 / T / 1e6
+totFlow2 = Q2 * np.ones(WaterFlow1.shape)
+H2Oconc2 = (WaterFlow2 + WaterFlow1) / 1000 / totFlow2 * H2O_conc(T_cel, 1).SatP[0] / 1.3806488e-23 / T / 1e6
 O2conc2 =  O2conc1 * Q1/Q2
 SO2conc2 = SO2conc1* Q1/Q2
+
+if flag_tube == '1':
+    H2Oconc2 = 0
+    O2conc2 = 0
+    SO2conc2 = 0
 
 H2Oconc = np.transpose([H2Oconc1,H2Oconc2])
 O2conc =  np.transpose([O2conc1,O2conc2])
@@ -178,14 +198,15 @@ params = {'T' : UnitFloat(T, "K"), # temperaure
           'key_spe_for_plot' : key_spe_for_plot, # key species for ploting 
           'plot_spec' : plot_spec # plot species 
           } 
-  
+#% 
 for i in range(8):
     print(list(params.keys())[i], list(params.values())[i], list(params.values())[i].unit)
-i =1 
-const_comp_conc= const_comp_conc[:,i,:]
-Init_comp_conc=Init_comp_conc[i]
-#% computation begins
+# i =1 
+# const_comp_conc= const_comp_conc[:,i,:]
+# Init_comp_conc=Init_comp_conc[i]
+#%% computation begins
 meanconc = []
+
 c = []
 
 for i in range(WaterFlow1.size):#range(H2SO4.size):
@@ -201,9 +222,9 @@ meanconc_s.index = plot_spec
 
 meanconc_s = pd.DataFrame(np.transpose(meanconc)) 
 meanconc_s.index = plot_spec
-meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_mean.csv')
+meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_3_mean.csv')
 
-with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_c.txt', 'w') as f:
+with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_3_c.txt', 'w') as f:
     for item in c:
         f.write("%s\n" % item)
 
