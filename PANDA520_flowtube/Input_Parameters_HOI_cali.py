@@ -35,10 +35,43 @@ file = os.getcwd() + '/input_files/HOI_cali1.csv'
 H2O_data=pd.read_csv(file)
 
 ''' set temperature and press '''
-T_cel = 25  # C
+T_cel = float(input('temperaure C:'))
 T = T_cel + 273.15 # K
-p =96060 * 1.005 # pressure Pa
+p = 96060 * 1.005 # pressure Pa
 
+#% set the parameters for the first tube 
+flag_tube = input('how much tube you have:')
+
+if flag_tube == '2':
+    R1 = float(input('1st tube diameter:'))
+    L1 = float(input('1st tube length:'))
+    R2 = float(input('2nd tube diameter:')) 
+    L2 = float(input('2nd tube length:'))
+    Q1 = H2O_data['Q1'][0] # lpm
+    Q2 =  H2O_data['Q2'][2] + Q1
+    # Q2 = Q1 + Q2
+else:
+    R1 = float(input('tube diameter:'))
+    L1 = float(input('tube length:'))
+    R2 = 0 
+    L2 = 0
+    Q1 = H2O_data['Q1'][0] # lpm
+    Q2 = 0
+
+#% set the parameters for the first tube 
+ 
+# R1 = 0.78 # cm the inner diameters of the tube
+# L1 = 50  # cm
+# Q1 = H2O_data['Q1'][0] # lpm
+
+# #% set the parameters for the second tube 
+# # if there is no second tube, then set to 0
+
+# R2 = 0.78/3*4
+# L2 = 68 
+# Q2 =  H2O_data['Q2'][1]
+# Q2 = Q1 + Q2
+    
 # It product for cali box 
 Itx = 5.2009e10 # at Qx flow rate
 Qx = 20 # lpm
@@ -52,6 +85,7 @@ outflowLocation = 'before' # outflow tube located before or after injecting air,
 
 fullOrSimpleModel = 'full' # simple: Gormley&Kennedy approximation, full: flow model (much slower)
 
+<<<<<<< HEAD
 #% set the parameters for the first tube 
  
 R1 = 0.78 # cm the inner diameters of the tube
@@ -64,6 +98,8 @@ R2 = 0.78/3*4
 L2 = 68 
 Q2 =  H2O_data['Q2']
 Q2 = Q1 + Q2
+=======
+>>>>>>> b796dafde0c181a7070f1514d48d9f2624db328c
 
 
 # calculate the conc for const species here, this file is SO2, O2, H2O 
@@ -173,11 +209,8 @@ params = {'T' : UnitFloat(T, "K"), # temperaure
           'plot_spec' : plot_spec # plot species 
           }
 
-
-
 for i in range(8):
     print(list(params.keys())[i], list(params.values())[i], list(params.values())[i].unit)
-
 
 #% computation begins
 meanconc = []
@@ -191,6 +224,8 @@ for i in range(WaterFlow1.size):#range(H2SO4.size):
 meanconc_s = pd.DataFrame(np.transpose(meanconc)) 
 meanconc_s.index = plot_spec
 
-meanconc_s = pd.DataFrame(np.transpose(meanconc))
-meanconc_s.index = plot_spec
-meanconc_s.to_csv('./Export_files/HOI_model_1_mean.csv')
+meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_mean.csv')
+
+with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_c.txt', 'w') as f:
+    for item in c:
+        f.write("%s\n" % item)
