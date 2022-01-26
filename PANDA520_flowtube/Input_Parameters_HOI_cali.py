@@ -30,7 +30,7 @@ is 2.54 cm, 0.2 for the tube wall
 ''' Prepare the inputs'''
  
 # load H2O Q  
-file = os.getcwd() + '/input_files/HOI_cali1.csv'
+file = os.getcwd() + '/input_files/HOI_cali_T1_25Oct21.csv'
 
 H2O_data=pd.read_csv(file)
 
@@ -42,42 +42,29 @@ p = 101000 # pressure Pa
 #% set the parameters for the first tube 
 flag_tube = 2
 
-if flag_tube == '2':
-    R1 = float(input('1st tube diameter:'))
-    L1 = float(input('1st tube length:'))
-    R2 = float(input('2nd tube diameter:')) 
-    L2 = float(input('2nd tube length:'))
-    Q1 = H2O_data['Q1'][0] # lpm
-    Q2 =  H2O_data['Q2'][2] + Q1
+if flag_tube == 2:
+    R1 = 0.78
+    L1 = 50
+    R2 = 1.04
+    L2 = 68
+    Q1 = H2O_data['Q1'].values[0] # lpm
+    Q2 =  H2O_data['Q2'].values[0] + Q1
     # Q2 = Q1 + Q2
 else:
-    R1 = float(input('tube diameter:'))
-    L1 = float(input('tube length:'))
-    R2 = 0 
+    R1 = 0.78
+    L1 = 50  
+    R2 = 0
     L2 = 0
     Q1 = H2O_data['Q1'][0] # lpm
     Q2 = 0
 
-#% set the parameters for the first tube 
- 
-# R1 = 0.78 # cm the inner diameters of the tube
-# L1 = 50  # cm
-# Q1 = H2O_data['Q1'][0] # lpm
 
-# #% set the parameters for the second tube 
-# # if there is no second tube, then set to 0
-
-# R2 = 0.78/3*4
-# L2 = 68 
-# Q2 =  H2O_data['Q2'][1]
-# Q2 = Q1 + Q2
-    
 # It product for cali box 
 Itx = 5.2009e10 # at Qx flow rate
 Qx = 20 # lpm
 
 
-N2Flow = 22 # slpm
+N2Flow = Q1 + Q2 # slpm
 AirFlow = 50 #  synthetic air slpm
 O2inAir = 0.209
 
@@ -88,7 +75,7 @@ fullOrSimpleModel = 'full' # simple: Gormley&Kennedy approximation, full: flow m
 
 # calculate the conc for const species here, this file is SO2, O2, H2O 
 
-WaterFlow1 = H2O_data['H2O_1']
+WaterFlow1 = H2O_data['H2O_cali']
 
 if outflowLocation in 'after':
     totFlow = N2Flow + AirFlow / 1000 + WaterFlow1 / 1000 + SO2Flow / 1000
@@ -97,14 +84,17 @@ else:
 
 O2conc1 = O2inAir * AirFlow / 1000 / totFlow * p / 1.3806488e-23 / T / 1e6
 H2Oconc1 = WaterFlow1 / 1000 / totFlow * H2O_conc(T_cel, 1).SatP[0] / 1.3806488e-23 / T / 1e6
-I2conc1 = 6e9 * np.ones(WaterFlow1.shape)
-WaterFlow2 = H2O_data['H2O_2']   # second H2O flow 
+I2conc1 = H2O_data['I2_Q1']
 
-totFlow2 =Q2 * np.ones(WaterFlow1.shape)
+
+## tube section 2
+WaterFlow2 = H2O_data['H2O_free']   # second H2O flow
+
+totFlow2 = 22.5
 
 H2Oconc2 = (WaterFlow2+WaterFlow1) / 1000 / totFlow2 * H2O_conc(T_cel, 1).SatP[0] / 1.3806488e-23 / T / 1e6
 O2conc2 =  O2conc1 * Q1/Q2
-I2conc2 = I2conc1*Q1/Q2
+I2conc2 = H2O_data['I2_Q2']
 
 H2Oconc = np.transpose([H2Oconc1,H2Oconc2])
 O2conc =  np.transpose([O2conc1,O2conc2])
@@ -120,8 +110,6 @@ qyH2O = 1
 It = Itx * Qx / Q1
 
 OHconc = It * csH2O * qyH2O * H2Oconc1
-print(OHconc)
-# OHconc = OHconc.reset_index()['H2O_1']
 
 # store initial concentration
 Init_comp = ['OH','HO2'] # species have inital concentration 
@@ -167,8 +155,7 @@ Init_comp = ['OH','HO2'] # species have inital concentration
 const_comp = ['I2','H2O','O2']# species have constant concentration
 drh_str = str('0.*TEMP')
 erh_str = str('0.*TEMP')
-
-params = {'T' : UnitFloat(T, "K"), # temperaure 
+params = {'T' : UnitFloat(T, "K"), # temperaure
           'p': UnitFloat(p, "Pa"), # pressure pa
           'R1': UnitFloat(R1, "cm"), # diameters for frist tube 
           'R2': UnitFloat(R2, "cm"), # diameters for second tube 
