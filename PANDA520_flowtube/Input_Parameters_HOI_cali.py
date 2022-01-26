@@ -40,7 +40,7 @@ T = T_cel + 273.15 # K
 p = 101000 # pressure Pa
 
 #% set the parameters for the first tube 
-flag_tube = input('how much tube you have:')
+flag_tube = 2
 
 if flag_tube == '2':
     R1 = float(input('1st tube diameter:'))
@@ -84,22 +84,6 @@ O2inAir = 0.209
 outflowLocation = 'before' # outflow tube located before or after injecting air, water, and so2
 
 fullOrSimpleModel = 'full' # simple: Gormley&Kennedy approximation, full: flow model (much slower)
-
-<<<<<<< HEAD
-#% set the parameters for the first tube 
- 
-R1 = 0.78 # cm the inner diameters of the tube
-L1 = 50  # cm
-Q1 = H2O_data['Q1'] # lpm
-#% set the parameters for the second tube
-# if there is no second tube, then set to 0
-
-R2 = 0.78/3*4
-L2 = 68 
-Q2 =  H2O_data['Q2']
-Q2 = Q1 + Q2
-=======
->>>>>>> b796dafde0c181a7070f1514d48d9f2624db328c
 
 
 # calculate the conc for const species here, this file is SO2, O2, H2O 
