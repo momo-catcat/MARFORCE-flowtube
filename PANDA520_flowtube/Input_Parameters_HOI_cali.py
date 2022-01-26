@@ -35,9 +35,9 @@ file = os.getcwd() + '/input_files/HOI_cali1.csv'
 H2O_data=pd.read_csv(file)
 
 ''' set temperature and press '''
-T_cel = float(input('temperaure C:'))
+T_cel = 23
 T = T_cel + 273.15 # K
-p = 96060 * 1.005 # pressure Pa
+p = 101000 # pressure Pa
 
 #% set the parameters for the first tube 
 flag_tube = input('how much tube you have:')
@@ -224,7 +224,7 @@ for i in range(WaterFlow1.size):#range(H2SO4.size):
 meanconc_s = pd.DataFrame(np.transpose(meanconc)) 
 meanconc_s.index = plot_spec
 
-meanconc_s.to_csv('Export_files/HOI_test.csv')
+meanconc_s.to_csv('./Export_files/HOI_test.csv')
 
 # with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_c.txt', 'w') as f:
 #     for item in c:

@@ -87,20 +87,6 @@ outflowLocation = 'before' # outflow tube located before or after injecting air,
 
 fullOrSimpleModel = 'full' # simple: Gormley&Kennedy approximation, full: flow model (much slower)
 
-#% set the parameters for the first tube
- 
-R1 = 0.78 # cm the inner diameters of the tube
-L1 = 10  # cm
-Q1 = H2O_data['Q1'][0] # lpm **************************Why [0] is needed here?
-
-#% set the parameters for the second tube 
-# if there is no second tube, then set to 0
-
-R2 = 0.78/3*4
-L2 = 68 
-Q2 =  H2O_data['Q2'][2] # ********************************Why [2] is needed here?
-Q2 = Q1 + Q2
-
 
 # calculate the conc for const species here, this file is SO2, O2, H2O
 
