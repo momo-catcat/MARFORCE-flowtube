@@ -6,9 +6,10 @@ KMT06 = 1 + (1.40D-21*EXP(2200/TEMP)*H2O);
 {2.} I2 + OH = HOI + I : 1.8D-10 ;  #Saiz-Lopez 2014
 {3.} HI + OH = H2O + I : 1.6D-11 * EXP(440 / TEMP) ; #Saiz-Lopez 2014
 {4.} HOI + OH = H2O + IO : 2.0D-13 ; #Saiz-Lopez 2014
+{5.} IO + OH = HO2 + I : 1.0D-10 ; #Saiz-Lopez 2014
 IO + IO = OIO + I : 5.4D-11 * EXP(180 / TEMP)  #Bloss et al 2001
-{5.} OH + OH = H2O2 : 2 * 6.9D-31 * (TEMP / 300) ** -0.8 * p / 1.3806488D-23 / TEMP / 1D6 ;
-{6.} OH + OH  = H2O  : 6.2D-14 * (TEMP / 298) ** 2.6 * EXP(945 / TEMP) ;
-{7.} OH + HO2 = H2O + O2  : 4.8D-11 * EXP(250 / TEMP) ;
-{8.} HO2 + HO2 = H2O2  : 2.20D - 13 * KMT06 * EXP(600 / TEMP) + 1.90D-33 * M * KMT06 * EXP(980 / TEMP)
+{6.} OH + OH = H2O2 : 2 * 6.9D-31 * (TEMP / 300) ** -0.8 * p / 1.3806488D-23 / TEMP / 1D6 ;
+{7.} OH + OH  = H2O  : 6.2D-14 * (TEMP / 298) ** 2.6 * EXP(945 / TEMP) ;
+{8.} OH + HO2 = H2O + O2  : 4.8D-11 * EXP(250 / TEMP) ;
+{9.} HO2 + HO2 = H2O2  : 2.20D - 13 * KMT06 * EXP(600 / TEMP) + 1.90D-33 * M * KMT06 * EXP(980 / TEMP)
 

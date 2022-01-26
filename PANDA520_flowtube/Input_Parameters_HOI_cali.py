@@ -138,11 +138,11 @@ Zgrid = np.array(40).astype(int)           # number of grid points in tube lengt
 Rgrid = np.array(80).astype(int)           # number of grid points in tube radius direction
 
 # chemistry part
-sch_name = os.getcwd()+ '/input_mechanism/HOI_cali_chem.txt'
+sch_name = os.getcwd()+ '/input_mechanism/HOI_cali_chem_simp.txt'
 chm_sch_mrk = ['{', 'RO2', '+', '', '', ';', '+', ';', '$', '{', ':', ';','}']
 formula = ['OH','$HOI$','$\mathdefault{HO_2}$','$I$','IO']
 key_spe_for_plot = 'HOI'
-plot_spec = ['OH','HOI','HO2','I','IO'] # plot species
+plot_spec = ['OH','HOI','HO2','I','I2'] # plot species
 Init_comp = ['OH','HO2'] # species have inital concentration
 const_comp = ['I2','H2O','O2']# species have constant concentration
 drh_str = str('0.*TEMP')
@@ -190,3 +190,7 @@ for i in range(WaterFlow1.size):#range(H2SO4.size):
 
 meanconc_s = pd.DataFrame(np.transpose(meanconc)) 
 meanconc_s.index = plot_spec
+
+meanconc_s = pd.DataFrame(np.transpose(meanconc))
+meanconc_s.index = plot_spec
+meanconc_s.to_csv('./Export_files/HOI_model_1_mean.csv')
