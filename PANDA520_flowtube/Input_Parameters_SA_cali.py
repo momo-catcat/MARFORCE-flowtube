@@ -87,7 +87,8 @@ outflowLocation = 'before' # outflow tube located before or after injecting air,
 
 fullOrSimpleModel = 'full' # simple: Gormley&Kennedy approximation, full: flow model (much slower)
 
-# calculate the conc for const species here, this file is SO2, O2, H2O 
+
+# calculate the conc for const species here, this file is SO2, O2, H2O
 
 WaterFlow1 = H2O_data['H2O_1']
 
