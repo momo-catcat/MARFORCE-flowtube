@@ -224,8 +224,8 @@ for i in range(WaterFlow1.size):#range(H2SO4.size):
 meanconc_s = pd.DataFrame(np.transpose(meanconc)) 
 meanconc_s.index = plot_spec
 
-meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_mean.csv')
+meanconc_s.to_csv('Export_files/HOI_test.csv')
 
-with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_c.txt', 'w') as f:
-    for item in c:
-        f.write("%s\n" % item)
+# with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_c.txt', 'w') as f:
+#     for item in c:
+#         f.write("%s\n" % item)
