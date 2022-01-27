@@ -25,3 +25,6 @@ add_str = '_'
 for m in s:
     if m.isdigit():
         add_str = add_str + m
+        
+        s = s + add_str
+        

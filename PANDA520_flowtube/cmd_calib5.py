@@ -37,7 +37,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     con_infl_nam = const_comp
     Zgrid = params['Zgrid']        # number of grid points in tube length direction
     Rgrid = params['Rgrid']         # number of grid points in tube radius direction
-    # formula = params['formula'] # the formula for the plots
+    formula = params['formula'] # the formula for the plots
     key_spe_for_plot = params['key_spe_for_plot'] # key species for ploting 
     plot_spec = params['plot_spec'] # plot species 
 
