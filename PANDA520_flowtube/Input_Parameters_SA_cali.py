@@ -168,7 +168,7 @@ Rgrid = np.array(80).astype(int)           # number of grid points in tube radiu
 # chemistry part 
 sch_name = os.getcwd()+ '/input_mechanism/SO2_SA.txt'
 chm_sch_mrk = ['{', 'RO2', '+', '', '', ';', '+', ';', '$', '{', ':', ';','}']
-formula = ['OH','$\mathdefault{HSO_3}$','$\mathdefault{HO_2}$','$\mathdefault{SO_3}$','SA']
+# formula = ['OH','$\mathdefault{HSO_3}$','$\mathdefault{HO_2}$','$\mathdefault{SO_3}$','SA']
 key_spe_for_plot = 'H2SO4'
 plot_spec = ['OH','HSO3','HO2','SO3','H2SO4'] # plot species 
 const_comp = ['SO2','H2O','O2']# species have constant concentration
@@ -195,7 +195,7 @@ params = {'T' : UnitFloat(T, "K"), # temperaure
           'Init_comp': Init_comp, # species have inital concentration 
           'Zgrid': Zgrid, # number of grid points in tube length direction
           'Rgrid': Rgrid, # number of grid points in tube radius direction
-          'formula': formula, # the formula for the plots
+          # 'formula': formula, # the formula for the plots
           'key_spe_for_plot' : key_spe_for_plot, # key species for ploting 
           'plot_spec' : plot_spec # plot species 
           } 
