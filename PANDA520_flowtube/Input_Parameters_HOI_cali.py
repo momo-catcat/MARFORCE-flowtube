@@ -47,15 +47,15 @@ if flag_tube == 2:
     L1 = 50
     R2 = 1.04
     L2 = 68
-    Q1 = H2O_data['Q1'].values[0] # lpm
-    Q2 =  H2O_data['Q2'].values[0] + Q1
+    Q1 = H2O_data['Q1'].values[0] /1000 # lpm
+    Q2 =  H2O_data['Q2'].values[0] /1000 + Q1
     # Q2 = Q1 + Q2
 else:
     R1 = 0.78
     L1 = 50  
     R2 = 0
     L2 = 0
-    Q1 = H2O_data['Q1'][0] # lpm
+    Q1 = H2O_data['Q1'][0]/1000 # lpm
     Q2 = 0
 
 
@@ -148,7 +148,7 @@ Rgrid = np.array(80).astype(int)           # number of grid points in tube radiu
 # chemistry part
 sch_name = os.getcwd()+ '/input_mechanism/HOI_cali_chem_simp.txt'
 chm_sch_mrk = ['{', 'RO2', '+', '', '', ';', '+', ';', '$', '{', ':', ';','}']
-formula = ['OH','$HOI$','$\mathdefault{HO_2}$','$I$','IO']
+formula = ['OH','$HOI$','$\mathdefault{HO_2}$','$I$','I2']
 key_spe_for_plot = 'HOI'
 plot_spec = ['OH','HOI','HO2','I','I2'] # plot species
 Init_comp = ['OH','HO2'] # species have inital concentration
@@ -175,7 +175,7 @@ params = {'T' : UnitFloat(T, "K"), # temperaure
           'Init_comp': Init_comp, # species have inital concentration 
           'Zgrid': Zgrid, # number of grid points in tube length direction
           'Rgrid': Rgrid, # number of grid points in tube radius direction
-          'formula': formula, # the formula for the plots
+          # 'formula': formula, # the formula for the plots
           'key_spe_for_plot' : key_spe_for_plot, # key species for ploting 
           'plot_spec' : plot_spec # plot species 
           }
@@ -189,8 +189,8 @@ c = []
 for i in range(WaterFlow1.size):#range(H2SO4.size):
     if H2Oconc1[i]>0:
         meanConc1,c1= cmd_calib5(const_comp_conc[:,i,:], params, Init_comp_conc[i])
-        meanconc = [meanconc,meanConc1]
-        c = [c,c1]
+        meanconc.append(meanConc1) 
+        c.append(c1)
 
 meanconc_s = pd.DataFrame(np.transpose(meanconc)) 
 meanconc_s.index = plot_spec
