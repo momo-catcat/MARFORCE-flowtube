@@ -136,7 +136,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
         plt.rcParams.update({'font.size':13,'font.weight':'bold','font.family':'serif','font.serif':'Times New Roman'})
 
         axs = axs.ravel()
-        formula = plot_spec
+        # formula = plot_spec
         for i in range(len(plot_spec)):
             axs[i].pcolor(np.linspace(0, L2+L1, Zgrid),np.linspace(-R1, R1, Rgrid), c[:, : , comp_plot_index[i]], shading = 'nearest',cmap='jet')
             axs[i].pcolor(np.linspace(0, L2+L1, Zgrid),np.linspace(-R1, R2, Rgrid), c[:, : , comp_plot_index[i]], shading = 'nearest',cmap='jet')
