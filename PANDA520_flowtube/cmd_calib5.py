@@ -37,7 +37,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     con_infl_nam = const_comp
     Zgrid = params['Zgrid']        # number of grid points in tube length direction
     Rgrid = params['Rgrid']         # number of grid points in tube radius direction
-    # formula = params['formula'] # the formula for the plots
+    formula = params['formula'] # the formula for the plots
     key_spe_for_plot = params['key_spe_for_plot'] # key species for ploting 
     plot_spec = params['plot_spec'] # plot species 
 
@@ -136,7 +136,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
         plt.rcParams.update({'font.size':13,'font.weight':'bold','font.family':'serif','font.serif':'Times New Roman'})
 
         axs = axs.ravel()
-        formula = plot_spec
+        # formula = plot_spec
         for i in range(len(plot_spec)):
             axs[i].pcolor(np.linspace(0, L2+L1, Zgrid),np.linspace(-R1, R1, Rgrid), c[:, : , comp_plot_index[i]], shading = 'nearest',cmap='jet')
             axs[i].pcolor(np.linspace(0, L2+L1, Zgrid),np.linspace(-R1, R2, Rgrid), c[:, : , comp_plot_index[i]], shading = 'nearest',cmap='jet')
