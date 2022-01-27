@@ -47,15 +47,15 @@ if flag_tube == 2:
     L1 = 50
     R2 = 1.04
     L2 = 68
-    Q1 = H2O_data['Q1'].values[0] /1000 # lpm
-    Q2 =  H2O_data['Q2'].values[0] /1000 + Q1
+    Q1 = H2O_data['Q1'].values[0] # lpm
+    Q2 =  H2O_data['Q2'].values[0] + Q1
     # Q2 = Q1 + Q2
 else:
     R1 = 0.78
     L1 = 50  
     R2 = 0
     L2 = 0
-    Q1 = H2O_data['Q1'][0]/1000 # lpm
+    Q1 = H2O_data['Q1'][0] # lpm
     Q2 = 0
 
 
