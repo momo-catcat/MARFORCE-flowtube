@@ -71,13 +71,6 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     RO2_indi = RO2_indices.RO2_indices(comp_namelist, RO2_names)
                                                              
     u, Diff_vals = get_diff_and_u(comp_namelist,Diff_setname,con_C_indx,Diff_set,T,p)
-<<<<<<< HEAD
-        
-    dt = 0.0001                        # timestep [s]
-=======
-    
-    
->>>>>>> 8071d328726d30baef4e6689ea0ac634c287df48
     numLoop = 500                      # number of times to run to reach the pinhole of the instrument
     timesteps = 10000                    # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
 

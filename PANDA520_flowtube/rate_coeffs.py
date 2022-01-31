@@ -1,6 +1,10 @@
 '''module for calculating reaction rate coefficients (automatically generated)'''
 # module to hold expressions for calculating rate coefficients # 
+<<<<<<< HEAD
 # created at 2022-01-31 13:00:22.468783
+=======
+# created at 2022-01-31 12:24:44.788648
+>>>>>>> 0bf47a9a943656f8ab1b494ad9547d4a91dac056
 
 import numpy
 
@@ -35,6 +39,7 @@ def evaluate_rates(RO2, TEMP, lightm, M, N2, H2O,  O2, NO, HO2, NO3,p):
 	J = numpy.zeros(52) 
 	J[1] = 1e-5 
 
+<<<<<<< HEAD
 	rate_values = numpy.zeros((3))
 	
 	# reac_coef has been formatted so that python can recognize it
@@ -42,5 +47,26 @@ def evaluate_rates(RO2, TEMP, lightm, M, N2, H2O,  O2, NO, HO2, NO3,p):
 	rate_values[0] = 1.8e-10
 	rate_values[1] = 2 * 6.9e-31 * (TEMP / 300) ** -0.8 * p / 1.3806488e-23 / TEMP / 1e6
 	rate_values[2] = 4.8e-11 * numpy.exp(250 / TEMP)
+=======
+	rate_values = numpy.zeros((15))
+	
+	# reac_coef has been formatted so that python can recognize it
+	# gas-phase reactions
+	rate_values[0] = 0.11 * 5.4e-11 * numpy.exp(180 / TEMP)
+	rate_values[1] = 0.38 * 5.4e-11 * numpy.exp(180 / TEMP)
+	rate_values[2] = 0.45 * 5.4e-11 * numpy.exp(180 / TEMP)
+	rate_values[3] = 2.1e-10
+	rate_values[4] = w1a * numpy.exp(w2a * TEMP)
+	rate_values[5] = w1b * numpy.exp(w2b * TEMP)
+	rate_values[6] = 1.0e-10
+	rate_values[7] = 1.6e-11 * numpy.exp(440 / TEMP)
+	rate_values[8] = 2.0e-13
+	rate_values[9] = 1.47e-11 * numpy.exp(- 1090 / TEMP)
+	rate_values[10] = 1.4e-11 * numpy.exp(540 / TEMP)
+	rate_values[11] = 2 * 6.9e-31 * (TEMP / 300) ** -0.8 * p / 1.3806488e-23 / TEMP / 1e6
+	rate_values[12] = 6.2e-14 * (TEMP / 298) ** 2.6 * numpy.exp(945 / TEMP)
+	rate_values[13] = 4.8e-11 * numpy.exp(250 / TEMP)
+	rate_values[14] = 2.20D - 13 * KMT06 * numpy.exp(600 / TEMP) + 1.90e-33 * M * KMT06 * numpy.exp(980 / TEMP)
+>>>>>>> 0bf47a9a943656f8ab1b494ad9547d4a91dac056
 	
 	return(rate_values, erf, err_mess)
