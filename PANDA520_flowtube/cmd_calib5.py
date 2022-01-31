@@ -2,7 +2,6 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     #%% import packages
     import numpy as np
     import RO2_conc
-    import rate_coeffs
     import sch_interr
     import eqn_interr
     import eqn_pars
@@ -111,7 +110,8 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
                                             RO2_indx, HOMRO2_indx, rstoi, pstoi)                                                                                                  
     # y = c[0,0,:]
 
-    RO2conc = RO2_conc.RO2_conc(RO2_indi,y)    
+    import rate_coeffs
+    RO2conc = RO2_conc.RO2_conc(RO2_indi,y)
     op = jude_species(y,comp_namelist)
     rate_values, erf, err_mess = rate_coeffs.evaluate_rates(RO2conc, T, 0, M, M*0.7809, op[0],op[1],op[2],op[3],op[4], p)
 
