@@ -40,7 +40,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     # formula = params['formula'] # the formula for the plots
     key_spe_for_plot = params['key_spe_for_plot'] # key species for ploting 
     plot_spec = params['plot_spec'] # plot species 
-
+    dt = params['dt']
     H2Oconc = const_comp_conc[:,const_comp.index('H2O')]  
     
  	# read the file and store everything into a list   
@@ -73,7 +73,6 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     u, Diff_vals = get_diff_and_u(comp_namelist,Diff_setname,con_C_indx,Diff_set,T,p)
     
     
-    dt = 0.0001                        # timestep [s]
     numLoop = 500                      # number of times to run to reach the pinhole of the instrument
     timesteps = 10000                    # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
 
