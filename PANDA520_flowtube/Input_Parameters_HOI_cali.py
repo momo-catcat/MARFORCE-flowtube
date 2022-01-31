@@ -97,6 +97,11 @@ H2Oconc2 = (WaterFlow2+WaterFlow1) / 1000 / totFlow2 * H2O_conc(T_cel, 1).SatP[0
 O2conc2 =  O2conc1 * Q1/Q2
 I2conc2 = H2O_data['I2_Q2']
 
+if flag_tube == '1':
+    H2Oconc2 = pd.Series(np.zeros(WaterFlow1.shape))
+    O2conc2 = pd.Series(np.zeros(WaterFlow1.shape))
+    I2conc2 = pd.Series(np.zeros(WaterFlow1.shape))
+
 H2Oconc = np.transpose([H2Oconc1,H2Oconc2])
 O2conc =  np.transpose([O2conc1,O2conc2])
 I2conc = np.transpose([I2conc1,I2conc2])

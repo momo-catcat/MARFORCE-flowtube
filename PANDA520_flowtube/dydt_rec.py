@@ -2,11 +2,7 @@
 # changes due to gas-phase photochemistry and partitioning are included; 
 # generated in init_conc and treats loss from gas-phase as negative
 
-<<<<<<< HEAD
-# File Created at 2022-01-31 12:00:59.198403
-=======
-# File Created at 2022-01-31 11:09:43.363106
->>>>>>> 8071d328726d30baef4e6689ea0ac634c287df48
+# File Created at 2022-01-31 13:00:22.469675
 
 import numpy as np 
 

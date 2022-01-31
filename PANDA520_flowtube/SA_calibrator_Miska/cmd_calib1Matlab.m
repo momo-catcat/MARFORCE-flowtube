@@ -1,4 +1,4 @@
-function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSimpleModel)  %don't use mean weighted H2SO4. The method is not understood yet.
+function [meanH2SO4,c]=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSimpleModel)  %don't use mean weighted H2SO4. The method is not understood yet.
     %% parameters (that can be changed by the user)
 
     if H2Oconc==0
@@ -50,9 +50,9 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
     %Q = 125; % Q = 167;                            % flow rate [cm^3/s]
 
     % solving parameters
-    dt = 0.0001;                       % timestep [s]
+    dt = 0.00001;                       % timestep [s]
     numLoop = 500;                       % number of times to run, a higher number than 1 will plot intermediate results
-    timesteps = 1000;                   % number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
+    timesteps = 10000;                   % number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
     Zgrid = 40;                         % number of grid points in tube length direction
     Rgrid = 80;                         % number of grid points in tube radius direction
 
@@ -158,10 +158,12 @@ function meanH2SO4=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,fullOrSi
     rVec=0:0.001:R;
     cVec=ppval(splineres, 0:0.001:R);
     meanH2SO4=2*0.001/R^2*sum(cVec.*rVec)
-    cVec=ppval(spline(x,y{1}), 0:0.001:R);
-    meanHSO3=2*0.001/R^2*sum(cVec.*rVec)
-    cVec=ppval(spline(x,y{1}), 0:0.001:R);
-    meanSO3=2*0.001/R^2*sum(cVec.*rVec)
+%     cVec=ppval(spline(x,y{1}), 0:0.001:R);
+%     meanHSO3=2*0.001/R^2*sum(cVec.*rVec)
+%     cVec=ppval(spline(x,y{2}), 0:0.001:R);
+%     meanSO3=2*0.001/R^2*sum(cVec.*rVec)
+%     cVec=ppval(spline(x,y{3}), 0:0.001:R);
+%     meanSO3=2*0.001/R^2*sum(cVec.*rVec)  
 %     meanWeightedH2SO4=4*0.001/R^2*sum(cVec.*rVec.*(1-rVec.^2/R^2))
 
     %{

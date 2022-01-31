@@ -31,7 +31,7 @@ is 2.54 cm, 0.2 for the tube wall
 #%% Prepare the inputs
   
 # load H2O Q  
-file = os.getcwd() + '/input_files/H2O_2.csv'
+file = os.getcwd() + '/input_files/test.csv'
 
 H2O_data = pd.read_csv(file)
 
@@ -205,7 +205,7 @@ for i in range(8):
 # const_comp_conc= const_comp_conc[:,i,:]
 # Init_comp_conc=Init_comp_conc[i]
 
-#%% computation begins
+#% computation begins
 meanconc = []
 
 c = []
@@ -231,9 +231,7 @@ with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_f
         f.write("%s\n" % item)
 
 
-# [4.63329389e+06 5.41992198e+07 2.70230841e+07 4.06223710e+07
-#  5.41992198e+07 6.77645075e+07 8.13219526e+07 9.48731668e+07
-#  1.08418962e+08 8.13219526e+07 2.70230841e+07]
+
 #%% check the specifiy species
 import plot_species
 plot_species.plot(c,L1,L2,ID1,ID2,'SA') # need to change

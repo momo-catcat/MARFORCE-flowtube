@@ -5,7 +5,7 @@
 T = 298.15; % K
 p = 96060*1.005; % Pa
 
-ID = 7.8*2; % mm
+ID = 7.8; % mm
 L = 1500; % mm
 Q = 22; % lpm, not slpm
 
@@ -39,9 +39,9 @@ SO2conc = SO2Flow/1000./totFlow*SO2BottlePpm*1e-6*p/1.3806488e-23/T/1e6;
 It = Itx*Qx/Q;
 
 H2SO4 = zeros(size(WaterFlow));
-
+c = zeros(size(WaterFlow));
 for i=1:numel(H2SO4)
-    [H2SO4(i),c] =cmd_calib1Matlab(O2conc(i),H2Oconc(i),SO2conc(i),ID/10/2,L/10,Q*1000/60,It,T,p,fullOrSimpleModel);
+    H2SO4(i),c(i)=cmd_calib1Matlab(O2conc(i),H2Oconc(i),SO2conc(i),ID/10/2,L/10,Q*1000/60,It,T,p,fullOrSimpleModel);
 end
 
 disp(H2SO4)
