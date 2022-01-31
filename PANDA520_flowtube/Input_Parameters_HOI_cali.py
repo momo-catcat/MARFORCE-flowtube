@@ -30,7 +30,8 @@ is 2.54 cm, 0.2 for the tube wall
 ''' Prepare the inputs'''
  
 # load H2O Q  
-file = os.getcwd() + '/input_files/HOI_cali_T1_25Oct21.csv'
+# file = os.getcwd() + '/input_files/HOI_cali_T1_25Oct21.csv'
+file = os.getcwd() + '/input_files/HOI_cali_T2_20Nov21.csv'
 
 H2O_data=pd.read_csv(file)
 
@@ -163,7 +164,8 @@ params = {'T' : UnitFloat(T, "K"), # temperaure
           'L2': UnitFloat(L2, "cm"), # length for frist tube 
           'Q1': UnitFloat(Q1, "lpm"), # flow for frist tube 
           'Q2': UnitFloat(Q2, "lpm"), # flow for second tube
-          'Diff_setname': Diff_setname, # diffusion 
+          'dt' : 0.0001, # plot species
+          'Diff_setname': Diff_setname, # diffusion
           'Diff_set': Diff_set,
           # 'It': It, # it product for calculation 
           'fullOrSimpleModel': fullOrSimpleModel, #Gormley&Kennedy approximation, full: flow model (much slower)
@@ -192,10 +194,10 @@ for i in range(WaterFlow1.size):#range(H2SO4.size):
         meanconc.append(meanConc1) 
         c.append(c1)
 
-meanconc_s = pd.DataFrame(np.transpose(meanconc)) 
+meanconc_s = pd.DataFrame(meanconc)
 meanconc_s.index = plot_spec
 
-meanconc_s.to_csv('./Export_files/HOI_test.csv')
+meanconc_s.to_csv('./Export_files/HOI_cali_20Nov21.csv')
 
 # with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_c.txt', 'w') as f:
 #     for item in c:

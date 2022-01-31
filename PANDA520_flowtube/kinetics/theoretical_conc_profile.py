@@ -35,10 +35,23 @@ def conc_profile_Alonso(R, r, MM, rho, L, Q, P = 101000, T = 298.15):
     return(conc_prof)
 
 
-R = 0.0125
-conc_prof = conc_profile_Alonso(R, np.linspace(0, R, 100), 176, 4600, 2, 11 / 60 / 1000)
-
-# print(conc_prof)
+R = 0.0078
+conc_prof = conc_profile_Alonso(R, np.linspace(0, R, 100), 176, 4600, 2, 10  / 60 / 1000)
+## import theoretical value
+import pandas as pd
+prof_conc_theory = pd.read_csv('../Export_files/Theoretical_model.csv')
 
 plt.plot(np.linspace(0, R, 100), conc_prof)
+plt.plot(prof_conc_theory.R/100, prof_conc_theory.SA  / 1e8)
+plt.legend(['Theory','Model'])
 plt.show()
+
+
+##data export
+file_path = '/Users/momo/Documents/science/publication/IO3_measurement/data/Figures/Model_kinetic_validation.xlsx'
+Export_data = pd.concat([pd.DataFrame({'Theory_R': np.linspace(0,R,100)}),
+                           pd.DataFrame({'Theory_SA_remain': conc_prof}),
+                           pd.DataFrame({'Model_R': prof_conc_theory.R/100}),
+                           pd.DataFrame({'Model_SA_remain': prof_conc_theory.SA / 1e8})], axis = 1)
+
+Export_data.to_excel(file_path)

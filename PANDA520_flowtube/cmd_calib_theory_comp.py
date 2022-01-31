@@ -1,4 +1,4 @@
-def cmd_calib5(const_comp_conc, params, Init_comp_conc):       
+def cmd_calib_theory_comp(const_comp_conc, params, Init_comp_conc):
     #%% import packages
     import numpy as np
     import RO2_conc
@@ -13,9 +13,10 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     from judg_spe_reac_rates import jude_species as jude_species
     import matplotlib.pyplot as plt
     from scipy import interpolate
-    from odesolve3 import odesolve as odesolve
+    from odesolve_theory_comp import odesolve as odesolve
     from get_diff_and_u import get_diff_and_u
     from get_formula import get_formula
+    import pandas as pd
         
     #% get the inputs 
     T = params['T'] # constant species
@@ -40,8 +41,8 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     # formula = params['formula'] # the formula for the plots
     key_spe_for_plot = params['key_spe_for_plot'] # key species for ploting 
     plot_spec = params['plot_spec'] # plot species 
-    dt = params['dt']
-    H2Oconc = const_comp_conc[:,const_comp.index('H2O')]  
+
+    H2Oconc = const_comp_conc[1]
     
  	# read the file and store everything into a list   
     f_open_eqn = open(sch_name, mode='r') # open the chemical scheme file
@@ -71,13 +72,9 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     RO2_indi = RO2_indices.RO2_indices(comp_namelist, RO2_names)
                                                              
     u, Diff_vals = get_diff_and_u(comp_namelist,Diff_setname,con_C_indx,Diff_set,T,p)
-<<<<<<< HEAD
-        
-    dt = 0.0001                        # timestep [s]
-=======
     
     
->>>>>>> 8071d328726d30baef4e6689ea0ac634c287df48
+    dt = 0.00001                        # timestep [s]
     numLoop = 500                      # number of times to run to reach the pinhole of the instrument
     timesteps = 10000                    # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
 
@@ -98,12 +95,16 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     Rtot = np.zeros([int(Rgrid),int(Zgrid),comp_num])
     Rtot[:,0:int(Zgrid*L1/(L2+L1)),:] = R1
     Rtot[:,int(Zgrid*L1/(L2+L1)):,:] =  R2
-    
+
+    temp_const = np.zeros([2, len(const_comp_conc)])
+    temp_const[0,:] = const_comp_conc
+    temp_const[1,:] = const_comp_conc
+    const_comp_conc = temp_const
     const_comp_gird = cal_const_comp_conc.cal_const_comp_conc(Rgrid, Zgrid, const_comp_conc, L1,L2, const_comp)
           
     c = np.zeros([Rgrid, Zgrid, comp_num])
     for i in Init_comp:
-        c[:, 0, comp_namelist.index(i)] = Init_comp_conc[Init_comp.index(i)]  # set [OH] at z = 0 # set [HO2] at z = 0. This equals OH conc
+        c[:, 0, comp_namelist.index(i)] = Init_comp_conc  # set [OH] at z = 0 # set [HO2] at z = 0. This equals OH conc
     for i in const_comp:
         c[:,:,comp_namelist.index(i)] = const_comp_gird[const_comp.index(i)]  
 
@@ -123,8 +124,6 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     rate_values, erf, err_mess = rate_coeffs.evaluate_rates(RO2conc, T, 0, M, M*0.7809, op[0],op[1],op[2],op[3],op[4], p)
 
     #%% plot
-    if R2 == 0:
-        R2 = R1
     for j in range(numLoop):
         c1 = c.copy()
         old = c1[:, -1 , comp_namelist.index( key_spe_for_plot)]
@@ -157,7 +156,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
         plt.pause(1)  
 
         print(['t = ' + str(tim) + str(key_spe_for_plot) + " difference: " + str(np.sum(new - old))])         
-        
+
         if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):
             break
 
@@ -173,5 +172,9 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
 
         cVec=interpolate.splev(rVec, splineres1)
         meanConc.append(2 * 0.001 / R2 ** 2 * np.sum(cVec * rVec))
-    
+        if i == 'H2SO4':
+            prof_conc = pd.DataFrame({'R': rVec, 'SA': cVec})
+            prof_conc.to_csv('./Export_files/Theoretical_model.csv')
+    #print the profile out
+
     return(meanConc,c)
