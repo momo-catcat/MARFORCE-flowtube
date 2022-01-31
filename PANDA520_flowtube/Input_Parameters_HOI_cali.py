@@ -147,7 +147,7 @@ Zgrid = np.array(40).astype(int)           # number of grid points in tube lengt
 Rgrid = np.array(80).astype(int)           # number of grid points in tube radius direction
 
 # chemistry part
-sch_name = os.getcwd()+ '/input_mechanism/HOI_cali_chem_simp.txt'
+sch_name = os.getcwd()+ '/input_mechanism/HOI_cali_chem.txt'
 chm_sch_mrk = ['{', 'RO2', '+', '', '', ';', '+', ';', '$', '{', ':', ';','}']
 # formula = ['OH','$HOI$','$\mathdefault{HO_2}$','$I$','I2']
 key_spe_for_plot = 'HOI'
