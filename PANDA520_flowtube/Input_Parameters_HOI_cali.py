@@ -147,7 +147,7 @@ Zgrid = np.array(40).astype(int)           # number of grid points in tube lengt
 Rgrid = np.array(80).astype(int)           # number of grid points in tube radius direction
 
 # chemistry part
-sch_name = os.getcwd()+ '/input_mechanism/HOI_cali_chem.txt'
+sch_name = os.getcwd()+ '/input_mechanism/HOI_cali_chem_simp.txt'
 chm_sch_mrk = ['{', 'RO2', '+', '', '', ';', '+', ';', '$', '{', ':', ';','}']
 # formula = ['OH','$HOI$','$\mathdefault{HO_2}$','$I$','I2']
 key_spe_for_plot = 'HOI'
@@ -197,7 +197,7 @@ for i in range(WaterFlow1.size):#range(H2SO4.size):
 meanconc_s = pd.DataFrame(meanconc)
 meanconc_s.index = plot_spec
 
-meanconc_s.to_csv('./Export_files/HOI_cali_20Nov21.csv')
+# meanconc_s.to_csv('./Export_files/HOI_cali_20Nov21.csv')
 
 # with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_c.txt', 'w') as f:
 #     for item in c:
