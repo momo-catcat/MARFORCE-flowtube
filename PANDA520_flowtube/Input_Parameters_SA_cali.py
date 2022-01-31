@@ -41,7 +41,7 @@ H2O_data=pd.read_csv(file)
 
 T_cel = float(input('temperaure C:'))
 T = T_cel + 273.15 # K
-p = 96060 * 1.005 # pressure Pa
+p = 101000 # pressure Pa
 
 #% set the parameters for the first tube 
 flag_tube = input('how much tube you have:')
