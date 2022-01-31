@@ -71,8 +71,13 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     RO2_indi = RO2_indices.RO2_indices(comp_namelist, RO2_names)
                                                              
     u, Diff_vals = get_diff_and_u(comp_namelist,Diff_setname,con_C_indx,Diff_set,T,p)
+<<<<<<< HEAD
+        
+    dt = 0.0001                        # timestep [s]
+=======
     
     
+>>>>>>> 8071d328726d30baef4e6689ea0ac634c287df48
     numLoop = 500                      # number of times to run to reach the pinhole of the instrument
     timesteps = 10000                    # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
 
@@ -118,6 +123,8 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     rate_values, erf, err_mess = rate_coeffs.evaluate_rates(RO2conc, T, 0, M, M*0.7809, op[0],op[1],op[2],op[3],op[4], p)
 
     #%% plot
+    if R2 == 0:
+        R2 = R1
     for j in range(numLoop):
         c1 = c.copy()
         old = c1[:, -1 , comp_namelist.index( key_spe_for_plot)]

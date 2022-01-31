@@ -91,7 +91,7 @@ def init_conc(num_comp, Comp0, init_conc, TEMP, PInit,
 				0, 0, 0,
 				0, 0, 0, 0, erf, err_mess, 0, 0, 0)
 			
-		y[y_indx] = init_conc[i]*Cfactor # convert from ppb to # molecules/cm3 (air)
+		y[y_indx] = init_conc[i] #*Cfactor # convert from ppb to # molecules/cm3 (air)
 		
 		# remember index for plotting gas-phase concentrations later
 		y_indx_plot.append(y_indx)
@@ -265,7 +265,7 @@ def init_conc(num_comp, Comp0, init_conc, TEMP, PInit,
 # 		nuci = -1 # filler
 	
 	# get indices of seed particle component(s)
-	indx = 0 # count on seed component(s)
+# 	indx = 0 # count on seed component(s)
 # 	for sname in seed_name:
 # 		# index of core component
 # 		seedi[indx] = int(comp_namelist.index(sname))
@@ -300,5 +300,5 @@ def init_conc(num_comp, Comp0, init_conc, TEMP, PInit,
 # 	except:
 # 		NO3i = 0 # filler
 # 	RO2i = comp_namelist.index('RO2')
-	return (y, y_mw, num_comp, Cfactor, y_indx_plot,  dydt_vst, 
+	return (y, y_mw, num_comp, Cfactor*1e9, y_indx_plot,  dydt_vst, 
 			comp_namelist, erf, err_mess)
