@@ -35,7 +35,8 @@ function [meanH2SO4,c]=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,full
     % (TODO: check D(H2SO4) RH dependance! we go up to 70% for our calibration)
     rh=H2Oconc*1e6*1.3806488e-23*T/vappresw(T);
     D = [0.126 0.126 0.141 diff_sa_rh(298,rh)*1e4 0.215]
-
+    disp(D)
+   
     T0=[300 300 298 298 298];
     D=101325/p*D.*((T.^(3/2))./(T0.^(3/2)));
 
@@ -50,7 +51,7 @@ function [meanH2SO4,c]=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,full
     %Q = 125; % Q = 167;                            % flow rate [cm^3/s]
 
     % solving parameters
-    dt = 0.00001;                       % timestep [s]
+    dt = 0.0001;                       % timestep [s]
     numLoop = 500;                       % number of times to run, a higher number than 1 will plot intermediate results
     timesteps = 10000;                   % number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
     Zgrid = 40;                         % number of grid points in tube length direction

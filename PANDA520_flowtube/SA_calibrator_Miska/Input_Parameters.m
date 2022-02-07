@@ -7,14 +7,14 @@ p = 96060*1.005; % Pa
 
 ID = 7.8*2; % mm
 L = 1500; % mm
-Q = 22; % lpm, not slpm
+Q = 11; % lpm, not slpm
 
 Itx = 5.2009e10; % at Qx flow rate
 Qx = 20; % lpm
 
 N2Flow = 11; % slpm
 AirFlow = 50; % smlpm
-WaterFlow = [500]'; % smlpm
+WaterFlow = [2500]'; % smlpm
 SO2Flow = 5; % smlpm
 SO2BottlePpm = 5000; % ppm
 
@@ -38,6 +38,11 @@ SO2conc = SO2Flow/1000./totFlow*SO2BottlePpm*1e-6*p/1.3806488e-23/T/1e6;
 
 It = Itx*Qx/Q;
 
+% H2Oconc = 1.75011e+16;
+% O2conc = 1.10846e+16;
+% SO2conc = 2.65181e+13;
+
+
 H2SO4 = zeros(size(WaterFlow));
 
 for i=1:numel(H2SO4)
@@ -45,3 +50,6 @@ for i=1:numel(H2SO4)
 end
 
 disp(H2SO4)
+
+%%
+save('c_matlab.mat','c','H2SO4')
