@@ -89,6 +89,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
 
     const_comp_gird = cal_const_comp_conc.cal_const_comp_conc(Rgrid, Zgrid, const_comp_conc, L1, L2, const_comp)
     const_comp_grid_1 = cal_const_comp_conc.cal_const_comp_conc_1(Rgrid, Zgrid, const_comp_conc, L1, L2, const_comp)
+
     c = np.zeros([Rgrid, Zgrid, comp_num])
     for i in Init_comp:
         c[:, 0, comp_namelist.index(i)] = Init_comp_conc[
@@ -175,16 +176,6 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
             if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):
                 break
 
-        dr_final = R2 / (Rgrid - 1) * 2
-        x = np.arange(0, R2, dr_final) + dr_final
-        rVec = np.arange(0, R2, 0.001)
-
-        meanConc = []
-        for i in plot_spec:
-            y_x = np.flip(c[0: int(Rgrid / 2), -1, comp_namelist.index(i)])  # 'SA'
-            splineres1 = interpolate.splrep(x, y_x)
-            cVec = interpolate.splev(rVec, splineres1)
-            meanConc.append(2 * 0.001 / R2 ** 2 * np.sum(cVec * rVec))
     else:
         for i in const_comp:
             c[:, :, comp_namelist.index(i)] = const_comp_gird[const_comp.index(i)]
@@ -234,17 +225,18 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
 
             if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):
                 break
-        dr_final = R2 / (Rgrid - 1) * 2
-        x = np.arange(0, R2, dr_final) + dr_final
-        rVec = np.arange(0, R2, 0.001)
 
-        meanConc = []
-        for i in plot_spec:
-            y_x = np.flip(c[0: int(Rgrid / 2), -1, comp_namelist.index(i)])  # 'SA'
+    dr_final = R2 / (Rgrid - 1) * 2
+    x = np.arange(0, R2, dr_final) + dr_final
+    rVec = np.arange(0, R2, 0.001)
 
-            splineres1 = interpolate.splrep(x, y_x)
+    meanConc = []
+    for i in plot_spec:
+         y_x = np.flip(c[0: int(Rgrid / 2), -1, comp_namelist.index(i)])  # 'SA'
 
-            cVec = interpolate.splev(rVec, splineres1)
-            meanConc.append(2 * 0.001 / R2 ** 2 * np.sum(cVec * rVec))
+         splineres1 = interpolate.splrep(x, y_x)
+
+         cVec = interpolate.splev(rVec, splineres1)
+         meanConc.append(2 * 0.001 / R2 ** 2 * np.sum(cVec * rVec))
 
     return meanConc, c
