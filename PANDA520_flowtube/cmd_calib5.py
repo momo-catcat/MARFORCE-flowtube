@@ -72,11 +72,12 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     u, Diff_vals = get_diff_and_u(comp_namelist,Diff_setname,con_C_indx,Diff_set,T,p)
     numLoop = 500                      # number of times to run to reach the pinhole of the instrument
     timesteps = 10000                    # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
-
+    # print (comp_namelist, Diff_vals)
     #Change odd number Rgrid to even number grid
     if (Rgrid % 2) != 0:
         Rgrid = Rgrid + 1
 
+    sp_line = int(Zgrid*L1/(L2+L1))
     #% set the dr dx Q parameters for the tube 
     dr = np.zeros([int(Rgrid),int(Zgrid),comp_num])
     dx = (L1+L2) / (Zgrid - 1)
@@ -113,6 +114,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     import rate_coeffs
     RO2conc = RO2_conc.RO2_conc(RO2_indi,y)
     op = jude_species(y,comp_namelist)
+
     rate_values, erf, err_mess = rate_coeffs.evaluate_rates(RO2conc, T, 0, M, M*0.7809, op[0],op[1],op[2],op[3],op[4], p)
 
     #%% plot
@@ -122,7 +124,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
         c1 = c.copy()
         old = c1[:, -1 , comp_namelist.index( key_spe_for_plot)]
 
-        c = odesolve(timesteps, Zgrid, Rgrid, dt, Diff_vals, Rtot, dr, dx, Qtot,c,comp_namelist, dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u)
+        c = odesolve(timesteps, Zgrid, Rgrid, dt, Diff_vals, Rtot, dr, dx, Qtot, c ,comp_namelist, dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u,sp_line)
 
         tim = (j + 1) * timesteps * dt
         comp_plot_index = [comp_namelist.index(plot_spec[i]) for i in range(len(plot_spec))]

@@ -1,4 +1,4 @@
-def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u,sp_line):
+def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u):
     #%import packages
     import numpy as np
 #%% 
@@ -55,8 +55,7 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
                                         (Rtot[1:Rgrid // 2, -1,u] ** 2 - r[1:Rgrid // 2, -1, u] ** 2) *\
                             (initc[1:Rgrid // 2, -1, u] - initc[1:Rgrid // 2, -2, u]) / dx #carried by main flow
 
-        term1[1:Rgrid // 2, sp_line, u] = term1[1:Rgrid // 2, sp_line, u] / 2
-        term2[1:Rgrid // 2, sp_line, u] = term2[1:Rgrid // 2, sp_line, u] / 2
+
 
         term3 = np.zeros([int(Rgrid), int(Zgrid), num])
 

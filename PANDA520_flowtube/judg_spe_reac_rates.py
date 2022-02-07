@@ -32,4 +32,4 @@ def jude_species(y,comp_namelist):
         H2Oconc = y[comp_namelist.index('H2O')]
     else:
         H2Oconc = 0
-    return [O2conc, H2Oconc, NOconc, HO2conc, NO3conc]
+    return [H2Oconc, O2conc, NOconc, HO2conc, NO3conc]
