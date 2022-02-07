@@ -171,7 +171,7 @@ params = {'T' : UnitFloat(T, "K"), # temperaure
           'L2': UnitFloat(L2, "cm"), # length for frist tube 
           'Q1': UnitFloat(Q1, "lpm"), # flow for frist tube 
           'Q2': UnitFloat(Q2, "lpm"), # flow for second tube
-          'dt' : 0.00001, # plot species
+          'dt' : 0.0001, # plot species
           'Diff_setname': Diff_setname, # diffusion
           'Diff_set': Diff_set,
           # 'It': It, # it product for calculation 
