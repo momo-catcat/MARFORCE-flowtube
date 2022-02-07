@@ -40,6 +40,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     key_spe_for_plot = params['key_spe_for_plot'] # key species for ploting 
     plot_spec = params['plot_spec'] # plot species 
     dt = params['dt']
+    ratio = params['ratio']
     H2Oconc = const_comp_conc[:,const_comp.index('H2O')]  
     
  	# read the file and store everything into a list   
@@ -124,7 +125,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
         c1 = c.copy()
         old = c1[:, -1 , comp_namelist.index( key_spe_for_plot)]
 
-        c = odesolve(timesteps, Zgrid, Rgrid, dt, Diff_vals, Rtot, dr, dx, Qtot, c ,comp_namelist, dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u,sp_line)
+        c = odesolve(timesteps, Zgrid, Rgrid, dt, Diff_vals, Rtot, dr, dx, Qtot, c ,comp_namelist, dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u,sp_line,ratio)
 
         tim = (j + 1) * timesteps * dt
         comp_plot_index = [comp_namelist.index(plot_spec[i]) for i in range(len(plot_spec))]

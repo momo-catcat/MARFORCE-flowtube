@@ -9,7 +9,7 @@ del name
 # % import functions
 import numpy as np
 import pandas as pd
-from Vapour_calc import H2O_conc as H2O_conc
+#from Vapour_calc import H2O_conc as H2O_conc
 from cmd_calib5 import cmd_calib5
 import os
 
@@ -36,7 +36,9 @@ is 2.54 cm, 0.2 for the tube wall
 file = os.getcwd() + '/input_files/H2O_2.csv'
 
 H2O_data = pd.read_csv(file)
-
+Q1 = H2O_data['Q1'][1]  # lpm
+Q2 = H2O_data['Q2'][1]
+ratio = Q1/(Q1+Q2)
 ''' set temperature and press '''
 # T_cel = 25  # C
 
@@ -52,15 +54,15 @@ if flag_tube == '2':
     L1 = float(input('1st tube length:'))
     R2 = float(input('2nd tube diameter:'))
     L2 = float(input('2nd tube length:'))
-    Q1 = H2O_data['Q1'][0]  # lpm
-    Q2 = H2O_data['Q2'][0]
+    Q1 = H2O_data['Q1'][1]  # lpm
+    Q2 = H2O_data['Q2'][1]
     Q2 = Q1 + Q2
 else:
     R1 = float(input('tube diameter:'))
     L1 = float(input('tube length:'))
     R2 = 0
     L2 = 0
-    Q1 = H2O_data['Q1'][0]  # lpm
+    Q1 = H2O_data['Q1'][1]  # lpm
     Q2 = 0
 # % set the parameters for the first tube
 # R1 = 0.78 # cm the inner diameters of the tube
@@ -204,7 +206,8 @@ params = {'T': UnitFloat(T, "K"),  # temperaure
           'Rgrid': Rgrid,  # number of grid points in tube radius direction
           # 'formula': formula, # the formula for the plots
           'key_spe_for_plot': key_spe_for_plot,  # key species for ploting
-          'plot_spec': plot_spec  # plot species
+          'plot_spec': plot_spec,# plot species
+          'ratio': ratio
           }
 # %
 for i in range(8):
