@@ -1,4 +1,4 @@
-def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u,sp_line,ratio):
+def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u):
     #%import packages
     import numpy as np
 #%% 
@@ -19,8 +19,8 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
     term3 = np.zeros([int(Rgrid), int(Zgrid), num])
     # timesteps = 173
 
-    print(['Qtot before and after:' + str(Qtot[Rgrid // 2, sp_line - 1, 6]) + ' ' + str(Qtot[Rgrid // 2, sp_line + 1, 6])])
-    print(['HOI concentration before and after' + str(initc[Rgrid // 2, sp_line - 1, 6]) + ' ' + str(initc[Rgrid // 2, sp_line + 1 , 6])])
+    #print(['Qtot before and after:' + str(Qtot[Rgrid // 2, sp_line - 1, 6]) + ' ' + str(Qtot[Rgrid // 2, sp_line + 1, 6])])
+    #print(['HOI concentration before and after' + str(initc[Rgrid // 2, sp_line - 1, 6]) + ' ' + str(initc[Rgrid // 2, sp_line + 1 , 6])])
     #%%
     for m in range(timesteps):
         # Diffusion term
@@ -46,8 +46,8 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
         # convection; carried by main flow
         # Refs: 1. https://en.wikipedia.org/wiki/Advection
         #       2. Gormley & Kennedy, 1948, Diffusion from a stream flowing through a cylindrical tube
-        term2[1:-1, 1:-1, u] = (2. * Qtot[1:-1, 1:-1,u]) / (np.pi * Rtot[1:-1, 1:-1,u] ** 4) * \
-                                          (Rtot[1:-1, 1:-1,u] ** 2 - r[1:-1, 1:-1, u] ** 2) *\
+        term2[1:-1, 1:-1, u] = (2. * Qtot) / (np.pi * Rtot ** 4) * \
+                                          (Rtot ** 2 - r[1:-1, 1:-1, u] ** 2) *\
                             (initc[1:-1, 1:-1, u] - initc[1:-1, 0:-2, u]) / dx # carried by main flow
 
         # calculate the last column (measured by the instrument)
@@ -63,8 +63,8 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
 
         term1[1:-1, -1,u] = D[1:-1, -1, u] * (p_a_end + p_b_end + p_c_end)
 
-        term2[1:-1, -1, u] = (2. * Qtot[1:-1, -1,u]) / (np.pi * Rtot[1:-1, -1,u] ** 4) * \
-                                        (Rtot[1:-1, -1,u] ** 2 - r[1:-1, -1, u] ** 2) *\
+        term2[1:-1, -1, u] = (2. * Qtot) / (np.pi * Rtot ** 4) * \
+                                        (Rtot ** 2 - r[1:-1, -1, u] ** 2) *\
                             (initc[1:-1, -1, u] - initc[1:-1, -2, u]) / dx #carried by main flow
 
 
