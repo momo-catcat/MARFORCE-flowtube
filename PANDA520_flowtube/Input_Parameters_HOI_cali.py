@@ -34,7 +34,9 @@ file = os.getcwd() + '/input_files/HOI_cali_T1_25Oct21.csv'
 # file = os.getcwd() + '/input_files/HOI_cali_T2_20Nov21.csv'
 
 H2O_data=pd.read_csv(file)
-
+Q1 = H2O_data['Q1'][1]  # lpm
+Q2 = H2O_data['Q2'][1]
+ratio = Q1/(Q1+Q2)
 ''' set temperature and press '''
 T_cel = 23
 T = T_cel + 273.15 # K
@@ -184,7 +186,8 @@ params = {'T' : UnitFloat(T, "K"), # temperaure
           'Rgrid': Rgrid, # number of grid points in tube radius direction
            # 'formula': formula, # the formula for the plots
           'key_spe_for_plot' : key_spe_for_plot, # key species for ploting 
-          'plot_spec' : plot_spec # plot species 
+          'plot_spec' : plot_spec,# plot species
+          'ratio': ratio
           }
 
 for i in range(8):
