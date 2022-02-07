@@ -5,17 +5,17 @@ for name in dir():
     if not name.startswith('_'):
         del globals()[name]
 del name
-#import sys
+import sys
+sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
+
 import os
-#sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
-file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/" # file path
+file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"  # file path
 os.chdir(file_path)
 # % import functions
 import numpy as np
 import pandas as pd
-#from Vapour_calc import H2O_conc as H2O_conc
+# from Vapour_calc import H2O_conc as H2O_conc
 from cmd_calib5 import cmd_calib5
-
 
 
 class UnitFloat(float):
@@ -42,7 +42,8 @@ file = os.getcwd() + '/input_files/H2O_2.csv'
 H2O_data = pd.read_csv(file)
 Q1 = H2O_data['Q1'][1]  # lpm
 Q2 = H2O_data['Q2'][1]
-ratio = Q1/(Q1+Q2)
+ratio = Q1 / (Q1 + Q2)
+
 ''' set temperature and press '''
 # T_cel = 25  # C
 
@@ -210,7 +211,7 @@ params = {'T': UnitFloat(T, "K"),  # temperaure
           'Rgrid': Rgrid,  # number of grid points in tube radius direction
           # 'formula': formula, # the formula for the plots
           'key_spe_for_plot': key_spe_for_plot,  # key species for ploting
-          'plot_spec': plot_spec,# plot species
+          'plot_spec': plot_spec,  # plot species
           'ratio': ratio
           }
 # %
@@ -222,12 +223,11 @@ for i in range(8):
 # Init_comp_conc=Init_comp_conc[i]
 
 # %% computation begins
-
 meanconc = []
 
 c = []
 
-for i in range(2,3):  # range(H2SO4.size):
+for i in range(2, 3):  # range(H2SO4.size):
     meanConc1, c1 = cmd_calib5(const_comp_conc[:, i, :], params, Init_comp_conc[i])
     meanconc.append(meanConc1)
     c.append(c1)
@@ -237,9 +237,6 @@ meanconc_s = pd.DataFrame(np.transpose(meanconc))
 meanconc_s.index = plot_spec
 
 # %% save the modelled SA, HO2
-
-
-
 meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_2_mean.csv')
 
 with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_2_c.txt', 'w') as f:
