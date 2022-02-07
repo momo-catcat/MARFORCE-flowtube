@@ -17,9 +17,17 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, Rtot, dr, dx, Qtot, c, comp_namelis
     term1 = np.zeros([int(Rgrid), int(Zgrid), num])
     term2 = np.zeros([int(Rgrid), int(Zgrid), num])
     term3 = np.zeros([int(Rgrid), int(Zgrid), num])
+<<<<<<< HEAD
 
     # timesteps = 173
     # %%
+=======
+    # timesteps = 173
+
+    print(['Qtot before and after:' + str(Qtot[Rgrid // 2, sp_line - 1, 6]) + ' ' + str(Qtot[Rgrid // 2, sp_line + 1, 6])])
+    print(['HOI concentration before and after' + str(initc[Rgrid // 2, sp_line - 1, 6]) + ' ' + str(initc[Rgrid // 2, sp_line + 1 , 6])])
+    #%%
+>>>>>>> d06ffb2f19322b65161fbb0fbc728fda067ad8f8
     for m in range(timesteps):
         # Diffusion term
         # The equation is based on Fick's first law: https://en.wikipedia.org/wiki/Fick%27s_laws_of_diffusion
@@ -37,7 +45,12 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, Rtot, dr, dx, Qtot, c, comp_namelis
         p_c = (initc[1:Rgrid // 2, 2:, u] - 2. * initc[1:Rgrid // 2, 1:-1, u] + initc[1:Rgrid // 2, 0:-2, u]) / (
                     dx * dx)
 
+<<<<<<< HEAD
         term1[1:Rgrid // 2, 1:-1, u] = D[1:Rgrid // 2, 1:-1, u] * (p_a + p_b + p_c)  # diffusion of gas molecules
+=======
+
+        term1[1:Rgrid // 2, 1:-1, u] = D[1:Rgrid // 2, 1:-1, u] * (p_a + p_b + p_c) #diffusion of gas molecules
+>>>>>>> d06ffb2f19322b65161fbb0fbc728fda067ad8f8
 
         # convection; carried by main flow
         # Refs: 1. https://en.wikipedia.org/wiki/Advection
@@ -66,8 +79,11 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, Rtot, dr, dx, Qtot, c, comp_namelis
                                      (initc[1:Rgrid // 2, -1, u] - initc[1:Rgrid // 2, -2,
                                                                    u]) / dx  # carried by main flow
 
+<<<<<<< HEAD
         #term1[1:Rgrid // 2, sp_line, u] = term1[1:Rgrid // 2, sp_line, u] * ratio
         #term2[1:Rgrid // 2, sp_line, u] = term2[1:Rgrid // 2, sp_line, u] * ratio
+=======
+>>>>>>> d06ffb2f19322b65161fbb0fbc728fda067ad8f8
 
         term3 = np.zeros([int(Rgrid), int(Zgrid), num])
 

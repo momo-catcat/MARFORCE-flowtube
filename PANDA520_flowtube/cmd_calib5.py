@@ -12,7 +12,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     from judg_spe_reac_rates import jude_species as jude_species
     import matplotlib.pyplot as plt
     from scipy import interpolate
-    from odesolve3 import odesolve as odesolve
+    from odesolve3_Y import odesolve as odesolve
     from get_diff_and_u import get_diff_and_u
     from get_formula import get_formula
 
@@ -67,10 +67,9 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
                                                      drh_str, erh_str)
 
     RO2_indi = RO2_indices.RO2_indices(comp_namelist, RO2_names)
-
     u, Diff_vals = get_diff_and_u(comp_namelist, Diff_setname, con_C_indx, Diff_set, T, p)
     numLoop = 500  # number of times to run to reach the pinhole of the instrument
-    timesteps = 10000  # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
+    timesteps = 1000  # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
     # print (comp_namelist, Diff_vals)
     # Change odd number Rgrid to even number grid
     if (Rgrid % 2) != 0:
