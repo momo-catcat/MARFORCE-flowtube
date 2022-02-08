@@ -135,11 +135,11 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
                 break
         #%% transfer the flow distribution for next run
         dr_final = 2 * R2 / (Rgrid - 1)
-        x = np.arange(0, R1, dr)
-        rVec = np.arange(0, R2/2, dr_final)
+        x = np.arange(0, R1*2+dr, dr)
+        rVec = np.arange(0, R2, dr_final)
         cvec = []
         for i in comp_namelist:
-            y_x = np.flip(c[:int(Rgrid/2), -1, comp_namelist.index(i)])  # 'SA'
+            y_x = np.flip(c[:, -1, comp_namelist.index(i)])  # 'SA'
 
             splineres1 = interpolate.splrep(x, y_x)
 
@@ -147,10 +147,10 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
             cvec.append(cVec)
         cvec = np.transpose(cvec)
         c = np.zeros([Rgrid, Zgrid, comp_num])
-        c[:Rgrid // 4, 0, :] = cvec
-        c[Rgrid // 4: Rgrid // 2, 0, :] = np.flipud(cvec)
-        c[Rgrid // 2:,0,:] = 0
-        # second tube run
+        c[:Rgrid // 2, 0, :] = cvec
+        #c[Rgrid // 4: Rgrid // 2, 0, :] = np.flipud(cvec)
+        c[Rgrid // 2:,0,:] = np.zeros([Rgrid//2,comp_num])
+        #%% second tube run
         #dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
         dx = L2 / (Zgrid - 1)
         dr = 2 * R2 / (Rgrid - 1)
