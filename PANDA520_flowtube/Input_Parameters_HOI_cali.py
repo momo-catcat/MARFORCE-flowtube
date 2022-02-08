@@ -43,7 +43,7 @@ T = T_cel + 273.15 # K
 p = 101000 # pressure Pa
 
 #% set the parameters for the first tube 
-flag_tube = 2
+flag_tube = 1
 
 if flag_tube == 2:
     R1 = 0.78

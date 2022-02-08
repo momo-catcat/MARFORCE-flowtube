@@ -75,7 +75,6 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     if (Rgrid % 2) != 0:
         Rgrid = Rgrid + 1
 
-    sp_line = int(Zgrid * L1 / (L2 + L1))
     # % set the dr dx Q parameters for the tube
     dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
     dx = (L1 + L2) / (Zgrid - 1)
@@ -125,7 +124,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
         old = c1[:, -1, comp_namelist.index(key_spe_for_plot)]
 
         c = odesolve(timesteps, Zgrid, Rgrid, dt, Diff_vals, Rtot, dr, dx, Qtot, c, comp_namelist, dydt_vst, rindx,
-                     nreac, rstoi, rate_values, const_comp, u, sp_line, ratio)
+                     nreac, rstoi, rate_values, const_comp, u, ratio)
 
         tim = (j + 1) * timesteps * dt
         comp_plot_index = [comp_namelist.index(plot_spec[i]) for i in range(len(plot_spec))]

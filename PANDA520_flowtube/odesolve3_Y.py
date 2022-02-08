@@ -1,4 +1,4 @@
-def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u,sp_line,ratio):
+def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u,ratio):
     #%import packages
     import numpy as np
 #%% 
@@ -19,8 +19,6 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
     term3 = np.zeros([int(Rgrid), int(Zgrid), num])
     # timesteps = 173
 
-    print(['Qtot before and after:' + str(Qtot[Rgrid // 2, sp_line - 1, 6]) + ' ' + str(Qtot[Rgrid // 2, sp_line + 1, 6])])
-    print(['HOI concentration before and after' + str(initc[Rgrid // 2, sp_line - 1, 6]) + ' ' + str(initc[Rgrid // 2, sp_line + 1 , 6])])
     #%%
     for m in range(timesteps):
         # Diffusion term
