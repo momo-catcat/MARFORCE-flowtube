@@ -201,10 +201,11 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
             c[:, :, comp_namelist.index(i)] = const_comp_gird[const_comp.index(i)]
         if R2 == 0:
             R2 = R1
-        dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
+        #dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
         dx = (L2 + L1) / (Zgrid - 1)
-        dr[:, 0:sp_line, :] = 2 * R1 / (Rgrid - 1)
-        dr[:, sp_line:, :] = 2 * R2 / (Rgrid - 1)
+        dr = 2 * R1 / (Rgrid - 1)
+        #dr[:, 0:sp_line, :] = 2 * R1 / (Rgrid - 1)
+        #dr[:, sp_line:, :] = 2 * R2 / (Rgrid - 1)
         for j in range(numLoop):
             c1 = c.copy()
             old = c1[:, -1, comp_namelist.index(key_spe_for_plot)]
