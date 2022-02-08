@@ -53,7 +53,7 @@ p = 96060  # pressure Pa
 
 # % set the parameters for the first tube
 #flag_tube = input('how much tube you have:')
-flag_tube = '2'
+flag_tube = '1'
 if flag_tube == '2':
     #R1 = float(input('1st tube diameter:'))
     #L1 = float(input('1st tube length:'))
@@ -74,7 +74,7 @@ else:
     R2 = 0
     L2 = 0
     Q1 = H2O_data['Q1'][1]  # lpm
-    Q2 = 0
+    Q2 = Q1
 # % set the parameters for the first tube
 # R1 = 0.78 # cm the inner diameters of the tube
 # L1 = 10  # cm

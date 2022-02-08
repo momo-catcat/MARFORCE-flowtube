@@ -119,7 +119,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
         #%% first tube run
         for i in const_comp:
             c[:, :, comp_namelist.index(i)] = const_comp_grid_1[const_comp.index(i)]
-        #dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
+
         dx = L1 / (Zgrid - 1)
         dr = 2 * R1 / (Rgrid - 1)
         for j in range(numLoop):
@@ -152,7 +152,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
         c[:Rgrid // 2, 0, :] = cvec
         c[Rgrid // 2:, 0, :] = np.zeros([ Rgrid // 2, comp_num])
         #%% second tube run
-        #dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
+
         dx = L2 / (Zgrid - 1)
         dr = 2 * R2 / (Rgrid - 1)
         for j in range(numLoop):
@@ -209,7 +209,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
             c1 = c.copy()
             old = c1[:, -1, comp_namelist.index(key_spe_for_plot)]
 
-            c = odesolve_double(timesteps, Zgrid, Rgrid, dt, Diff_vals, Rtot, dr, dx, Qtot, c, comp_namelist, dydt_vst,
+            c = odesolve_Y(timesteps, Zgrid, Rgrid, dt, Diff_vals, R1, dr, dx, Q1, c, comp_namelist, dydt_vst,
                            rindx,
                            nreac, rstoi, rate_values, const_comp, u)
 
@@ -227,8 +227,8 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
             axs = axs.ravel()
             formula = get_formula(plot_spec)
             for i in range(len(plot_spec)):
-                axs[i].pcolor(np.linspace(0, L2 + L1, Zgrid), np.linspace(-R1, R1, Rgrid), c[:, :, comp_plot_index[i]],
-                              shading='nearest', cmap='jet')
+                #axs[i].pcolor(np.linspace(0, L2 + L1, Zgrid), np.linspace(-R1, R1, Rgrid), c[:, :, comp_plot_index[i]],
+                 #             shading='nearest', cmap='jet')
                 axs[i].pcolor(np.linspace(0, L2 + L1, Zgrid), np.linspace(-R1, R2, Rgrid), c[:, :, comp_plot_index[i]],
                               shading='nearest', cmap='jet')
 
