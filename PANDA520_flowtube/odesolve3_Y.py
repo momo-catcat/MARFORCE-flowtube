@@ -4,6 +4,7 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
 #%% 
     # D = Diff_vals
     initc = c
+
     num = len(comp_namelist)
     r = np.zeros([int(Rgrid), int(Zgrid),  num])
     r = np.abs(np.array([r[i, :, :] + i - r.shape[0] / 2 + 0.5 for i in range(r.shape[0])])) * dr
@@ -33,15 +34,19 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
         #
         # p_c = (initc[1:Rgrid // 2, 2:, u] - 2. * initc[1:Rgrid // 2, 1:-1, u] + initc[1:Rgrid // 2, 0:-2,u ]) / (dx * dx)
 
-        p_a = - 1. / r[1:-1, 1:-1, u] * (initc[1:-1, 1:-1, u] - initc[0:-2, 1:-1, u]) / dr
+        p_a_first = - 1. / r[1:Rgrid // 2 + 1, 1:-1, u] * (initc[1:Rgrid // 2 + 1, 1:-1, u] - initc[0:Rgrid // 2, 1:-1, u]) / r[1:Rgrid // 2 + 1, 1:-1, u]
 
-        p_a[Rgrid // 2 - 1 : , :, :]  = - p_a[Rgrid // 2 - 1 : , :, :]
+        p_a_second = 1. / r[Rgrid // 2 + 1: -1, 1:-1, u] * (initc[Rgrid // 2 + 1 : -1 :, 1:-1, u] - initc[Rgrid // 2: -2, 1:-1, u]) / r[Rgrid // 2 + 1: -1, 1:-1, u]
+
+
+        p_a = np.concatenate((p_a_first, p_a_second), axis=0)
 
         p_b = (initc[2:, 1:-1, u] - 2. * initc[1:-1, 1:-1, u] + initc[0:-2, 1:-1, u]) / (dr ** 2)
 
         p_c = (initc[1:-1, 2:, u] - 2. * initc[1:-1, 1:-1, u] + initc[1:-1, 0:-2,u ]) / (dx * dx)
 
         term1[1:-1, 1:-1, u] = D[1:-1, 1:-1, u] * (p_a + p_b + p_c) #diffusion of gas molecules
+        # term1[1:-1, 1:-1, u] = D[1:-1, 1:-1, u] * (p_b + p_c) #diffusion of gas molecules
 
         # convection; carried by main flow
         # Refs: 1. https://en.wikipedia.org/wiki/Advection
@@ -52,10 +57,12 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
 
         # calculate the last column (measured by the instrument)
 
-        p_a_end = - 1. / r[1:-1, -1, u] * (
-                    initc[1:-1, -1, u] - initc[0:-2, -1, u]) / dr
+        p_a_end_first = - 1. / r[1:Rgrid // 2 + 1, -1, u] * (
+                initc[1:Rgrid // 2 + 1, -1, u] - initc[0:Rgrid // 2, -1, u]) / r[1:Rgrid // 2 + 1, -1, u]
+        p_a_end_second = 1. / r[Rgrid // 2 + 1: -1, -1, u] * (
+                initc[Rgrid // 2 + 1, -1, u] - initc[Rgrid // 2 : -2, -1, u]) / r[Rgrid // 2 + 1: -1, -1, u]
 
-        p_a_end[Rgrid // 2 - 1 : , :]  = - p_a_end[Rgrid // 2 - 1 : , :]
+        p_a_end = np.concatenate((p_a_end_first, p_a_end_second), axis=0)
 
         p_b_end = (initc[2:, -1,u] - 2. * initc[1:-1, -1, u] + initc[0:-2, -1, u]) / (dr ** 2)
 
@@ -93,7 +100,6 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
 
                     term3[1:-1, 1:, compi] += reac_sign[reac_count]*(gprate1)
                     reac_count += 1
-       
 
         c[:,:,u] = dt * (term1[:,:,u] - term2[:,:,u] + term3[:,:,u]) + initc[:,:,u]
         # c[0:Rgrid // 2, :, u] = dt * (term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u])  + initc[0:Rgrid // 2,:, u]

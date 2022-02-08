@@ -6,11 +6,11 @@ for name in dir():
         del globals()[name]
 del name
 import sys
-sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
+# sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
 
 import os
-file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"  # file path
-os.chdir(file_path)
+# file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"  # file path
+# os.chdir(file_path)
 # % import functions
 import numpy as np
 import pandas as pd
@@ -53,7 +53,7 @@ p = 96060  # pressure Pa
 
 # % set the parameters for the first tube
 #flag_tube = input('how much tube you have:')
-flag_tube = '1'
+flag_tube = '2'
 if flag_tube == '2':
     #R1 = float(input('1st tube diameter:'))
     #L1 = float(input('1st tube length:'))
