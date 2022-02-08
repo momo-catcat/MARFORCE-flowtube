@@ -143,7 +143,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
 
             splineres1 = interpolate.splrep(x, y_x)
 
-            cVec = interpolate.splev(rVec, splineres1)
+            cVec = interpolate.splev(R2 * rVec / R1, splineres1)
             cvec.append(cVec)
 
         cvec = np.transpose(cvec)

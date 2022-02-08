@@ -53,7 +53,7 @@ p = 96060  # pressure Pa
 
 # % set the parameters for the first tube
 #flag_tube = input('how much tube you have:')
-flag_tube = '1'
+flag_tube = '2'
 if flag_tube == '2':
     #R1 = float(input('1st tube diameter:'))
     #L1 = float(input('1st tube length:'))
