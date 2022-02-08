@@ -77,7 +77,6 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     if (Rgrid % 2) != 0:
         Rgrid = Rgrid + 1
 
-    sp_line = int(Zgrid * L1 / (L2 + L1))
     # % set the dr dx Q parameters for the tube
     Qtot = np.zeros([int(Rgrid), int(Zgrid), comp_num])
     Qtot[:, 0:sp_line, :] = Q1
