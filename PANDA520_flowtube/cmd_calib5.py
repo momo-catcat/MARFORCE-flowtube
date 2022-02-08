@@ -76,7 +76,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     # Change odd number Rgrid to even number grid
     if (Rgrid % 2) != 0:
         Rgrid = Rgrid + 1
-
+    sp_line = int(Rgrid/2)
     # % set the dr dx Q parameters for the tube
     Qtot = np.zeros([int(Rgrid), int(Zgrid), comp_num])
     Qtot[:, 0:sp_line, :] = Q1
