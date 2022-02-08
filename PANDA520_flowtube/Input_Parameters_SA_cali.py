@@ -6,11 +6,11 @@ for name in dir():
         del globals()[name]
 del name
 import sys
-sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
+# sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
 
 import os
-file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"  # file path
-os.chdir(file_path)
+# file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"  # file path
+# os.chdir(file_path)
 # % import functions
 import numpy as np
 import pandas as pd
