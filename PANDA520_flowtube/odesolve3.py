@@ -1,4 +1,4 @@
-def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u,sp_line,ratio):
+def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u):
     #%import packages
     import numpy as np
 #%% 
@@ -17,11 +17,9 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
     term1 = np.zeros([int(Rgrid), int(Zgrid), num])
     term2 = np.zeros([int(Rgrid), int(Zgrid), num])
     term3 = np.zeros([int(Rgrid), int(Zgrid), num])
+    
     # timesteps = 173
-
-    print(['Qtot before and after:' + str(Qtot[Rgrid // 2, sp_line - 1, 6]) + ' ' + str(Qtot[Rgrid // 2, sp_line + 1, 6])])
-    print(['HOI concentration before and after' + str(initc[Rgrid // 2, sp_line - 1, 6]) + ' ' + str(initc[Rgrid // 2, sp_line + 1 , 6])])
-    #%%
+#%%
     for m in range(timesteps):
         # Diffusion term
         # The equation is based on Fick's first law: https://en.wikipedia.org/wiki/Fick%27s_laws_of_diffusion
@@ -32,7 +30,6 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
         p_b = (initc[2:Rgrid // 2 + 1, 1:-1, u] - 2. * initc[1:Rgrid // 2, 1:-1, u] + initc[0:Rgrid // 2 - 1, 1:-1, u]) / (dr[1:Rgrid // 2, 1:-1, u] ** 2)
 
         p_c = (initc[1:Rgrid // 2, 2:, u] - 2. * initc[1:Rgrid // 2, 1:-1, u] + initc[1:Rgrid // 2, 0:-2,u ]) / (dx * dx)
-
 
         term1[1:Rgrid // 2, 1:-1, u] = D[1:Rgrid // 2, 1:-1, u] * (p_a + p_b + p_c) #diffusion of gas molecules
 
@@ -57,6 +54,7 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
         term2[1:Rgrid // 2, -1, u] = (2. * Qtot[1:Rgrid // 2, -1,u]) / (np.pi * Rtot[1:Rgrid // 2, -1,u] ** 4) * \
                                         (Rtot[1:Rgrid // 2, -1,u] ** 2 - r[1:Rgrid // 2, -1, u] ** 2) *\
                             (initc[1:Rgrid // 2, -1, u] - initc[1:Rgrid // 2, -2, u]) / dx #carried by main flow
+
 
 
         term3 = np.zeros([int(Rgrid), int(Zgrid), num])

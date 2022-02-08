@@ -1,8 +1,8 @@
-def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u):
+def odesolve(timesteps, Zgrid, Rgrid, dt,  D, R1, dr, dx, Q1, c, comp_namelist, dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u):
     #%import packages
     import numpy as np
 #%% 
-    # D = Diff_vals
+    #D = Diff_vals
     initc = c
     num = len(comp_namelist)
     r = np.zeros([int(Rgrid), int(Zgrid),  num])
@@ -25,9 +25,9 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
         # The equation is based on Fick's first law: https://en.wikipedia.org/wiki/Fick%27s_laws_of_diffusion
         # calculate central grids
 
-        p_a = - 1. / r[1:Rgrid // 2, 1:-1, u] * (initc[1:Rgrid // 2, 1:-1, u] - initc[0:Rgrid // 2 - 1, 1:-1, u]) / dr[1:Rgrid // 2, 1:-1, u]
+        p_a = - 1. / r[1:Rgrid // 2, 1:-1, u] * (initc[1:Rgrid // 2, 1:-1, u] - initc[0:Rgrid // 2 - 1, 1:-1, u]) / dr
 
-        p_b = (initc[2:Rgrid // 2 + 1, 1:-1, u] - 2. * initc[1:Rgrid // 2, 1:-1, u] + initc[0:Rgrid // 2 - 1, 1:-1, u]) / (dr[1:Rgrid // 2, 1:-1, u] ** 2)
+        p_b = (initc[2:Rgrid // 2 + 1, 1:-1, u] - 2. * initc[1:Rgrid // 2, 1:-1, u] + initc[0:Rgrid // 2 - 1, 1:-1, u]) / (dr ** 2)
 
         p_c = (initc[1:Rgrid // 2, 2:, u] - 2. * initc[1:Rgrid // 2, 1:-1, u] + initc[1:Rgrid // 2, 0:-2,u ]) / (dx * dx)
 
@@ -36,23 +36,23 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
         # convection; carried by main flow
         # Refs: 1. https://en.wikipedia.org/wiki/Advection
         #       2. Gormley & Kennedy, 1948, Diffusion from a stream flowing through a cylindrical tube
-        term2[1:Rgrid // 2, 1:-1, u] = (2. * Qtot[1:Rgrid // 2, 1:-1,u]) / (np.pi * Rtot[1:Rgrid // 2, 1:-1,u] ** 4) * \
-                                          (Rtot[1:Rgrid // 2, 1:-1,u] ** 2 - r[1:Rgrid // 2, 1:-1, u] ** 2) *\
+        term2[1:Rgrid // 2, 1:-1, u] = (2. * Q1) / (np.pi * R1 ** 4) * \
+                                          (R1 ** 2 - r[1:Rgrid // 2, 1:-1, u] ** 2) *\
                             (initc[1:Rgrid // 2, 1:-1, u] - initc[1:Rgrid // 2, 0:-2, u]) / dx # carried by main flow
 
         # calculate the last column (measured by the instrument)
 
         p_a_end = - 1. / r[1:Rgrid // 2, -1, u] * (
-                    initc[1:Rgrid // 2, -1, u] - initc[0:Rgrid // 2 - 1, -1, u]) / dr[1:Rgrid // 2, -1, u]
+                    initc[1:Rgrid // 2, -1, u] - initc[0:Rgrid // 2 - 1, -1, u]) / dr
 
-        p_b_end = (initc[2:Rgrid // 2 + 1, -1,u] - 2. * initc[1:Rgrid // 2, -1, u] + initc[0:Rgrid // 2 - 1, -1, u]) / (dr[1:Rgrid // 2, -1, u] ** 2)
+        p_b_end = (initc[2:Rgrid // 2 + 1, -1,u] - 2. * initc[1:Rgrid // 2, -1, u] + initc[0:Rgrid // 2 - 1, -1, u]) / (dr ** 2)
 
         p_c_end = (initc[1:Rgrid // 2, -1, u] - 2. * initc[1:Rgrid // 2, -2, u] + initc[1:Rgrid // 2, -2,u ]) / (dx * dx)
 
         term1[1:Rgrid // 2, -1,u] = D[1:Rgrid // 2, -1, u] * (p_a_end + p_b_end + p_c_end)
 
-        term2[1:Rgrid // 2, -1, u] = (2. * Qtot[1:Rgrid // 2, -1,u]) / (np.pi * Rtot[1:Rgrid // 2, -1,u] ** 4) * \
-                                        (Rtot[1:Rgrid // 2, -1,u] ** 2 - r[1:Rgrid // 2, -1, u] ** 2) *\
+        term2[1:Rgrid // 2, -1, u] = (2. * Q1) / (np.pi * R1 ** 4) * \
+                                        (R1 ** 2 - r[1:Rgrid // 2, -1, u] ** 2) *\
                             (initc[1:Rgrid // 2, -1, u] - initc[1:Rgrid // 2, -2, u]) / dx #carried by main flow
 
 
