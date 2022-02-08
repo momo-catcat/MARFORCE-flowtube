@@ -30,7 +30,7 @@ def cmd_calib1(O2conc, H2Oconc, SO2conc, R, L, Q, It, T, p, fullOrSimpleModel, t
     # order is: HSO3, SO3, HO2, H2SO4, OH
 
     rh = H2Oconc * 1e6 * 1.3806488e-23 * T / H2O_conc(T - 273.15, 1).SatP[0]
-    D = np.array([0.126, 0.126, 0.141, 0.08, 0.215]) #todo need to calculate Diffusion coefficient properly
+    D = np.array([0.126, 0.126, 0.141, 0.08, 0.215]) # todo need to calculate Diffusion coefficient properly
     # D = np.array([0.4, 0.4, 0.4, 0.4, 0.4])
     T0 = np.array([300, 300, 298, 298, 298])
     D = 101325 / p * D * ((T ** (3 / 2)) / (T0 ** (3 / 2)))

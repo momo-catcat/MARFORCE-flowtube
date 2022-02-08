@@ -80,9 +80,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
 
     sp_line = int(Zgrid/2)
     # % set the dr dx Q parameters for the tube
-    Qtot = np.zeros([int(Rgrid), int(Zgrid), comp_num])
-    Qtot[:, 0:sp_line, :] = Q1
-    Qtot[:, sp_line:, :] = Q2
+
 
     Rtot = np.zeros([int(Rgrid), int(Zgrid), comp_num])
     Rtot[:, 0:sp_line, :] = R1
@@ -229,8 +227,8 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
             formula = get_formula(plot_spec)
             for i in range(len(plot_spec)):
                 #axs[i].pcolor(np.linspace(0, L2 + L1, Zgrid), np.linspace(-R1, R1, Rgrid), c[:, :, comp_plot_index[i]],
-                 #             shading='nearest', cmap='jet')
-                axs[i].pcolor(np.linspace(0, L2 + L1, Zgrid), np.linspace(-R1, R2, Rgrid), c[:, :, comp_plot_index[i]],
+                #             shading='nearest', cmap='jet')
+                axs[i].pcolor(np.linspace(0, L2, Zgrid), np.linspace(-R1, R2, Rgrid), c[:, :, comp_plot_index[i]],
                               shading='nearest', cmap='jet')
 
                 axs[i].set_xlabel('L [cm]')
