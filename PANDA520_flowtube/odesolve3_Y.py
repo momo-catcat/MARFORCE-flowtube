@@ -33,11 +33,11 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
         #
         # p_c = (initc[1:Rgrid // 2, 2:, u] - 2. * initc[1:Rgrid // 2, 1:-1, u] + initc[1:Rgrid // 2, 0:-2,u ]) / (dx * dx)
 
-        p_a = - 1. / r[1:-1, 1:-1, u] * (initc[1:-1, 1:-1, u] - initc[0:-2, 1:-1, u]) / dr[1:-1, 1:-1, u]
+        p_a = - 1. / r[1:-1, 1:-1, u] * (initc[1:-1, 1:-1, u] - initc[0:-2, 1:-1, u]) / dr
 
         p_a[Rgrid // 2 - 1 : , :, :]  = - p_a[Rgrid // 2 - 1 : , :, :]
 
-        p_b = (initc[2:, 1:-1, u] - 2. * initc[1:-1, 1:-1, u] + initc[0:-2, 1:-1, u]) / (dr[1:-1, 1:-1, u] ** 2)
+        p_b = (initc[2:, 1:-1, u] - 2. * initc[1:-1, 1:-1, u] + initc[0:-2, 1:-1, u]) / (dr ** 2)
 
         p_c = (initc[1:-1, 2:, u] - 2. * initc[1:-1, 1:-1, u] + initc[1:-1, 0:-2,u ]) / (dx * dx)
 
@@ -53,11 +53,11 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
         # calculate the last column (measured by the instrument)
 
         p_a_end = - 1. / r[1:-1, -1, u] * (
-                    initc[1:-1, -1, u] - initc[0:-2, -1, u]) / dr[1:-1, -1, u]
+                    initc[1:-1, -1, u] - initc[0:-2, -1, u]) / dr
 
         p_a_end[Rgrid // 2 - 1 : , :]  = - p_a_end[Rgrid // 2 - 1 : , :]
 
-        p_b_end = (initc[2:, -1,u] - 2. * initc[1:-1, -1, u] + initc[0:-2, -1, u]) / (dr[1:-1, -1, u] ** 2)
+        p_b_end = (initc[2:, -1,u] - 2. * initc[1:-1, -1, u] + initc[0:-2, -1, u]) / (dr ** 2)
 
         p_c_end = (initc[1:-1, -1, u] - 2. * initc[1:-1, -2, u] + initc[1:-1, -2,u ]) / (dx * dx)
 

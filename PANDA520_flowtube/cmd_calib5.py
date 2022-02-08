@@ -42,7 +42,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     key_spe_for_plot = params['key_spe_for_plot']  # key species for ploting
     plot_spec = params['plot_spec']  # plot species
     dt = params['dt']
-    ratio = params['ratio']
+    #ratio = params['ratio']
     H2Oconc = const_comp_conc[:, const_comp.index('H2O')]
 
     # read the file and store everything into a list
@@ -113,14 +113,14 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     rate_values, erf, err_mess = rate_coeffs.evaluate_rates(RO2conc, T, 0, M, M * 0.7809, op[0], op[1], op[2], op[3],
                                                             op[4], p)
 
-    # % plot
+    #%% plot
     if Q2 > Q1:
-        # first tube run
+        #%% first tube run
         for i in const_comp:
             c[:, :, comp_namelist.index(i)] = const_comp_grid_1[const_comp.index(i)]
-        dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
+        #dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
         dx = L1 / (Zgrid - 1)
-        dr[:, :, :] = 2 * R1 / (Rgrid - 1)
+        dr = 2 * R1 / (Rgrid - 1)
         for j in range(numLoop):
             c1 = c.copy()
             old = c1[:, -1, comp_namelist.index(key_spe_for_plot)]
@@ -132,10 +132,27 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
 
             if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):
                 break
+        #%% transfer the flow distribution for next run
+        dr_final = 2 * R2 / (Rgrid - 1)
+        x = np.arange(0, R1, dr)
+        rVec = np.arange(0, R2/2, dr_final)
+        cvec = []
+        for i in comp_namelist:
+            y_x = np.flip(c[:int(Rgrid/2), -1, comp_namelist.index(i)])  # 'SA'
+
+            splineres1 = interpolate.splrep(x, y_x)
+
+            cVec = interpolate.splev(rVec, splineres1)
+            cvec.append(cVec)
+        cvec = np.transpose(cvec)
+        c = np.zeros([Rgrid, Zgrid, comp_num])
+        c[:Rgrid // 4, 0, :] = cvec
+        c[Rgrid // 4: Rgrid // 2, 0, :] = np.flipud(cvec)
+        c[Rgrid // 2:,0,:] = 0
         # second tube run
-        dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
+        #dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
         dx = L2 / (Zgrid - 1)
-        dr[:, :, :] = 2 * R2 / (Rgrid - 1)
+        dr = 2 * R2 / (Rgrid - 1)
         for j in range(numLoop):
             c1 = c.copy()
             old = c1[:, -1, comp_namelist.index(key_spe_for_plot)]

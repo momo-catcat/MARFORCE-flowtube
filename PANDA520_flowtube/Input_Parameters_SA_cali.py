@@ -224,9 +224,9 @@ params = {'T': UnitFloat(T, "K"),  # temperaure
 for i in range(8):
     print(list(params.keys())[i], list(params.values())[i], list(params.values())[i].unit)
 
-# i = 0
-# const_comp_conc= const_comp_conc[:,i,:]
-# Init_comp_conc=Init_comp_conc[i]
+#i = 2
+#const_comp_conc= const_comp_conc[:,i,:]
+#Init_comp_conc=Init_comp_conc[i]
 
 # %% computation begins
 meanconc = []
