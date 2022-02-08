@@ -145,11 +145,12 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
 
             cVec = interpolate.splev(rVec, splineres1)
             cvec.append(cVec)
+
         cvec = np.transpose(cvec)
+
         c = np.zeros([Rgrid, Zgrid, comp_num])
         c[:Rgrid // 2, 0, :] = cvec
-        #c[Rgrid // 4: Rgrid // 2, 0, :] = np.flipud(cvec)
-        c[Rgrid // 2:,0,:] = np.zeros([Rgrid//2,comp_num])
+        c[Rgrid // 2:, 0, :] = np.zeros([ Rgrid // 2, comp_num])
         #%% second tube run
         #dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
         dx = L2 / (Zgrid - 1)
@@ -195,6 +196,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
                 break
 
     else:
+        #%% run once
         for i in const_comp:
             c[:, :, comp_namelist.index(i)] = const_comp_gird[const_comp.index(i)]
         if R2 == 0:
