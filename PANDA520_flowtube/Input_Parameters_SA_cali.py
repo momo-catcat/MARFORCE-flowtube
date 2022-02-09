@@ -125,7 +125,12 @@ SO2conc = np.transpose([SO2conc1, SO2conc2])
 
 # % store all the const species to const_comp_conc
 const_comp_conc = np.transpose([SO2conc, H2Oconc, O2conc])
-
+if flag_tube == '3':
+    const_comp_free = ['H2O','O2']
+    const_comp_conc_free = [H2Oconc1[0], O2conc1[0]]
+else:
+    const_comp_free = []
+    const_comp_conc_free = []
 # calculate Initial concentration for some species here is OH and HO2 
 csH2O = 7.22e-20  # cm2
 
@@ -208,7 +213,9 @@ params = {'T': UnitFloat(T, "K"),  # temperaure
           # 'formula': formula, # the formula for the plots
           'key_spe_for_plot': key_spe_for_plot,  # key species for ploting
           'plot_spec': plot_spec,  # plot species
-          'flag_tube': flag_tube
+          'flag_tube': flag_tube,
+          'const_comp_free ': const_comp_free,
+          'const_comp_conc_free':const_comp_conc_free
           }
 # %
 for i in range(8):

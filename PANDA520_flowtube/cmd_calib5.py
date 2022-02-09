@@ -42,6 +42,9 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     plot_spec = params['plot_spec']  # plot species
     dt = params['dt']
     flag_tube = params['flag_tube']
+    const_comp_free = params['const_comp_free']
+    const_comp_conc_free = params['const_comp_conc_free']
+
 
     # read the file and store everything into a list
     f_open_eqn = open(sch_name, mode='r')  # open the chemical scheme file
@@ -137,6 +140,9 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
             c[:int(Rgrid / 2), :, comp_namelist.index(i)] = meanConc[comp_namelist.index(i)]
 
         c[int(Rgrid / 2):, 0, :] = np.zeros([int(Rgrid / 2), comp_num])
+        for i in const_comp_free:
+            c[int(Rgrid / 2):, :, comp_namelist.index(i)] = const_comp_conc_free[const_comp_free.index(i)]
+
         # %% second tube run
 
         dx = L2 / (Zgrid - 1)
