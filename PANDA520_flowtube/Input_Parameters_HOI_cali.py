@@ -30,8 +30,8 @@ is 2.54 cm, 0.2 for the tube wall
 ''' Prepare the inputs'''
  
 # load H2O Q  
-file = os.getcwd() + '/input_files/HOI_cali_T1_25Oct21.csv'
-# file = os.getcwd() + '/input_files/HOI_cali_T2_20Nov21.csv'
+# file = os.getcwd() + '/input_files/HOI_cali_T1_25Oct21.csv'
+file = os.getcwd() + '/input_files/HOI_cali_T2_20Nov21.csv'
 
 H2O_data=pd.read_csv(file)
 Q1 = H2O_data['Q1'][0]  # lpm
@@ -46,13 +46,37 @@ p = 101000 # pressure Pa
 flag_tube = '3'
 
 if flag_tube == '3':
+    #R1 = float(input('1st tube diameter:'))
+    #L1 = float(input('1st tube length:'))
+    #R2 = float(input('2nd tube diameter:'))
+    #L2 = float(input('2nd tube length:'))
+    # #25Oct21
+    # L1 = 50
+    # L2 = 68
+    #20Nov21
+    L1 = 50
+    L2 = 66
+
+
+    R1 = 0.78
+    R2 = 1.04
     Q1 = H2O_data['Q1'][1]  # lpm
     Q2 = H2O_data['Q2'][1]
     Q2 = Q1 + Q2
 elif flag_tube == '2':
+    #R1 = float(input('tube diameter:'))
+    #L1 = float(input('tube length:'))
+    R1 = 0.78
+    L1 = 100
+    R2 = 1.04
+    L2 = 50
     Q1 = H2O_data['Q1'][1]  # lpm
     Q2 = Q1
 else:
+    R1 = 0.78
+    R2 = 0
+    L2 = 0
+    L1 = 100
     Q1 = H2O_data['Q1'][1]
     Q2 = 0
 
@@ -75,7 +99,7 @@ fullOrSimpleModel = 'full' # simple: Gormley&Kennedy approximation, full: flow m
 WaterFlow1 = H2O_data['H2O_cali']
 
 if outflowLocation in 'after':
-    totFlow = N2Flow + AirFlow / 1000 + WaterFlow1 / 1000 #+ #SO2Flow / 1000
+    totFlow = N2Flow + AirFlow / 1000 + WaterFlow1 / 1000 + SO2Flow / 1000
 else:
     totFlow = Q1 * np.ones(WaterFlow1.shape)
 
@@ -197,7 +221,8 @@ for i in range(WaterFlow1.size):#range(H2SO4.size):
         c.append(c1)
 meanconc_s = pd.DataFrame(meanconc)
 meanconc_s.columns = plot_spec
-meanconc_s.to_csv('./Export_files/HOI_cali_25Oct21.csv')
+# meanconc_s.to_csv('./Export_files/HOI_cali_25Oct21.csv')
+meanconc_s.to_csv('./Export_files/HOI_cali_20Nov21.csv')
 
 # with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_c.txt', 'w') as f:
 #     for item in c:
