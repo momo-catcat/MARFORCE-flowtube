@@ -13,6 +13,7 @@ import os
 import numpy as np
 import pandas as pd
 from cmd_calib5 import cmd_calib5
+from basic_input import inputs_va
 
 
 class UnitFloat(float):
@@ -32,52 +33,29 @@ class UnitFloat(float):
 is 2.54 cm, 0.2 for the tube wall
 '''
 # %% Prepare the inputs
-
-# load H2O Q  
-file = os.getcwd() + '/input_files/H2O_1.csv'
-
-H2O_data = pd.read_csv(file)
-
-''' set temperature and press '''
-# T_cel = 25  # C
-
 T_cel = float(input('temperaure C:'))
+date = input('date:')
+
 T = T_cel + 273.15  # K
 p = 96060  # pressure Pa
 
-# % set the parameters for the first tube
-# flag_tube = input('how much tube you have:')
-flag_tube = '2'
+R1,L1,R2,L2,flag_tube,file = inputs_va(date)
+
+# load H2O Q
+file = os.getcwd() + '/input_files/' + file
+
+H2O_data = pd.read_csv(file)
 
 if flag_tube == '3':
-    # R1 = float(input('1st tube diameter:'))
-    # L1 = float(input('1st tube length:'))
-    # R2 = float(input('2nd tube diameter:'))
-    # L2 = float(input('2nd tube length:'))
-    R1 = 0.78
-    L1 = 50
-    R2 = 1.04
-    L2 = 68
-    Q1 = H2O_data['Q1'][1]  # lpm
-    Q2 = H2O_data['Q2'][1]
+    Q1 = H2O_data['Q1'][0]  # lpm
+    Q2 = H2O_data['Q2'][0]
     Q2 = Q1 + Q2
 elif flag_tube == '2':
-    # R1 = float(input('tube diameter:'))
-    # L1 = float(input('tube length:'))
-    R1 = 0.78
-    L1 = 41
-    R2 = 1.04
-    L2 = 58.5
-    Q1 = H2O_data['Q1'][1]  # lpm
+    Q1 = H2O_data['Q1'][0]  # lpm
     Q2 = Q1
 else:
-    R1 = 0.78
-    R2 = 0
-    L2 = 0
-    L1 = 100
-    Q1 = H2O_data['Q1'][1]
+    Q1 = H2O_data['Q1'][0]
     Q2 = 0
-
 
 # It product for cali box 
 Itx = 5.2009e10  # at Qx flow rate
@@ -94,7 +72,6 @@ outflowLocation = 'before'  # outflow tube located before or after injecting air
 fullOrSimpleModel = 'full'  # simple: Gormley&Kennedy approximation, full: flow model (much slower)
 
 # calculate the conc for const species here, this file is SO2, O2, H2O
-
 WaterFlow1 = H2O_data['H2O_1']
 
 if outflowLocation in 'after':
@@ -126,6 +103,12 @@ SO2conc = np.transpose([SO2conc1, SO2conc2])
 # % store all the const species to const_comp_conc
 const_comp_conc = np.transpose([SO2conc, H2Oconc, O2conc])
 
+if flag_tube == '3':
+    const_comp_free = ['H2O','O2']
+    const_comp_conc_free = [H2Oconc1[0], O2conc1[0]]
+else:
+    const_comp_free = [0]
+    const_comp_conc_free = [0]
 # calculate Initial concentration for some species here is OH and HO2 
 csH2O = 7.22e-20  # cm2
 
@@ -208,7 +191,9 @@ params = {'T': UnitFloat(T, "K"),  # temperaure
           # 'formula': formula, # the formula for the plots
           'key_spe_for_plot': key_spe_for_plot,  # key species for ploting
           'plot_spec': plot_spec,  # plot species
-          'flag_tube': flag_tube
+          'flag_tube': flag_tube,
+          'const_comp_free': const_comp_free,
+          'const_comp_conc_free': const_comp_conc_free
           }
 # %
 for i in range(8):
