@@ -21,7 +21,7 @@ def cal_const_comp_conc(Rgrid, Zgrid, const_comp_conc, L1, L2, const_comp):
 
 
 ## this file is used to set the const comp conc for the grids
-def cal_const_comp_conc_1(Rgrid, Zgrid, const_comp_conc, L1, L2, const_comp):
+def cal_const_comp_conc_1(Rgrid, Zgrid, const_comp_conc, const_comp):
     const_comp_gird = []
     for i in range(len(const_comp)):
         # const_comp[i]

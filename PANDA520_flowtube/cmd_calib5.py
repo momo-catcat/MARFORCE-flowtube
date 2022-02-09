@@ -38,12 +38,10 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     con_infl_nam = const_comp
     Zgrid = params['Zgrid']  # number of grid points in tube length direction
     Rgrid = params['Rgrid']  # number of grid points in tube radius direction
-    # formula = params['formula'] # the formula for the plots
     key_spe_for_plot = params['key_spe_for_plot']  # key species for ploting
     plot_spec = params['plot_spec']  # plot species
     dt = params['dt']
     flag_tube = params['flag_tube']
-    H2Oconc = const_comp_conc[:, const_comp.index('H2O')]
 
     # read the file and store everything into a list
     f_open_eqn = open(sch_name, mode='r')  # open the chemical scheme file
@@ -52,40 +50,29 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
 
     eqn_list, num_eqn, rrc, rrc_name, RO2_names, eqn_list_on = sch_interr.sch_interr(total_list_eqn, chm_sch_mrk)
 
-    [rindx, rstoi, pindx, pstoi, reac_coef,
-     nreac, nprod, y_arr, y_rind, uni_y_rind, y_pind,
-     uni_y_pind, reac_col, prod_col, rstoi_flat, pstoi_flat,
-     rr_arr, rr_arr_p, comp_namelist, comp_list,
-     comp_num] = eqn_interr.eqn_interr(num_eqn, eqn_list, chm_sch_mrk)
+    [rindx, rstoi, pindx, pstoi, reac_coef, nreac, nprod, comp_namelist, comp_list, comp_num] = eqn_interr.eqn_interr(num_eqn, eqn_list, chm_sch_mrk)
 
-    [rindx, pindx, rstoi, pstoi, nreac, nprod, y_arr, y_rind,
-     uni_y_rind, y_pind, uni_y_pind, reac_col, prod_col,
-     rstoi_flat, pstoi_flat, rr_arr, rr_arr_p,
-     comp_num, RO2_indx,
-     HOMRO2_indx, comp_list,
-     eqn_num, comp_namelist,
-     erf, err_mess, con_C_indx] = eqn_pars.extr_mech(sch_name, chm_sch_mrk,
+    [RO2_indx, HOMRO2_indx, con_C_indx] = eqn_pars.extr_mech(sch_name, chm_sch_mrk,
                                                      con_infl_nam, const_comp,
                                                      drh_str, erh_str)
 
     RO2_indi = RO2_indices.RO2_indices(comp_namelist, RO2_names)
     u, Diff_vals = get_diff_and_u(comp_namelist, Diff_setname, con_C_indx, Diff_set, T, p)
+
     numLoop = 500  # number of times to run to reach the pinhole of the instrument
     timesteps = 1000  # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
-    # print (comp_namelist, Diff_vals)
+
     # Change odd number Rgrid to even number grid
     if (Rgrid % 2) != 0:
         Rgrid = Rgrid + 1
 
     sp_line = int(Zgrid / 2)
-    # % set the dr dx Q parameters for the tube
-
     Rtot = np.zeros([int(Rgrid), int(Zgrid), comp_num])
     Rtot[:, 0:sp_line, :] = R1
     Rtot[:, sp_line:, :] = R2
 
     const_comp_gird = cal_const_comp_conc.cal_const_comp_conc(Rgrid, Zgrid, const_comp_conc, L1, L2, const_comp)
-    const_comp_grid_1 = cal_const_comp_conc.cal_const_comp_conc_1(Rgrid, Zgrid, const_comp_conc, L1, L2, const_comp)
+    const_comp_grid_1 = cal_const_comp_conc.cal_const_comp_conc_1(Rgrid, Zgrid, const_comp_conc, const_comp)
 
     c = np.zeros([Rgrid, Zgrid, comp_num])
     for i in Init_comp:
@@ -96,12 +83,11 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
 
     C0 = c[0, 0, :]
 
-    [y, y_mw, num_comp, M, y_indx_plot, dydt_vst,
-     comp_namelist, erf, err_mess] = init_conc.init_conc(comp_num, comp_namelist, C0, T, \
+    [y, comp_num, M, dydt_vst,
+     comp_namelist] = init_conc.init_conc(comp_num, comp_namelist, C0, T, \
                                                          p, comp_namelist, rindx, pindx, \
                                                          num_eqn[0], nreac, nprod, comp_namelist, \
                                                          RO2_indx, HOMRO2_indx, rstoi, pstoi)
-    # y = c[0,0,:]
 
     import rate_coeffs
     RO2conc = RO2_conc.RO2_conc(RO2_indi, y)
@@ -147,6 +133,8 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
         c = np.zeros([Rgrid, Zgrid, comp_num])
         for i in range(len(comp_namelist)):
             c[:int(Rgrid / 2), 0, i] = meanConc[i]
+        for i in const_comp:
+            c[:int(Rgrid / 2), :, comp_namelist.index(i)] = meanConc[comp_namelist.index(i)]
 
         c[int(Rgrid / 2):, 0, :] = np.zeros([int(Rgrid / 2), comp_num])
         # %% second tube run
@@ -174,8 +162,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
             axs = axs.ravel()
             formula = get_formula(plot_spec)
             for i in range(len(plot_spec)):
-                # axs[i].pcolor(np.linspace(0, L2 + L1, Zgrid), np.linspace(-R1, R1, Rgrid), c[:, :, comp_plot_index[i]],
-                #             shading='nearest', cmap='jet')
+
                 axs[i].pcolor(np.linspace(0, L2, Zgrid), np.linspace(-R2, R2, Rgrid), c[:, :, comp_plot_index[i]],
                               shading='nearest', cmap='jet')
 
@@ -201,7 +188,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
             R2 = R1
         dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
         dx = (L2 + L1) / (Zgrid - 1)
-        # dr = 2 * R1 / (Rgrid - 1)
+
         dr[:, 0:sp_line, :] = 2 * R1 / (Rgrid - 1)
         dr[:, sp_line:, :] = 2 * R2 / (Rgrid - 1)
         for j in range(numLoop):
@@ -226,8 +213,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
             axs = axs.ravel()
             formula = get_formula(plot_spec)
             for i in range(len(plot_spec)):
-                # axs[i].pcolor(np.linspace(0, L2 + L1, Zgrid), np.linspace(-R1, R1, Rgrid), c[:, :, comp_plot_index[i]],
-                #             shading='nearest', cmap='jet')
+
                 axs[i].pcolor(np.linspace(0, L2, Zgrid), np.linspace(-R1, R2, Rgrid), c[:, :, comp_plot_index[i]],
                               shading='nearest', cmap='jet')
 
@@ -248,11 +234,10 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
         # %% run once with one tube
         for i in const_comp:
             c[:, :, comp_namelist.index(i)] = const_comp_grid_1[const_comp.index(i)]
-        #dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
+
         dx = L1 / (Zgrid - 1)
         dr = 2 * R1 / (Rgrid - 1)
-        #dr[:, 0:sp_line, :] = 2 * R1 / (Rgrid - 1)
-        #dr[:, sp_line:, :] = 2 * R2 / (Rgrid - 1)
+
         for j in range(numLoop):
             c1 = c.copy()
             old = c1[:, -1, comp_namelist.index(key_spe_for_plot)]
@@ -275,8 +260,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
             axs = axs.ravel()
             formula = get_formula(plot_spec)
             for i in range(len(plot_spec)):
-                # axs[i].pcolor(np.linspace(0, L2 + L1, Zgrid), np.linspace(-R1, R1, Rgrid), c[:, :, comp_plot_index[i]],
-                #             shading='nearest', cmap='jet')
+
                 axs[i].pcolor(np.linspace(0, L1, Zgrid), np.linspace(-R1, R1, Rgrid), c[:, :, comp_plot_index[i]],
                               shading='nearest', cmap='jet')
 
@@ -297,15 +281,11 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
         R2 = R1
 
     dr_final = R2 / (Rgrid - 1) * 2
-    x = np.arange(0, R2, dr_final) + dr_final
-    # x = np.flip(x)
-    # x = np.append(x, np.flip(x))
+    x = np.arange(0, R2, dr_final) + dr_final # match with y_x
 
     rVec = np.arange(0, R2, 0.001)
 
     rVec = np.flip(rVec)
-
-    # rVec = np.append(x, np.flip(rVec))
 
     meanConc = []
     for i in plot_spec:
@@ -322,7 +302,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
         cVec2 = interpolate.splev(rVec, splineres2)
         conc1 = 0.001 / R2 ** 2 * np.sum(cVec1 * rVec)
         conc2 = 0.001 / R2 ** 2 * np.sum(cVec2 * rVec)
-        conc = conc1 + conc2
-        meanConc.append(conc)
+
+        meanConc.append(conc1+conc2)
 
     return meanConc, c
