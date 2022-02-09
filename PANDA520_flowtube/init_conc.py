@@ -300,5 +300,5 @@ def init_conc(num_comp, Comp0, init_conc, TEMP, PInit,
 # 	except:
 # 		NO3i = 0 # filler
 # 	RO2i = comp_namelist.index('RO2')
-	return (y, y_mw, num_comp, Cfactor*1e9, y_indx_plot,  dydt_vst, 
-			comp_namelist, erf, err_mess)
+	return (y,  num_comp, Cfactor*1e9, dydt_vst,
+			comp_namelist)

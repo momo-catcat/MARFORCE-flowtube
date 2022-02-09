@@ -61,10 +61,8 @@ def extr_mech(sch_name, chem_sch_mrk,
 # 	[comp_smil, comp_name] = xml_interr.xml_interr(xml_name)
 
 	# get equation information for chemical reactions
-	[rindx_g, rstoi_g, pindx_g, pstoi_g, reac_coef_g, 
-			nreac_g, nprod_g, y_arr_g, y_rind_g, uni_y_rind_g, y_pind_g, 
-			uni_y_pind_g, reac_col_g, prod_col_g, rstoi_flat_g, pstoi_flat_g, 
-			rr_arr_g, rr_arr_p_g, comp_namelist, comp_list, 
+	[rindx_g, rstoi_g, pindx_g, pstoi_g, reac_coef_g,
+			nreac_g, nprod_g, comp_namelist, comp_list,
 			comp_num] = eqn_interr.eqn_interr(eqn_num, 
 		eqn_list,  chem_sch_mrk)
         
@@ -138,10 +136,7 @@ def extr_mech(sch_name, chem_sch_mrk,
 	# get number of photolysis equations
  	# Jlen = photo_num.photo_num(photo_path)
 
-	return(rindx_g, pindx_g, rstoi_g, pstoi_g, nreac_g, nprod_g,  y_arr_g, y_rind_g,
-		uni_y_rind_g, y_pind_g, uni_y_pind_g, reac_col_g, prod_col_g, 
-		rstoi_flat_g, pstoi_flat_g, rr_arr_g, rr_arr_p_g, 
-		comp_num, RO2_indx,
-		HOMRO2_indx, comp_list, 
-		 eqn_num, comp_namelist, 
-		erf, err_mess, con_C_indx)
+	return(
+		RO2_indx,
+		HOMRO2_indx,
+		con_C_indx)

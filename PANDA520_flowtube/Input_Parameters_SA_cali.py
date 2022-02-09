@@ -1,4 +1,3 @@
-# this file is used for all the inputs 
 # %% first clear all the variable that you
 # already have 
 for name in dir():
@@ -11,10 +10,8 @@ import sys
 import os
 # file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"  # file path
 # os.chdir(file_path)
-# % import functions
 import numpy as np
 import pandas as pd
-# from Vapour_calc import H2O_conc as H2O_conc
 from cmd_calib5 import cmd_calib5
 
 
@@ -40,9 +37,6 @@ is 2.54 cm, 0.2 for the tube wall
 file = os.getcwd() + '/input_files/H2O_1.csv'
 
 H2O_data = pd.read_csv(file)
-Q1 = H2O_data['Q1'][1]  # lpm
-Q2 = H2O_data['Q2'][1]
-ratio = Q1 / (Q1 + Q2)
 
 ''' set temperature and press '''
 # T_cel = 25  # C
@@ -52,27 +46,28 @@ T = T_cel + 273.15  # K
 p = 96060  # pressure Pa
 
 # % set the parameters for the first tube
-#flag_tube = input('how much tube you have:')
-flag_tube = '1'
+# flag_tube = input('how much tube you have:')
+flag_tube = '2'
+
 if flag_tube == '3':
-    #R1 = float(input('1st tube diameter:'))
-    #L1 = float(input('1st tube length:'))
-    #R2 = float(input('2nd tube diameter:'))
-    #L2 = float(input('2nd tube length:'))
+    # R1 = float(input('1st tube diameter:'))
+    # L1 = float(input('1st tube length:'))
+    # R2 = float(input('2nd tube diameter:'))
+    # L2 = float(input('2nd tube length:'))
     R1 = 0.78
-    L1 = 41
+    L1 = 50
     R2 = 1.04
-    L2 = 58.5
+    L2 = 68
     Q1 = H2O_data['Q1'][1]  # lpm
     Q2 = H2O_data['Q2'][1]
     Q2 = Q1 + Q2
 elif flag_tube == '2':
-    #R1 = float(input('tube diameter:'))
-    #L1 = float(input('tube length:'))
+    # R1 = float(input('tube diameter:'))
+    # L1 = float(input('tube length:'))
     R1 = 0.78
-    L1 = 100
+    L1 = 41
     R2 = 1.04
-    L2 = 50
+    L2 = 58.5
     Q1 = H2O_data['Q1'][1]  # lpm
     Q2 = Q1
 else:
@@ -83,17 +78,6 @@ else:
     Q1 = H2O_data['Q1'][1]
     Q2 = 0
 
-# % set the parameters for the first tube
-# R1 = 0.78 # cm the inner diameters of the tube
-# L1 = 10  # cm
-# Q1 = H2O_data['Q1'][0] # lpm
-
-# % set the parameters for the second tube
-# if there is no second tube, then set to 0
-# R2 = 0.78/3*4
-# L2 = 68 
-# Q2 =  H2O_data['Q2'][2]
-# Q2 = Q1 + Q2
 
 # It product for cali box 
 Itx = 5.2009e10  # at Qx flow rate
@@ -131,7 +115,6 @@ if flag_tube == '1':
     O2conc2 = pd.Series(np.zeros(WaterFlow1.shape))
     SO2conc2 = pd.Series(np.zeros(WaterFlow1.shape))
 else:
-    # H2Oconc2 = (WaterFlow2 + WaterFlow1) / 1000 / totFlow2 * H2O_conc(T_cel, 1).SatP[0] / 1.3806488e-23 / T / 1e6
     H2Oconc2 = H2O_data['H2Oconc_2']
     O2conc2 = O2conc1 * Q1 / Q2
     SO2conc2 = SO2conc1 * Q1 / Q2
@@ -195,7 +178,6 @@ Rgrid = np.array(80).astype(int)  # number of grid points in tube radius directi
 # chemistry part 
 sch_name = os.getcwd() + '/input_mechanism/SO2_SA.txt'
 chm_sch_mrk = ['{', 'RO2', '+', '', '', ';', '+', ';', '$', '{', ':', ';', '}']
-# formula = ['OH','$\mathdefault{HSO_3}$','$\mathdefault{HO_2}$','$\mathdefault{SO_3}$','SA']
 key_spe_for_plot = 'H2SO4'
 plot_spec = ['OH', 'HSO3', 'HO2', 'SO3', 'H2SO4']  # plot species
 const_comp = ['SO2', 'H2O', 'O2']  # species have constant concentration
@@ -232,10 +214,9 @@ params = {'T': UnitFloat(T, "K"),  # temperaure
 for i in range(8):
     print(list(params.keys())[i], list(params.values())[i], list(params.values())[i].unit)
 
-#i = 2
-#const_comp_conc= const_comp_conc[:,i,:]
-#Init_comp_conc=Init_comp_conc[i]
-
+# i = 2
+# const_comp_conc= const_comp_conc[:,i,:]
+# Init_comp_conc=Init_comp_conc[i]
 # %% computation begins
 meanconc = []
 
@@ -246,17 +227,14 @@ for i in range(len(H2O_data)):  # range(H2SO4.size):
     meanconc.append(meanConc1)
     c.append(c1)
 
-# meanconc = meanConc1
 meanconc_s = pd.DataFrame(np.transpose(meanconc))
 meanconc_s.index = plot_spec
-
 # %% save the modelled SA, HO2
 meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_1_mean.csv')
 
 with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_1_c.txt', 'w') as f:
     for item in c:
         f.write("%s\n" % item)
-
 # %% check the specifiy species
 # import plot_species
 # plot_species.plot(c,L1,L2,ID1,ID2,'SA') # need to change
