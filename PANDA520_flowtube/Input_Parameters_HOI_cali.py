@@ -43,17 +43,23 @@ T = T_cel + 273.15 # K
 p = 101000 # pressure Pa
 
 #% set the parameters for the first tube 
-flag_tube = '1'
+flag_tube = '3'
 
 if flag_tube == '3':
     #R1 = float(input('1st tube diameter:'))
     #L1 = float(input('1st tube length:'))
     #R2 = float(input('2nd tube diameter:'))
     #L2 = float(input('2nd tube length:'))
+    #25Oct21
+    L1 = 50
+    L2 = 68
+    # #20Nov21
+    # L1 = 50
+    # L2 = 66
+
+
     R1 = 0.78
-    L1 = 41
     R2 = 1.04
-    L2 = 58.5
     Q1 = H2O_data['Q1'][1]  # lpm
     Q2 = H2O_data['Q2'][1]
     Q2 = Q1 + Q2
@@ -216,6 +222,7 @@ for i in range(WaterFlow1.size):#range(H2SO4.size):
 meanconc_s = pd.DataFrame(meanconc)
 meanconc_s.columns = plot_spec
 meanconc_s.to_csv('./Export_files/HOI_cali_25Oct21.csv')
+# meanconc_s.to_csv('./Export_files/HOI_cali_20Nov21.csv')
 
 # with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_c.txt', 'w') as f:
 #     for item in c:
