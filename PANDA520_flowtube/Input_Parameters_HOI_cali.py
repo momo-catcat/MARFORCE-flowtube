@@ -43,7 +43,7 @@ T = T_cel + 273.15 # K
 p = 101000 # pressure Pa
 
 #% set the parameters for the first tube 
-flag_tube = '1'
+flag_tube = '3'
 
 if flag_tube == '3':
     #R1 = float(input('1st tube diameter:'))
@@ -93,7 +93,7 @@ fullOrSimpleModel = 'full' # simple: Gormley&Kennedy approximation, full: flow m
 WaterFlow1 = H2O_data['H2O_cali']
 
 if outflowLocation in 'after':
-    totFlow = N2Flow + AirFlow / 1000 + WaterFlow1 / 1000 + SO2Flow / 1000
+    totFlow = N2Flow + AirFlow / 1000 + WaterFlow1 / 1000 #+ #SO2Flow / 1000
 else:
     totFlow = Q1 * np.ones(WaterFlow1.shape)
 
