@@ -30,8 +30,8 @@ is 2.54 cm, 0.2 for the tube wall
 ''' Prepare the inputs'''
  
 # load H2O Q  
-file = os.getcwd() + '/input_files/HOI_cali_T1_25Oct21.csv'
-# file = os.getcwd() + '/input_files/HOI_cali_T2_20Nov21.csv'
+# file = os.getcwd() + '/input_files/HOI_cali_T1_25Oct21.csv'
+file = os.getcwd() + '/input_files/HOI_cali_T2_20Nov21.csv'
 
 H2O_data=pd.read_csv(file)
 Q1 = H2O_data['Q1'][0]  # lpm
@@ -50,12 +50,12 @@ if flag_tube == '3':
     #L1 = float(input('1st tube length:'))
     #R2 = float(input('2nd tube diameter:'))
     #L2 = float(input('2nd tube length:'))
-    #25Oct21
-    L1 = 50
-    L2 = 68
-    # #20Nov21
+    # #25Oct21
     # L1 = 50
-    # L2 = 66
+    # L2 = 68
+    #20Nov21
+    L1 = 50
+    L2 = 66
 
 
     R1 = 0.78
@@ -221,8 +221,8 @@ for i in range(WaterFlow1.size):#range(H2SO4.size):
         c.append(c1)
 meanconc_s = pd.DataFrame(meanconc)
 meanconc_s.columns = plot_spec
-meanconc_s.to_csv('./Export_files/HOI_cali_25Oct21.csv')
-# meanconc_s.to_csv('./Export_files/HOI_cali_20Nov21.csv')
+# meanconc_s.to_csv('./Export_files/HOI_cali_25Oct21.csv')
+meanconc_s.to_csv('./Export_files/HOI_cali_20Nov21.csv')
 
 # with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_c.txt', 'w') as f:
 #     for item in c:
