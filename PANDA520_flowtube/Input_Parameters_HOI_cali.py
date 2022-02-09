@@ -34,8 +34,8 @@ file = os.getcwd() + '/input_files/HOI_cali_T1_25Oct21.csv'
 # file = os.getcwd() + '/input_files/HOI_cali_T2_20Nov21.csv'
 
 H2O_data=pd.read_csv(file)
-Q1 = H2O_data['Q1'][1]  # lpm
-Q2 = H2O_data['Q2'][1]
+Q1 = H2O_data['Q1'][0]  # lpm
+Q2 = H2O_data['Q2'][0]
 ratio = Q1/(Q1+Q2)
 ''' set temperature and press '''
 T_cel = 23
@@ -43,24 +43,36 @@ T = T_cel + 273.15 # K
 p = 101000 # pressure Pa
 
 #% set the parameters for the first tube 
-flag_tube = 1
+flag_tube = '1'
 
-if flag_tube == 2:
+if flag_tube == '3':
+    #R1 = float(input('1st tube diameter:'))
+    #L1 = float(input('1st tube length:'))
+    #R2 = float(input('2nd tube diameter:'))
+    #L2 = float(input('2nd tube length:'))
     R1 = 0.78
-    L1 = 50
+    L1 = 41
     R2 = 1.04
-    L2 = 68
-    Q1 = H2O_data['Q1'].values[0] # lpm
-    Q2 =  H2O_data['Q2'].values[0] + Q1
-    # Q2 = Q1 + Q2
+    L2 = 58.5
+    Q1 = H2O_data['Q1'][1]  # lpm
+    Q2 = H2O_data['Q2'][1]
+    Q2 = Q1 + Q2
+elif flag_tube == '2':
+    #R1 = float(input('tube diameter:'))
+    #L1 = float(input('tube length:'))
+    R1 = 0.78
+    L1 = 100
+    R2 = 1.04
+    L2 = 50
+    Q1 = H2O_data['Q1'][1]  # lpm
+    Q2 = Q1
 else:
     R1 = 0.78
-    L1 = 50  
     R2 = 0
     L2 = 0
-    Q1 = H2O_data['Q1'][0] # lpm
+    L1 = 100
+    Q1 = H2O_data['Q1'][1]
     Q2 = 0
-
 
 # It product for cali box 
 Itx = 5.2009e10 # at Qx flow rate
@@ -186,8 +198,8 @@ params = {'T' : UnitFloat(T, "K"), # temperaure
           'Rgrid': Rgrid, # number of grid points in tube radius direction
            # 'formula': formula, # the formula for the plots
           'key_spe_for_plot' : key_spe_for_plot, # key species for ploting 
-          'plot_spec' : plot_spec,# plot species
-          'ratio': ratio
+          'plot_spec': plot_spec,# plot species
+          'flag_tube': flag_tube
           }
 
 for i in range(8):

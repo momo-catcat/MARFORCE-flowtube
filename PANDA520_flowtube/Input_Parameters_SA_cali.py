@@ -37,7 +37,7 @@ is 2.54 cm, 0.2 for the tube wall
 # %% Prepare the inputs
 
 # load H2O Q  
-file = os.getcwd() + '/input_files/H2O_2.csv'
+file = os.getcwd() + '/input_files/H2O_1.csv'
 
 H2O_data = pd.read_csv(file)
 Q1 = H2O_data['Q1'][1]  # lpm
@@ -53,8 +53,8 @@ p = 96060  # pressure Pa
 
 # % set the parameters for the first tube
 #flag_tube = input('how much tube you have:')
-flag_tube = '2'
-if flag_tube == '2':
+flag_tube = '1'
+if flag_tube == '3':
     #R1 = float(input('1st tube diameter:'))
     #L1 = float(input('1st tube length:'))
     #R2 = float(input('2nd tube diameter:'))
@@ -66,15 +66,23 @@ if flag_tube == '2':
     Q1 = H2O_data['Q1'][1]  # lpm
     Q2 = H2O_data['Q2'][1]
     Q2 = Q1 + Q2
-else:
+elif flag_tube == '2':
     #R1 = float(input('tube diameter:'))
     #L1 = float(input('tube length:'))
     R1 = 0.78
     L1 = 100
-    R2 = 0
-    L2 = 0
+    R2 = 1.04
+    L2 = 50
     Q1 = H2O_data['Q1'][1]  # lpm
     Q2 = Q1
+else:
+    R1 = 0.78
+    R2 = 0
+    L2 = 0
+    L1 = 100
+    Q1 = H2O_data['Q1'][1]
+    Q2 = 0
+
 # % set the parameters for the first tube
 # R1 = 0.78 # cm the inner diameters of the tube
 # L1 = 10  # cm
@@ -218,7 +226,7 @@ params = {'T': UnitFloat(T, "K"),  # temperaure
           # 'formula': formula, # the formula for the plots
           'key_spe_for_plot': key_spe_for_plot,  # key species for ploting
           'plot_spec': plot_spec,  # plot species
-          'ratio': ratio
+          'flag_tube': flag_tube
           }
 # %
 for i in range(8):
@@ -233,7 +241,7 @@ meanconc = []
 
 c = []
 
-for i in range(2, 3):  # range(H2SO4.size):
+for i in range(len(H2O_data)):  # range(H2SO4.size):
     meanConc1, c1 = cmd_calib5(const_comp_conc[:, i, :], params, Init_comp_conc[i])
     meanconc.append(meanConc1)
     c.append(c1)
@@ -243,9 +251,9 @@ meanconc_s = pd.DataFrame(np.transpose(meanconc))
 meanconc_s.index = plot_spec
 
 # %% save the modelled SA, HO2
-meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_2_mean.csv')
+meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_1_mean.csv')
 
-with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_2_c.txt', 'w') as f:
+with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_1_c.txt', 'w') as f:
     for item in c:
         f.write("%s\n" % item)
 

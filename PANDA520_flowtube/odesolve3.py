@@ -36,7 +36,7 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
         # convection; carried by main flow
         # Refs: 1. https://en.wikipedia.org/wiki/Advection
         #       2. Gormley & Kennedy, 1948, Diffusion from a stream flowing through a cylindrical tube
-        term2[1:Rgrid // 2, 1:-1, u] = (2. * Qtot[1:Rgrid // 2, 1:-1,u]) / (np.pi * Rtot[1:Rgrid // 2, 1:-1,u] ** 4) * \
+        term2[1:Rgrid // 2, 1:-1, u] = (2. * Qtot) / (np.pi * Rtot[1:Rgrid // 2, 1:-1,u] ** 4) * \
                                           (Rtot[1:Rgrid // 2, 1:-1,u] ** 2 - r[1:Rgrid // 2, 1:-1, u] ** 2) *\
                             (initc[1:Rgrid // 2, 1:-1, u] - initc[1:Rgrid // 2, 0:-2, u]) / dx # carried by main flow
 
@@ -51,7 +51,7 @@ def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist
 
         term1[1:Rgrid // 2, -1,u] = D[1:Rgrid // 2, -1, u] * (p_a_end + p_b_end + p_c_end)
 
-        term2[1:Rgrid // 2, -1, u] = (2. * Qtot[1:Rgrid // 2, -1,u]) / (np.pi * Rtot[1:Rgrid // 2, -1,u] ** 4) * \
+        term2[1:Rgrid // 2, -1, u] = (2. * Qtot) / (np.pi * Rtot[1:Rgrid // 2, -1,u] ** 4) * \
                                         (Rtot[1:Rgrid // 2, -1,u] ** 2 - r[1:Rgrid // 2, -1, u] ** 2) *\
                             (initc[1:Rgrid // 2, -1, u] - initc[1:Rgrid // 2, -2, u]) / dx #carried by main flow
 
