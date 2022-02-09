@@ -46,31 +46,13 @@ p = 101000 # pressure Pa
 flag_tube = '3'
 
 if flag_tube == '3':
-    #R1 = float(input('1st tube diameter:'))
-    #L1 = float(input('1st tube length:'))
-    #R2 = float(input('2nd tube diameter:'))
-    #L2 = float(input('2nd tube length:'))
-    R1 = 0.78
-    L1 = 41
-    R2 = 1.04
-    L2 = 58.5
     Q1 = H2O_data['Q1'][1]  # lpm
     Q2 = H2O_data['Q2'][1]
     Q2 = Q1 + Q2
 elif flag_tube == '2':
-    #R1 = float(input('tube diameter:'))
-    #L1 = float(input('tube length:'))
-    R1 = 0.78
-    L1 = 100
-    R2 = 1.04
-    L2 = 50
     Q1 = H2O_data['Q1'][1]  # lpm
     Q2 = Q1
 else:
-    R1 = 0.78
-    R2 = 0
-    L2 = 0
-    L1 = 100
     Q1 = H2O_data['Q1'][1]
     Q2 = 0
 
