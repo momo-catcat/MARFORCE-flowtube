@@ -1,15 +1,10 @@
 # %% first clear all the variable that you
-# already have 
 for name in dir():
     if not name.startswith('_'):
         del globals()[name]
 del name
-import sys
-# sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
 
 import os
-# file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"  # file path
-# os.chdir(file_path)
 import numpy as np
 import pandas as pd
 from cmd_calib5 import cmd_calib5
@@ -24,14 +19,16 @@ class UnitFloat(float):
     def __init__(self, value, unit=None):
         self.unit = unit
 
-
-'''
-# setup: box + 50 cm 3/4 inch +68 cm 1 inch+tower
-# first we roughfuly calculate with 3/4 inch at 118 cm long
-3/4 inch inner R is 0.78 cm
-1 inch inner diamerters is 0.78/4*3
-is 2.54 cm, 0.2 for the tube wall
-'''
+# summary for all the SA cali
+# MION inlet
+# 09.10 the frist SA cali with 41 cm for 3/4 inch and 58.5 cm for 1 inch first tower Br API9
+# 10.28 the second SA cali with 50 cm for 3/4 inch and 68 cm for 1 inch we have Y pieces first tower Br API9
+# 11.18 the third SA cali with 50 cm for 3/4 inch and 66 cm for 1 inch we have Y pieces and second tower Br API9
+# 01.04 the fourth SA cali with 10 cm for 3/4 inch and 78 cm for 1 inch we have Y pieces and first tower NO3 tower API9
+# NO3 inlet
+# 01.27 the fifth SA cali with 26cm for 3/4 inch NO3 inlet API9
+# MION inlet
+# 02.07 the sixth SA cali with 10 cm for 3/4 inch and 61 cm for 1 inch first tower Br karsa
 # %% Prepare the inputs
 T_cel = float(input('temperaure C:'))
 date = input('date:')
@@ -39,7 +36,7 @@ date = input('date:')
 T = T_cel + 273.15  # K
 p = 96060  # pressure Pa
 
-R1,L1,R2,L2,flag_tube,file = inputs_va(date)
+R1,L1,R2,L2,flag_tube,file,s1,s2 = inputs_va(date)
 
 # load H2O Q
 file = os.getcwd() + '/input_files/' + file
@@ -175,7 +172,7 @@ params = {'T': UnitFloat(T, "K"),  # temperaure
           'L2': UnitFloat(L2, "cm"),  # length for frist tube
           'Q1': UnitFloat(Q1, "lpm"),  # flow for frist tube
           'Q2': UnitFloat(Q2, "lpm"),  # flow for second tube
-          'dt': 0.0001,  # flow for second tube
+          'dt': 0.00001,  # flow for second tube
           'Diff_setname': Diff_setname,  # diffusion
           'Diff_set': Diff_set,
           # 'It': It, # it product for calculation 
@@ -207,7 +204,7 @@ meanconc = []
 
 c = []
 
-for i in range(len(H2O_data)):  # range(H2SO4.size):
+for i in range(9,len(H2O_data)):  # range(H2SO4.size):
     meanConc1, c1 = cmd_calib5(const_comp_conc[:, i, :], params, Init_comp_conc[i])
     meanconc.append(meanConc1)
     c.append(c1)
@@ -215,14 +212,12 @@ for i in range(len(H2O_data)):  # range(H2SO4.size):
 meanconc_s = pd.DataFrame(np.transpose(meanconc))
 meanconc_s.index = plot_spec
 # %% save the modelled SA, HO2
-meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_1_mean.csv')
+meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_mean_1'+s1)
 
-with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_1_c.txt', 'w') as f:
+with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_c1'+s2, 'w') as f:
     for item in c:
         f.write("%s\n" % item)
-# %% check the specifiy species
-# import plot_species
-# plot_species.plot(c,L1,L2,ID1,ID2,'SA') # need to change
+
 # %% compare the data from matlab
 # import scipy.io
 # import matplotlib.pyplot as plt
