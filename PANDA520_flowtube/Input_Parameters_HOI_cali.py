@@ -177,17 +177,17 @@ chm_sch_mrk = ['{', 'RO2', '+', '', '', ';', '+', ';', '$', '{', ':', ';','}']
 # formula = ['OH','$HOI$','$\mathdefault{HO_2}$','$I$','I2']
 key_spe_for_plot = 'HOI'
 plot_spec = ['OH','HOI','HO2','I','I2'] # plot species
-Init_comp = ['OH','HO2'] # species have inital concentration
+Init_comp = ['OH','HO2'] # species have initial concentration
 const_comp = ['I2','H2O','O2']# species have constant concentration
 drh_str = str('0.*TEMP')
 erh_str = str('0.*TEMP')
-params = {'T' : UnitFloat(T, "K"), # temperaure
+params = {'T' : UnitFloat(T, "K"), # temperature
           'p': UnitFloat(p, "Pa"), # pressure pa
-          'R1': UnitFloat(R1, "cm"), # diameters for frist tube 
+          'R1': UnitFloat(R1, "cm"), # diameters for first tube
           'R2': UnitFloat(R2, "cm"), # diameters for second tube 
-          'L1': UnitFloat(L1, "cm"), # length for frist tube 
-          'L2': UnitFloat(L2, "cm"), # length for frist tube 
-          'Q1': UnitFloat(Q1, "lpm"), # flow for frist tube 
+          'L1': UnitFloat(L1, "cm"), # length for first tube
+          'L2': UnitFloat(L2, "cm"), # length for first tube
+          'Q1': UnitFloat(Q1, "lpm"), # flow for first tube
           'Q2': UnitFloat(Q2, "lpm"), # flow for second tube
           'dt' : 0.0001, # plot species
           'Diff_setname': Diff_setname, # diffusion

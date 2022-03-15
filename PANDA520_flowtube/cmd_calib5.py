@@ -135,13 +135,13 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
 
         c = np.zeros([Rgrid, Zgrid, comp_num])
         for i in range(len(comp_namelist)):
-            c[:int(Rgrid / 2), 0, i] = meanConc[i]
+            c[:, 0, i] = meanConc[i]/2
         for i in const_comp:
-            c[:int(Rgrid / 2), :, comp_namelist.index(i)] = meanConc[comp_namelist.index(i)]
+            c[:, :, comp_namelist.index(i)] = meanConc[comp_namelist.index(i)]
 
-        c[int(Rgrid / 2):, 0, :] = np.zeros([int(Rgrid / 2), comp_num])
-        for i in const_comp_free:
-            c[int(Rgrid / 2):, :, comp_namelist.index(i)] = const_comp_conc_free[const_comp_free.index(i)]
+        #c[int(Rgrid / 2):, 0, :] = np.zeros([int(Rgrid / 2), comp_num])
+        #for i in const_comp_free:
+        #    c[int(Rgrid / 2):, :, comp_namelist.index(i)] = const_comp_conc_free[const_comp_free.index(i)]
 
         # %% second tube run
 

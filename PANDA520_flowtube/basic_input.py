@@ -49,10 +49,10 @@ def inputs_va(date):
     elif date == '01.27':
         flag_tube = '1'
         R1 = 0.78
-        L1 = 10
+        L1 = 24
         R2 = 0
         L2 = 0
-        file = 'H2O_1.csv'
+        file = 'H2O_5.csv'
         s1 = '5.csv'
         s2 = '5.txt'
     else:
@@ -61,7 +61,7 @@ def inputs_va(date):
         L1 = 10
         R2 = 1.04
         L2 = 61
-        file = 'H2O_1.csv'
+        file = 'H2O_6.csv'
         s1 = '6.csv'
         s2 = '6.txt'
     return R1,L1,R2,L2,flag_tube,file,s1,s2
