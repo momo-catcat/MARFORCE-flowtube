@@ -1,12 +1,10 @@
-def odesolve(timesteps, Zgrid, Rgrid, dt, D, R, L, Q,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values,c):
+def odesolve(timesteps, Zgrid, Rgrid, dt,  D, Rtot, dr, dx, Qtot,c,comp_namelist,dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u):
     #%import packages
     import numpy as np
-    import matplotlib.pyplot as plt
+#%% 
+    # D = Diff_vals
     initc = c
     num = len(comp_namelist)
-    
-    dx = L / (Zgrid - 1)
-    dr = 2 * R / (Rgrid - 1)
     r = np.zeros([int(Rgrid), int(Zgrid),  num])
     r = np.abs(np.array([r[i, :, :] + i - r.shape[0] / 2 + 0.5 for i in range(r.shape[0])])) * dr
 
@@ -20,22 +18,16 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, R, L, Q,comp_namelist,dydt_vst,rind
     term2 = np.zeros([int(Rgrid), int(Zgrid), num])
     term3 = np.zeros([int(Rgrid), int(Zgrid), num])
     
-    # SO2tot = c[:,:,comp_namelist.index('SO2')]
-    # O2tot = c[:,:,comp_namelist.index('O2')]
-    # H2Otot = c[:,:,comp_namelist.index('H2O')]
-
-    const_comp = ['SO2','O2','H2O']
-    u = [0,2,3,6,7,8]
-    # u = [[0,1,2,3,4,5]
-
+    # timesteps = 173
+#%%
     for m in range(timesteps):
         # Diffusion term
         # The equation is based on Fick's first law: https://en.wikipedia.org/wiki/Fick%27s_laws_of_diffusion
         # calculate central grids
-#%
-        p_a = - 1. / r[1:Rgrid // 2, 1:-1, u] * (initc[1:Rgrid // 2, 1:-1, u] - initc[0:Rgrid // 2 - 1, 1:-1, u]) / dr
 
-        p_b = (initc[2:Rgrid // 2 + 1, 1:-1, u] - 2. * initc[1:Rgrid // 2, 1:-1, u] + initc[0:Rgrid // 2 - 1, 1:-1, u]) / (dr * dr)
+        p_a = - 1. / r[1:Rgrid // 2, 1:-1, u] * (initc[1:Rgrid // 2, 1:-1, u] - initc[0:Rgrid // 2 - 1, 1:-1, u]) / dr[1:Rgrid // 2, 1:-1, u]
+
+        p_b = (initc[2:Rgrid // 2 + 1, 1:-1, u] - 2. * initc[1:Rgrid // 2, 1:-1, u] + initc[0:Rgrid // 2 - 1, 1:-1, u]) / (dr[1:Rgrid // 2, 1:-1, u] ** 2)
 
         p_c = (initc[1:Rgrid // 2, 2:, u] - 2. * initc[1:Rgrid // 2, 1:-1, u] + initc[1:Rgrid // 2, 0:-2,u ]) / (dx * dx)
 
@@ -44,36 +36,27 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, R, L, Q,comp_namelist,dydt_vst,rind
         # convection; carried by main flow
         # Refs: 1. https://en.wikipedia.org/wiki/Advection
         #       2. Gormley & Kennedy, 1948, Diffusion from a stream flowing through a cylindrical tube
-        term2[1:Rgrid // 2, 1:-1, u] = (2. * Q) / (np.pi * R ** 4) * \
-                                          (R ** 2 - r[1:Rgrid // 2, 1:-1, u] ** 2) *\
+        term2[1:Rgrid // 2, 1:-1, u] = (2. * Qtot) / (np.pi * Rtot[1:Rgrid // 2, 1:-1,u] ** 4) * \
+                                          (Rtot[1:Rgrid // 2, 1:-1,u] ** 2 - r[1:Rgrid // 2, 1:-1, u] ** 2) *\
                             (initc[1:Rgrid // 2, 1:-1, u] - initc[1:Rgrid // 2, 0:-2, u]) / dx # carried by main flow
 
-        #calculate the last column (measured by the instrument)
+        # calculate the last column (measured by the instrument)
 
-        p_a_end = - 1. / r[1:Rgrid // 2, -1, u] * (initc[1:Rgrid // 2, -1, u] - initc[0:Rgrid // 2 - 1, -1, u]) / dr
+        p_a_end = - 1. / r[1:Rgrid // 2, -1, u] * (
+                    initc[1:Rgrid // 2, -1, u] - initc[0:Rgrid // 2 - 1, -1, u]) / dr[1:Rgrid // 2, -1, u]
 
-        p_b_end = (initc[2:Rgrid // 2 + 1, -1, u] - 2. * initc[1:Rgrid // 2, -1, u] + initc[0:Rgrid // 2 - 1, -1, u]) / (dr ** 2)
+        p_b_end = (initc[2:Rgrid // 2 + 1, -1,u] - 2. * initc[1:Rgrid // 2, -1, u] + initc[0:Rgrid // 2 - 1, -1, u]) / (dr[1:Rgrid // 2, -1, u] ** 2)
 
-        p_c_end = (initc[1:Rgrid // 2, -1, u] - 2. * initc[1:Rgrid // 2, -2, u] + initc[1:Rgrid // 2, -2,u]) / (dx * dx)
+        p_c_end = (initc[1:Rgrid // 2, -1, u] - 2. * initc[1:Rgrid // 2, -2, u] + initc[1:Rgrid // 2, -2,u ]) / (dx * dx)
 
-        term1[1:Rgrid // 2, -1, u] = D[1:Rgrid // 2, -1, u] * (p_a_end + p_b_end + p_c_end)
+        term1[1:Rgrid // 2, -1,u] = D[1:Rgrid // 2, -1, u] * (p_a_end + p_b_end + p_c_end)
 
-        term2[1:Rgrid // 2, -1, u] = (2. * Q) / (np.pi * R ** 4) * \
-                                        (R ** 2 - r[1:Rgrid // 2, -1, u] ** 2) *\
+        term2[1:Rgrid // 2, -1, u] = (2. * Qtot) / (np.pi * Rtot[1:Rgrid // 2, -1,u] ** 4) * \
+                                        (Rtot[1:Rgrid // 2, -1,u] ** 2 - r[1:Rgrid // 2, -1, u] ** 2) *\
                             (initc[1:Rgrid // 2, -1, u] - initc[1:Rgrid // 2, -2, u]) / dx #carried by main flow
 
-        # t = ['HSO_3', 'SO_3', 'HO_2', 'H_2SO_4', 'OH']
-#         term3[1:-1, 1:, comp_namelist.index('HSO3')] = kSO2pOH *  SO2tot[1:-1, 1:] * initc[1:-1, 1:, comp_namelist.index('OH')] - kHSO3pO2 * initc[1:-1, 1:, comp_namelist.index('HSO3')] * O2tot[1:-1, 1:]
 
-#         term3[1:-1, 1:, comp_namelist.index('SO3')] = kHSO3pO2 * O2tot[1:-1, 1:] * initc[1:-1, 1:, comp_namelist.index('HSO3')] - kSO3p2H2O * H2Otot[1:-1, 1:] * H2Otot[1:-1, 1:] * initc[1:-1, 1:, comp_namelist.index('SO3')]
 
-#         term3[1:-1, 1:, comp_namelist.index('HO2')] = kHSO3pO2 * O2tot[1:-1, 1:] * initc[1:-1, 1:, comp_namelist.index('HSO3')] - kOHpHO2 * initc[1:-1, 1:, comp_namelist.index('HO2')] * initc[1:-1, 1:, comp_namelist.index('OH')]
-
-#         term3[1:-1, 1:, comp_namelist.index('SA')] = kSO3p2H2O * H2Otot[1:-1, 1:] * H2Otot[1:-1, 1:] * initc[1:-1, 1:, comp_namelist.index('SO3')]
-
-#         term3[1:-1, 1:,comp_namelist.index('OH')] = -kSO2pOH * SO2tot[1:-1, 1:] * initc[1:-1, 1:, comp_namelist.index('OH')] - kOHpHO2 * initc[1:-1, 1:, comp_namelist.index('HO2')] * initc[\
-#             1:-1, 1:, comp_namelist.index('OH')] - 2. * kOHpOH * initc[1:-1, 1:, comp_namelist.index('OH')] * initc[1:-1, 1:, comp_namelist.index('OH')]
-# # NEW VERSION
         term3 = np.zeros([int(Rgrid), int(Zgrid), num])
 
 
@@ -89,29 +72,24 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, R, L, Q,comp_namelist,dydt_vst,rind
                 reac_count = 0
                 for i in dydt_rec[0,:]:
                     i = int(i) # ensure reaction index is integer - this necessary because the dydt_rec array is float (the tendency to change records beneath its first row are float)
-                    # print(i)
-                    # print(rin1dx[i, 0:nreac[i]])
                     gprate = initc[1:Rgrid // 2, 1:,rindx[i, 0:nreac[i]]] ** rstoi[i, 0:nreac[i]]
                     if (len( rstoi[i, 0:nreac[i]]) > 1): 
-                        gprate1= gprate[:,:,0] * gprate[:, :,-1] * rate_values[i]
-                        
+                        gprate1 = gprate[:,:,0] * gprate[:, :,-1] * rate_values[i]
+                        # gprate2 = gprate[:,:,0] * gprate[:, :,-1] * rate_values[i]
+                        # gprate3 = gprate1-gprate2
                     else:
-                        gprate1= gprate[:,:,0]  * rate_values[i]
-                    # print(gprate[5,2,:])
+                        gprate1 = gprate[:,:,0]  * rate_values[i]
 
                     term3[1:Rgrid // 2, 1:, compi] += reac_sign[reac_count]*(gprate1)
-                    # print(reac_sign[reac_count])
                     reac_count += 1
        
-        # c = dt * (term1 - term2 + term3) + initc
-        # c[0:Rgrid // 2,:,u] = dt * (term1[0:Rgrid // 2,:,u] - term2[0:Rgrid // 2,:,u] + term3[0:Rgrid // 2,:,u]) + initc[0:Rgrid // 2,:,u]
-        c[0:Rgrid // 2, :, u] = dt * (term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u])  + initc[0:Rgrid // 2,:, u]
+
+        c[0:Rgrid // 2,:,u] = dt * (term1[0:Rgrid // 2,:,u] - term2[0:Rgrid // 2,:,u] + term3[0:Rgrid // 2,:,u]) + initc[0:Rgrid // 2,:,u]
+        # c[0:Rgrid // 2, :, u] = dt * (term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u])  + initc[0:Rgrid // 2,:, u]
 
         c[Rgrid // 2:, :, u] = np.flipud(c[0:Rgrid // 2,:,u])
 
         initc = c
-
+#%%
     return(c)
-
-
 

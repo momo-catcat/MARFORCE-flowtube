@@ -7,18 +7,19 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     import eqn_pars
     import init_conc
     import RO2_indices
+    import rate_coeffs
     import write_rate_file
     import cal_const_comp_conc
     from judg_spe_reac_rates import jude_species as jude_species
-    import matplotlib.pyplot as plt
-    from scipy import interpolate
-    from odesolve3_single import odesolve as odesolve_single
-    from odesolve3 import odesolve as odesolve_double
-    from odesolve3_Y import odesolve as odesolve_Y
     from get_diff_and_u import get_diff_and_u
     from get_formula import get_formula
+    from model_1 import model_1
+    from model_3 import model_3
+    from model_4 import model_4
+    from meanconc_cal import meanconc_cal
+    from grid_parameters import grid_para as grid_para
 
-    # % get the inputs
+    # % load the inputs
     T = params['T']  # constant species
     p = params['p']  # temperaure
     R1 = params['R1']  # diameters for frist tube
@@ -42,9 +43,8 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     plot_spec = params['plot_spec']  # plot species
     dt = params['dt']
     flag_tube = params['flag_tube']
-    const_comp_free = params['const_comp_free']
+    const_comp_free = params['const_comp_free']  # the species in dilution flow
     const_comp_conc_free = params['const_comp_conc_free']
-
 
     # read the file and store everything into a list
     f_open_eqn = open(sch_name, mode='r')  # open the chemical scheme file
@@ -53,13 +53,15 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
 
     eqn_list, num_eqn, rrc, rrc_name, RO2_names, eqn_list_on = sch_interr.sch_interr(total_list_eqn, chm_sch_mrk)
 
-    [rindx, rstoi, pindx, pstoi, reac_coef, nreac, nprod, comp_namelist, comp_list, comp_num] = eqn_interr.eqn_interr(num_eqn, eqn_list, chm_sch_mrk)
+    [rindx, rstoi, pindx, pstoi, reac_coef, nreac, nprod, comp_namelist, comp_list, comp_num] = eqn_interr.eqn_interr(
+        num_eqn, eqn_list, chm_sch_mrk)
 
     [RO2_indx, HOMRO2_indx, con_C_indx] = eqn_pars.extr_mech(sch_name, chm_sch_mrk,
-                                                     con_infl_nam, const_comp,
-                                                     drh_str, erh_str)
+                                                             con_infl_nam, const_comp,
+                                                             drh_str, erh_str)
 
     RO2_indi = RO2_indices.RO2_indices(comp_namelist, RO2_names)
+
     u, Diff_vals = get_diff_and_u(comp_namelist, Diff_setname, con_C_indx, Diff_set, T, p)
 
     numLoop = 500  # number of times to run to reach the pinhole of the instrument
@@ -69,13 +71,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     if (Rgrid % 2) != 0:
         Rgrid = Rgrid + 1
 
-    sp_line = int(Zgrid / 2)
-    Rtot = np.zeros([int(Rgrid), int(Zgrid), comp_num])
-    Rtot[:, 0:sp_line, :] = R1
-    Rtot[:, sp_line:, :] = R2
-
     const_comp_gird = cal_const_comp_conc.cal_const_comp_conc(Rgrid, Zgrid, const_comp_conc, L1, L2, const_comp)
-    const_comp_grid_1 = cal_const_comp_conc.cal_const_comp_conc_1(Rgrid, Zgrid, const_comp_conc, const_comp)
 
     c = np.zeros([Rgrid, Zgrid, comp_num])
     for i in Init_comp:
@@ -86,229 +82,37 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
 
     C0 = c[0, 0, :]
 
-    [y, comp_num, M, dydt_vst,
-     comp_namelist] = init_conc.init_conc(comp_num, comp_namelist, C0, T, \
-                                                         p, comp_namelist, rindx, pindx, \
-                                                         num_eqn[0], nreac, nprod, comp_namelist, \
-                                                         RO2_indx, HOMRO2_indx, rstoi, pstoi)
+    [y, comp_num, M, dydt_vst, comp_namelist] = init_conc.init_conc(comp_num, comp_namelist, C0, T, p, comp_namelist, \
+                                                                    rindx, pindx, num_eqn[0], nreac, nprod, comp_namelist, \
+                                                                    RO2_indx, HOMRO2_indx, rstoi, pstoi)
 
-    import rate_coeffs
     RO2conc = RO2_conc.RO2_conc(RO2_indi, y)
+
     op = jude_species(y, comp_namelist)
 
     rate_values, erf, err_mess = rate_coeffs.evaluate_rates(RO2conc, T, 0, M, M * 0.7809, op[0], op[1], op[2], op[3],
                                                             op[4], p)
+    formula = get_formula(plot_spec) # used as the title for the plotted figures
+    for i in const_comp:
+        c[:, :, comp_namelist.index(i)] = const_comp_gird[const_comp.index(i)]
+    # % set the grids parameters
+    Rtot, dr, dx, sp_line = grid_para(Zgrid, Rgrid, R2, R1, L2, L1, comp_num)
 
-    # % plot
+    # %% plot
     if flag_tube == '3':
-        # %% first tube run
-        for i in const_comp:
-            c[:, :, comp_namelist.index(i)] = const_comp_grid_1[const_comp.index(i)]
-
-        dx = L1 / (Zgrid - 1)
-        dr = 2 * R1 / (Rgrid - 1)
-        for j in range(numLoop):
-            c1 = c.copy()
-            old = c1[:, -1, comp_namelist.index(key_spe_for_plot)]
-
-            c = odesolve_single(timesteps, Zgrid, Rgrid, dt, Diff_vals, R1, dr, dx, Q1, c, comp_namelist, dydt_vst,
-                                rindx,
-                                nreac, rstoi, rate_values, const_comp, u)
-
-            new = c[:, -1, comp_namelist.index(key_spe_for_plot)]
-
-            if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):
-                break
-        # %% transfer the flow distribution for next run
-        dr_final = R1 / (Rgrid - 1) * 2
-        x = np.arange(0, R1, dr_final) + dr_final
-        rVec = np.arange(0, R1, 0.001)
-
-        meanConc = []
-        for i in comp_namelist:
-            y_x = np.flip(c[0: int(Rgrid / 2), -1, comp_namelist.index(i)])  # 'SA'
-
-            splineres1 = interpolate.splrep(x, y_x)
-
-            cVec = interpolate.splev(rVec, splineres1)
-            meanConc.append(2 * 0.001 / R1 ** 2 * np.sum(cVec * rVec))
-
-        c = np.zeros([Rgrid, Zgrid, comp_num])
-        for i in range(len(comp_namelist)):
-            c[:, 0, i] = meanConc[i]/2
-        for i in const_comp:
-            c[:, :, comp_namelist.index(i)] = meanConc[comp_namelist.index(i)]
-
-        #c[int(Rgrid / 2):, 0, :] = np.zeros([int(Rgrid / 2), comp_num])
-        #for i in const_comp_free:
-        #    c[int(Rgrid / 2):, :, comp_namelist.index(i)] = const_comp_conc_free[const_comp_free.index(i)]
-
-        # %% second tube run
-
-        dx = L2 / (Zgrid - 1)
-        dr = 2 * R2 / (Rgrid - 1)
-        for j in range(numLoop):
-            c1 = c.copy()
-            old = c1[:, -1, comp_namelist.index(key_spe_for_plot)]
-
-            c = odesolve_Y(timesteps, Zgrid, Rgrid, dt, Diff_vals, R2, dr, dx, Q2, c, comp_namelist, dydt_vst, rindx,
-                           nreac, rstoi, rate_values, const_comp, u)
-
-            tim = (j + 1) * timesteps * dt
-            comp_plot_index = [comp_namelist.index(plot_spec[i]) for i in range(len(plot_spec))]
-
-            new = c[:, -1, comp_namelist.index(key_spe_for_plot)]
-
-            fig, axs = plt.subplots(2, 3, figsize=(8, 5), facecolor='w', edgecolor='k')
-            fig.subplots_adjust(hspace=.5, wspace=.45)
-            plt.style.use('default')
-            plt.rcParams.update(
-                {'font.size': 13, 'font.weight': 'bold', 'font.family': 'serif', 'font.serif': 'Times New Roman'})
-
-            axs = axs.ravel()
-            formula = get_formula(plot_spec)
-            for i in range(len(plot_spec)):
-
-                axs[i].pcolor(np.linspace(0, L2, Zgrid), np.linspace(-R2, R2, Rgrid), c[:, :, comp_plot_index[i]],
-                              shading='nearest', cmap='jet')
-
-                axs[i].set_xlabel('L [cm]')
-                axs[i].set_ylabel('R [cm]')
-                axs[i].set_title(formula[i])
-
-            fig.delaxes(axs[5])
-            plt.gcf().text(0.7, 0.3, 'Time = ' + str(tim), fontsize=15)
-            plt.draw()
-            plt.pause(1)
-
-            print(['t = ' + str(tim) + str(key_spe_for_plot) + " difference: " + str(np.sum(new - old))])
-
-            if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):
-                break
-
-    elif flag_tube == '2':
-        # %% run once with two different tubes
-        for i in const_comp:
-            c[:, :, comp_namelist.index(i)] = const_comp_gird[const_comp.index(i)]
-        if R2 == 0:
-            R2 = R1
-        dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
-        dx = (L2 + L1) / (Zgrid - 1)
-
-        dr[:, 0:sp_line, :] = 2 * R1 / (Rgrid - 1)
-        dr[:, sp_line:, :] = 2 * R2 / (Rgrid - 1)
-        for j in range(numLoop):
-            c1 = c.copy()
-            old = c1[:, -1, comp_namelist.index(key_spe_for_plot)]
-
-            c = odesolve_double(timesteps, Zgrid, Rgrid, dt, Diff_vals, Rtot, dr, dx, Q1, c, comp_namelist, dydt_vst,
-                                rindx,
-                                nreac, rstoi, rate_values, const_comp, u)
-
-            tim = (j + 1) * timesteps * dt
-            comp_plot_index = [comp_namelist.index(plot_spec[i]) for i in range(len(plot_spec))]
-
-            new = c[:, -1, comp_namelist.index(key_spe_for_plot)]
-
-            fig, axs = plt.subplots(2, 3, figsize=(8, 5), facecolor='w', edgecolor='k')
-            fig.subplots_adjust(hspace=.5, wspace=.45)
-            plt.style.use('default')
-            plt.rcParams.update(
-                {'font.size': 13, 'font.weight': 'bold', 'font.family': 'serif', 'font.serif': 'Times New Roman'})
-
-            axs = axs.ravel()
-            formula = get_formula(plot_spec)
-            for i in range(len(plot_spec)):
-
-                axs[i].pcolor(np.linspace(0, L2, Zgrid), np.linspace(-R1, R2, Rgrid), c[:, :, comp_plot_index[i]],
-                              shading='nearest', cmap='jet')
-
-                axs[i].set_xlabel('L [cm]')
-                axs[i].set_ylabel('R [cm]')
-                axs[i].set_title(formula[i])
-
-            fig.delaxes(axs[5])
-            plt.gcf().text(0.7, 0.3, 'Time = ' + str(tim), fontsize=15)
-            plt.draw()
-            plt.pause(1)
-
-            print(['t = ' + str(tim) + str(key_spe_for_plot) + " difference: " + str(np.sum(new - old))])
-
-            if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):
-                break
+        c = model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,
+                    Diff_vals, Rtot, Q1, Q2, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec, \
+                    formula, c, dr, dx)
+    elif flag_tube == '4':
+        c = model_4(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,
+                    Diff_vals, Rtot, const_comp_free, const_comp_conc_free, Q1, Q2, dydt_vst, rindx, nreac, rstoi, rate_values,
+                    const_comp, u, plot_spec, formula, c, dr, dx)
     else:
-        # %% run once with one tube
-        for i in const_comp:
-            c[:, :, comp_namelist.index(i)] = const_comp_grid_1[const_comp.index(i)]
-
-        dx = L1 / (Zgrid - 1)
-        dr = 2 * R1 / (Rgrid - 1)
-
-        for j in range(numLoop):
-            c1 = c.copy()
-            old = c1[:, -1, comp_namelist.index(key_spe_for_plot)]
-
-            c = odesolve_single(timesteps, Zgrid, Rgrid, dt, Diff_vals, R1, dr, dx, Q1, c, comp_namelist, dydt_vst,
-                                rindx,
-                                nreac, rstoi, rate_values, const_comp, u)
-
-            tim = (j + 1) * timesteps * dt
-            comp_plot_index = [comp_namelist.index(plot_spec[i]) for i in range(len(plot_spec))]
-
-            new = c[:, -1, comp_namelist.index(key_spe_for_plot)]
-
-            fig, axs = plt.subplots(2, 3, figsize=(8, 5), facecolor='w', edgecolor='k')
-            fig.subplots_adjust(hspace=.5, wspace=.45)
-            plt.style.use('default')
-            plt.rcParams.update(
-                {'font.size': 13, 'font.weight': 'bold', 'font.family': 'serif', 'font.serif': 'Times New Roman'})
-
-            axs = axs.ravel()
-            formula = get_formula(plot_spec)
-            for i in range(len(plot_spec)):
-
-                axs[i].pcolor(np.linspace(0, L1, Zgrid), np.linspace(-R1, R1, Rgrid), c[:, :, comp_plot_index[i]],
-                              shading='nearest', cmap='jet')
-
-                axs[i].set_xlabel('L [cm]')
-                axs[i].set_ylabel('R [cm]')
-                axs[i].set_title(formula[i])
-
-            fig.delaxes(axs[5])
-            plt.gcf().text(0.7, 0.3, 'Time = ' + str(tim), fontsize=15)
-            plt.draw()
-            plt.pause(1)
-
-            print(['t = ' + str(tim) + str(key_spe_for_plot) + " difference: " + str(np.sum(new - old))])
-
-            if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):
-                break
-    if R2 == 0:
-        R2 = R1
-
-    dr_final = R2 / (Rgrid - 1) * 2
-    x = np.arange(0, R2, dr_final) + dr_final # match with y_x
-
-    rVec = np.arange(0, R2, 0.001)
-
-    rVec = np.flip(rVec)
-
-    meanConc = []
-    for i in plot_spec:
-        y_x = np.flip(c[:int(Rgrid / 2), -1, comp_namelist.index(i)])  # 'SA'
-
-        splineres1 = interpolate.splrep(x, y_x)
-
-        cVec1 = interpolate.splev(rVec, splineres1)
-
-        y_x = c[int(Rgrid / 2):, -1, comp_namelist.index(i)]  # 'SA'
-
-        splineres2 = interpolate.splrep(x, y_x)
-
-        cVec2 = interpolate.splev(rVec, splineres2)
-        conc1 = 0.001 / R2 ** 2 * np.sum(cVec1 * rVec)
-        conc2 = 0.001 / R2 ** 2 * np.sum(cVec2 * rVec)
-
-        meanConc.append(conc1+conc2)
+        # % run once with two different tubes  or one tube # model 1 = model 2
+        c = model_1(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, sp_line, numLoop, comp_namelist, key_spe_for_plot, dt,
+                    timesteps, Diff_vals, Rtot, Q1, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec,\
+                    formula, c, dr, dx)
+    # % calculate the meanconc for each species
+    meanConc = meanconc_cal(R2, Rgrid, plot_spec, comp_namelist, c)
 
     return meanConc, c

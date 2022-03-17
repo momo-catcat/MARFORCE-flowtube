@@ -1,7 +1,4 @@
 # %% first clear all the variable that you
-import sys
-
-sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
 
 
 for name in dir():
@@ -9,7 +6,12 @@ for name in dir():
         del globals()[name]
 del name
 
+import sys
 import os
+sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
+#file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"
+#os.chdir(file_path)
+
 import numpy as np
 import pandas as pd
 from cmd_calib5 import cmd_calib5
@@ -42,7 +44,7 @@ class UnitFloat(float):
 T_cel = 25
 T = T_cel + 273.15  # K
 p = 96060  # pressure Pa
-date = ['01.04']
+date = ['09.10']
 for i in range(len(date)):
     R1, L1, R2, L2, flag_tube, file, s1, s2 = inputs_va(date[i])
 
@@ -92,10 +94,10 @@ for i in range(len(date)):
     WaterFlow2 = H2O_data['H2O_1']  # second H2O flow
     totFlow2 = Q2 * np.ones(WaterFlow1.shape)
 
-    if flag_tube == '1':
-        H2Oconc2 = pd.Series(np.zeros(WaterFlow1.shape))
-        O2conc2 = pd.Series(np.zeros(WaterFlow1.shape))
-        SO2conc2 = pd.Series(np.zeros(WaterFlow1.shape))
+    if flag_tube in ['1','2']:
+        H2Oconc2 = H2Oconc1
+        O2conc2 = O2conc1
+        SO2conc2 = SO2conc2
     else:
         H2Oconc2 = (WaterFlow2) / 1000 / totFlow2 * H2O_conc(T_cel, 1).SatP[0] / 1.3806488e-23 / T / 1e6
         # H2Oconc2 = H2O_data['H2Oconc_2']
