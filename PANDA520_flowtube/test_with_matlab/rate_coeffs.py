@@ -1,10 +1,10 @@
 '''module for calculating reaction rate coefficients (automatically generated)'''
 # module to hold expressions for calculating rate coefficients # 
-# created at 2022-01-13 17:00:10.457785
+# created at 2022-03-18 15:52:01.026550
 
 import numpy
 
-def evaluate_rates(RO2, H2O, TEMP, lightm, M, N2, O2, NO, HO2, NO3,p):
+def evaluate_rates(RO2, TEMP, lightm, M, N2, H2O,  O2, NO, HO2, NO3,p):
 
 	# inputs: ------------------------------------------------------------------
 	# RO2 - names of components included in peroxy radical list
@@ -42,14 +42,16 @@ def evaluate_rates(RO2, H2O, TEMP, lightm, M, N2, O2, NO, HO2, NO3,p):
 	J = numpy.zeros(52) 
 	J[1] = 1e-5 
 
-	rate_values = numpy.zeros((5))
+	rate_values = numpy.zeros((7))
 	
 	# reac_coef has been formatted so that python can recognize it
 	# gas-phase reactions
 	rate_values[0] = 1.32e-12 * (TEMP / 300) ** -0.7
 	rate_values[1] = 4.8e-11*numpy.exp(250/TEMP)
-	rate_values[2] = 2*6.9e-31 * (TEMP / 300) ** -0.8 * p / 1.3806488e-23 / TEMP / 1e6
-	rate_values[3] = 1.3e-12*numpy.exp(-330/TEMP)
-	rate_values[4] = 3.9e-41 * numpy.exp(6830.6 / TEMP)
+	rate_values[2] = 2.20e-13*KMT06*numpy.exp(600/TEMP)+1.90e-33*M*KMT06*numpy.exp(980/TEMP)
+	rate_values[3] = 6.9e-31 * (TEMP / 300) ** -0.8 * p / 1.3806488e-23 / TEMP / 1e6
+	rate_values[4] = 6.2e-14 * (TEMP / 298)**2.6 * numpy.exp(945/TEMP)
+	rate_values[5] = 1.3e-12*numpy.exp(-330/TEMP)
+	rate_values[6] = 3.9e-41 * numpy.exp(6830.6 / TEMP)
 	
 	return(rate_values, erf, err_mess)

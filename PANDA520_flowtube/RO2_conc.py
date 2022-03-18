@@ -10,9 +10,8 @@ get the RO2 concentration
 '''
 
 
-
-def RO2_conc(RO2_indices,y):
+def RO2_conc(RO2_indices, y):
     RO2conc = 0
     for i in range(len(RO2_indices)):
-        RO2conc += y[RO2_indices[i,1]]
+        RO2conc += y[RO2_indices[i, 1]]
     return RO2conc

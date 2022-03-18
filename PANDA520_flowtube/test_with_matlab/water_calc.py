@@ -8,7 +8,7 @@ def water_calc(TEMP, RH):
     
 	# saturation vapour pressure (Pa) (TEMP in K.)
 	Psat_water = (np.exp((-0.58002206E4/TEMP)+0.13914993E1-(0.48640239E-1*TEMP) 
-		+ (0.41764768E-4*(TEMP**2.e0))-(0.14452093E-7*(TEMP**3.e0))+ 
+		+ (0.41764768E-4*(TEMP**2e0))-(0.14452093E-7*(TEMP**3e0))+ 
 		(0.65459673e1*np.log(TEMP))))
 	NA = si.Avogadro # Avogadro's number (molecules/mol)
 

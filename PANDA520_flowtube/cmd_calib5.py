@@ -1,4 +1,4 @@
-def cmd_calib5(const_comp_conc, params, Init_comp_conc):
+def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
     # %% import packages
     import numpy as np
     import RO2_conc
@@ -26,12 +26,10 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     R2 = params['R2']  # diameters for second tube
     L1 = params['L1']  # length for frist tube
     L2 = params['L2']  # length for second tube
-    Q1 = params['Q1'] * 1000 / 60  # flow for frist tube
-    Q2 = params['Q2'] * 1000 / 60  # flow for second tube
+    Q1 = Q1* 1000 / 60  # flow for frist tube
+    Q2 = Q2 * 1000 / 60  # flow for second tube
     sch_name = params['sch_name']  # file for the MCM file
     chm_sch_mrk = params['chm_sch_mrk']  # markers to isolate sections of chemical scheme based on MCM KPP format
-    drh_str = params['drh_str']
-    erh_str = params['erh_str']
     const_comp = params['const_comp']
     Init_comp = params['Init_comp']
     Diff_setname = params['Diff_setname']
@@ -46,22 +44,17 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     const_comp_free = params['const_comp_free']  # the species in dilution flow
     const_comp_conc_free = params['const_comp_conc_free']
 
-    # read the file and store everything into a list
-    f_open_eqn = open(sch_name, mode='r')  # open the chemical scheme file
-    total_list_eqn = f_open_eqn.readlines()
-    f_open_eqn.close()  # close file
-
-    eqn_list, num_eqn, rrc, rrc_name, RO2_names, eqn_list_on = sch_interr.sch_interr(total_list_eqn, chm_sch_mrk)
-
-    [rindx, rstoi, pindx, pstoi, reac_coef, nreac, nprod, comp_namelist, comp_list, comp_num] = eqn_interr.eqn_interr(
+    # read the file and separate the equations and rate coefficients
+    eqn_list, num_eqn, rrc, rrc_name, RO2_names, eqn_list_on = sch_interr.sch_interr(chm_sch_mrk, sch_name)
+    # find the comp_namelist reac_coef, and indx for products and reactants
+    [rindx, rstoi, pindx, pstoi, reac_coef, nreac, nprod, comp_namelist, comp_num] = eqn_interr.eqn_interr(
         num_eqn, eqn_list, chm_sch_mrk)
-
-    [RO2_indx, HOMRO2_indx, con_C_indx] = eqn_pars.extr_mech(sch_name, chm_sch_mrk,
-                                                             con_infl_nam, const_comp,
-                                                             drh_str, erh_str)
+    # find RO2 and the constant concentration
+    RO2_indx, HOMRO2_indx, con_C_indx = eqn_pars.extr_mech(sch_name, chm_sch_mrk,
+                                                             con_infl_nam, const_comp)
 
     RO2_indi = RO2_indices.RO2_indices(comp_namelist, RO2_names)
-
+    # get the diffusion for all species and  the index of species in C except constant compounds
     u, Diff_vals = get_diff_and_u(comp_namelist, Diff_setname, con_C_indx, Diff_set, T, p)
 
     numLoop = 500  # number of times to run to reach the pinhole of the instrument
@@ -70,48 +63,50 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     # Change odd number Rgrid to even number grid
     if (Rgrid % 2) != 0:
         Rgrid = Rgrid + 1
-
+    # % apply all the concentration for the constant comp
     const_comp_gird = cal_const_comp_conc.cal_const_comp_conc(Rgrid, Zgrid, const_comp_conc, L1, L2, const_comp)
-
+    # % set the concentration for all the species for the grid of 80*40 in c
     c = np.zeros([Rgrid, Zgrid, comp_num])
-    for i in Init_comp:
-        c[:, 0, comp_namelist.index(i)] = Init_comp_conc[
-            Init_comp.index(i)]  # set [OH] at z = 0 # set [HO2] at z = 0. This equals OH conc
-
-    write_rate_file.write_rate_file(reac_coef, p, rrc, rrc_name, 0)
-
-    C0 = c[0, 0, :]
-
-    [y, comp_num, M, dydt_vst, comp_namelist] = init_conc.init_conc(comp_num, comp_namelist, C0, T, p, comp_namelist, \
-                                                                    rindx, pindx, num_eqn[0], nreac, nprod, comp_namelist, \
-                                                                    RO2_indx, HOMRO2_indx, rstoi, pstoi)
-
-    RO2conc = RO2_conc.RO2_conc(RO2_indi, y)
-
-    op = jude_species(y, comp_namelist)
-
-    rate_values, erf, err_mess = rate_coeffs.evaluate_rates(RO2conc, T, 0, M, M * 0.7809, op[0], op[1], op[2], op[3],
-                                                            op[4], p)
-    formula = get_formula(plot_spec) # used as the title for the plotted figures
-    for i in const_comp:
+    for i in Init_comp:  # set [OH] at z = 0 # set [HO2] at z = 0 [oh]
+        c[:, 0, comp_namelist.index(i)] = Init_comp_conc[Init_comp.index(i)]
+    for i in const_comp:  # set the constant concentrations for const_comp
         c[:, :, comp_namelist.index(i)] = const_comp_gird[const_comp.index(i)]
+    # % write the rate coefficients in a new file (rate_coeffs.py)
+    write_rate_file.write_rate_file(reac_coef, p, rrc, rrc_name, 0)
+    # % store the first column of the initial concentration into C0
+    C0 = c[0, 0, :]
+    # % store indx for products and reactants to dydt_vst, and the initial concentration for first column
+    [y,  M, dydt_vst] = init_conc.init_conc(comp_num, comp_namelist, C0, T, p, comp_namelist, \
+                                                                    rindx, pindx, num_eqn[0], nreac, nprod,
+                                                                    comp_namelist, \
+                                                                    RO2_indx, HOMRO2_indx, rstoi, pstoi)
+    # % calculate the RO2 concentration
+    RO2conc = RO2_conc.RO2_conc(RO2_indi, y)
+    # % calculate H2O, O2, NO, HO2, NO3
+    op = jude_species(y, comp_namelist)
+    # % calculate reaction rate coefficients values
+    rate_values = rate_coeffs.evaluate_rates(RO2conc, T, 0, M, M * 0.7809, op[0], op[1], op[2], op[3],
+                                                            op[4], p)
+    # used as the title for the plotted figures
+    formula = get_formula(plot_spec)
     # % set the grids parameters
     Rtot, dr, dx, sp_line = grid_para(Zgrid, Rgrid, R2, R1, L2, L1, comp_num)
 
-    # %% plot
+    # %% run the modules and plot
     if flag_tube == '3':
         c = model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,
                     Diff_vals, Rtot, Q1, Q2, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec, \
                     formula, c, dr, dx)
     elif flag_tube == '4':
         c = model_4(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,
-                    Diff_vals, Rtot, const_comp_free, const_comp_conc_free, Q1, Q2, dydt_vst, rindx, nreac, rstoi, rate_values,
+                    Diff_vals, Rtot, const_comp_free, const_comp_conc_free, Q1, Q2, dydt_vst, rindx, nreac, rstoi,
+                    rate_values,
                     const_comp, u, plot_spec, formula, c, dr, dx)
-    else:
-        # % run once with two different tubes  or one tube # model 1 = model 2
+    else: # model 1 and model 2 they are same
+        # % run once with two different tubes or one tube
         c = model_1(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, sp_line, numLoop, comp_namelist, key_spe_for_plot, dt,
-                    timesteps, Diff_vals, Rtot, Q1, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec,\
-                    formula, c, dr, dx)
+                    timesteps, Diff_vals, Rtot, Q1, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u,
+                    plot_spec, formula, c, dr, dx)
     # % calculate the meanconc for each species
     meanConc = meanconc_cal(R2, Rgrid, plot_spec, comp_namelist, c)
 

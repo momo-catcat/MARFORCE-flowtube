@@ -91,7 +91,7 @@ def write_rate_file(reac_coef_g, p, rrc, rrc_name, testf): # define function
 # 	for eqn_key_aq in range (1, len(reac_coef_aq)+1):
 # 		f.write('	rate_values[%s] = %s\n' %(eqn_key+eqn_key_aq, reac_coef_aq[eqn_key_aq-1]))
 # 	f.write('	\n')
-	f.write('	return(rate_values, erf, err_mess)\n')
+	f.write('	return rate_values\n')
 	f.close()
 
 	return()

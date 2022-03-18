@@ -1,8 +1,8 @@
 # this script is used to calculate particle penetration rate according to
 # Gormley & Kennedy, 1948, Diffusion from a stream flowing through a cylindrical tube
 import numpy as np
-from Vapor_calc import Air_density as Air_density
-from Vapor_calc import Dp as Dp
+from Vapour_calc import Air_density as Air_density
+from Vapour_calc import Dp as Dp
 import pandas as pd
 from molmass import Formula
 from thermo.chemical import Chemical

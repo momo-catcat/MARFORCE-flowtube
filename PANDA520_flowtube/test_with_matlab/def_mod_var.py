@@ -5,7 +5,7 @@ import numpy as np
 import os
 import pickle # used for storing values
 
-def def_mod_var(caller): # define function
+def def_mod_var(caller,T,p,const_comp): # define function
 
 	# inputs: -----------------------------------------------
 	# caller - mark for calling function
@@ -13,11 +13,11 @@ def def_mod_var(caller): # define function
 
 	# default input files ------------------------------
 	# default chemical scheme
-	sch_name = 'C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/input_mechanism/SO2_SA.txt'
+	sch_name = os.getcwd()+ '/input_mechanism/SO2_SA.txt'
 # 	sch_name = '/Users/momo/Documents/science/coding/git/Projects/PANDA520-flowtube/PANDA520_flowtube/input_mechanism/SO2_SA.txt'
-	xml_name = 'C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/input_mechanism/ex_xml_SO2.xml' # xml file path
+	xml_name =os.getcwd()+ '/input_mechanism/ex_xml_SO2.xml' # xml file path
 # 	xml_name = '/Users/momo/Documents/science/coding/git/Projects/PANDA520-flowtube/PANDA520_flowtube/input_mechanism/ex_xml_SO2.xml'  # xml file path
-	inname = 'Default' # model variables file name
+# 	inname = 'Default' # model variables file name
 	
 	# general ---------------------------------------------------------------------------------
 	# name of folder to save results to
@@ -27,23 +27,23 @@ def def_mod_var(caller): # define function
 	chm_sch_mrk = ['{', 'RO2', '+', '', '', ';', '+', ';', '$', '{', ':', ';','}']
     
 	# time interval between updates to integration inputs (s)
-	update_stp = 1.
-	tot_time = 1. # total time to integrate over (s)
-	save_step = 1. # time interval between saving results (s)
+# 	update_stp = 1.
+# 	tot_time = 1. # total time to integrate over (s)
+# 	save_step = 1. # time interval between saving results (s)
 	if (caller == 0): # called from PyCHAM
 		uman_up = 0 # marker for whether to update the UManSysProp folder
 	if (caller == 1): # called from Travis
 		uman_up = 1
-	int_tol = [1.e-3, 1.e-4] # integration tolerances (absolute first, relative second)
+# 	int_tol = [1.e-3, 1.e-4] # integration tolerances (absolute first, relative second)
 	testf = 0 # whether in testing mode or not
 	
 	# chamber environment -----------------------------------------------------------------
-	temp = np.array((298.15)).reshape(1) # temperature of experiment (K)
-	tempt = np.array((0.0)).reshape(1) # time that temperatures reached (s)	
-	RH = np.array(([0.65])) # humidity of experiment (fraction of 1)
-	RHt = np.array(([0])) # time through simulation (s) RH reached
-	Press = 101300 # air pressure during experiment (Pa)
-	dil_fac = 0. # dilution factor (volume fraction per second)
+# 	temp = np.array((298.15)).reshape(1) # temperature of experiment (K)
+# 	tempt = np.array((0.0)).reshape(1) # time that temperatures reached (s)	
+# 	RH = np.array(([0.65])) # humidity of experiment (fraction of 1)
+# 	RHt = np.array(([0])) # time through simulation (s) RH reached
+# 	Press = 101300 # air pressure during experiment (Pa)
+# 	dil_fac = 0. # dilution factor (volume fraction per second)
 	drh_str = str('0.*TEMP')
 	erh_str = str('0.*TEMP')
 # 	# particle section ----------------------------------------------------------------
@@ -97,23 +97,23 @@ def def_mod_var(caller): # define function
 	comp0 = np.array(())
 	# initial concentrations (ppb)
 	y0 = np.array(())	
-	con_infl_nam = [] # chemical scheme names of components with continuous influx
+	con_infl_nam = const_comp # chemical scheme names of components with continuous influx
 	# influx rate of components with continuous influx (ppb/s)
-	con_infl_C = np.empty(0)
+# 	con_infl_C = np.empty(0)
 	# times of component influx (s)
-	con_infl_t = np.empty(0)
+# 	con_infl_t = np.empty(0)
 	# chemical scheme name of components with constant concentration	
-	const_comp = []
+	const_comp = const_comp
 	# Chemical scheme names of components injected instantaneously after start of experiment
-	Compt = []
+# 	Compt = []
 	# times at which instantaneous injection of component(s) occur after 
 	# experiment start (s)
-	injectt = np.empty(0)
+# 	injectt = np.empty(0)
 	# concentration(s) (ppb) of component(s) injected instantaneously after 
 	# experiment start
-	Ct = np.zeros((0, 0))
+# 	Ct = np.zeros((0, 0))
 	# the gas-particle partitioning cutoff (Pa)
-	partit_cutoff = []
+# 	partit_cutoff = []
 
 	# lights -------------------------------------------------------------------------------
 # 	light_stat = np.zeros((1), dtype='int') # light status
@@ -150,33 +150,29 @@ def def_mod_var(caller): # define function
 	# chemical scheme name of components to track the change tendencies of	
 	dydt_trak = []
 	# chemical scheme names of components with densities manually set
-	dens_comp = []
+# 	dens_comp = []
 	# manually assigned densities (g/cc)
-	dens = []
+# 	dens = []
 	# chemical scheme names of components with vapour pressures manually set
-	vol_comp = []
+# 	vol_comp = []
 	# manually assigned vapour pressures (Pa)
-	volP = []
+# 	volP = []
 	# names of components (corresponding to chemical scheme name) with 
 	# activity coefficient stated in act_user
-	act_comp = []
+# 	act_comp = []
 	# user-specified activity coefficients of components with names given 
 	# in act_comp
-	act_user = []
+# 	act_user = []
 	# names of components with user-defined accommodation coefficients	
-	accom_comp = []
+# 	accom_comp = []
 	# user-defined accommodation coefficients
-	accom_val = []
+# 	accom_val = []
 	
 
 	# prepare for pickling
-	list_vars = [sav_nam, sch_name, chm_sch_mrk, xml_name, inname, update_stp, 
-			tot_time, comp0, y0, temp, tempt, RH, RHt, Press, 
-            save_step, const_comp, Compt, injectt, Ct,con_infl_nam, con_infl_t, 
-            con_infl_C, dydt_trak,
-            dens_comp, dens, vol_comp, 
-			volP, act_comp, act_user, accom_comp, accom_val, uman_up, 
-			int_tol,dil_fac, partit_cutoff,drh_str, erh_str, testf]
+	list_vars = [sav_nam, sch_name, chm_sch_mrk, xml_name, 
+			comp0, y0, T,  p, const_comp,con_infl_nam,  
+            dydt_trak, uman_up,drh_str, erh_str, testf]
 # 	list_vars = [sav_nam, sch_name, chem_sch_mark, xml_name, inname, update_stp, 
 # 			tot_time, comp0, y0, temp, tempt, RH, RHt, Press, wall_on, 
 # 			Cw, kw, siz_stru, num_sb, pmode, pconc, pconct, lowsize, 
@@ -201,9 +197,6 @@ def def_mod_var(caller): # define function
 		f.close() # close
 
 
-	return(sav_nam, sch_name, chm_sch_mrk, xml_name, inname, update_stp, 
-		tot_time, comp0, y0, temp, tempt, RH, RHt, Press,  
-		save_step, const_comp, Compt, injectt, Ct,  
-		con_infl_nam, con_infl_t, con_infl_C, 
-		dydt_trak, dens_comp, dens, vol_comp, volP, act_comp, act_user, 
-		accom_comp, accom_val, uman_up, int_tol, dil_fac, partit_cutoff,drh_str, erh_str, testf)
+	return(sav_nam, sch_name, chm_sch_mrk, xml_name, 
+		 comp0, y0,T,  p, const_comp, 
+		con_infl_nam, dydt_trak, uman_up, drh_str, erh_str, testf)
