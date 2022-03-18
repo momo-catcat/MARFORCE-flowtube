@@ -77,5 +77,4 @@ def inputs_setup(date):
         file = 'H2O_6.csv'
         s1 = '6.csv'
         s2 = '6.txt'
-    return R1,L1,R2,L2,flag_tube,file,s1,s2
-
+    return R1, L1, R2, L2, flag_tube, file, s1, s2

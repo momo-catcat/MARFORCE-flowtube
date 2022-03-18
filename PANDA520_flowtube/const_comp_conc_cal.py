@@ -1,7 +1,10 @@
 import numpy as np
+
 from Vapour_calc import H2O_conc
 
-def const_comp_conc_cal(H2O_data, outflowLocation, const_comp_var, const_comp_pre, pre_flow, N2Flow, pre_standard_conc, Q1, Q2, T_cel, T, p, flag_tube):
+
+def const_comp_conc_cal(H2O_data, outflowLocation, const_comp_var, const_comp_pre, pre_flow, N2Flow, pre_standard_conc,
+                        Q1, Q2, T_cel, T, p, flag_tube):
     kB = 1.3806488e-23  # boltzmann constant
     WaterFlow1 = H2O_data['H2O_1']
     var_flow = [WaterFlow1]
@@ -16,7 +19,7 @@ def const_comp_conc_cal(H2O_data, outflowLocation, const_comp_var, const_comp_pr
     else:
         H2Oconc1 = WaterFlow1 / 1000 / totFlow1 * H2O_conc(T_cel, 1).SatP[0] / kB / T / 1e6
 
-    pre_conc1 = [pre_flow[i]*pre_standard_conc[i] / 1000 / totFlow1 * p / kB / T / 1e6 for i in range(len(pre_flow))]
+    pre_conc1 = [pre_flow[i] * pre_standard_conc[i] / 1000 / totFlow1 * p / kB / T / 1e6 for i in range(len(pre_flow))]
     var_conc1 = [H2Oconc1]
 
     if 'H2O_2' in H2O_data.columns:
@@ -47,7 +50,7 @@ def const_comp_conc_cal(H2O_data, outflowLocation, const_comp_var, const_comp_pr
 
     if flag_tube == '3':
         const_comp_free = ['H2O', 'O2']
-        const_comp_conc_free = [var_conc2[const_comp_var.index('H2O')],pre_conc2[const_comp_pre.index('O2')]]
+        const_comp_conc_free = [var_conc2[const_comp_var.index('H2O')], pre_conc2[const_comp_pre.index('O2')]]
     else:
         const_comp_free = []
         const_comp_conc_free = [0]

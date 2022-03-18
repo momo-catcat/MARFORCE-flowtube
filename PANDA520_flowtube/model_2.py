@@ -1,25 +1,26 @@
 # %% first tube run
-from matplotlib import pyplot as plt
-from odesolve3 import odesolve as odesolve
 import numpy as np
+from matplotlib import pyplot as plt
 
-def model_2(R2,R1,Rgrid,Zgrid,comp_num,L2,L1,sp_line,numLoop,comp_namelist,key_spe_for_plot,dt,timesteps,Diff_vals,Rtot,\
-            Q1,dydt_vst,rindx,nreac,rstoi,rate_values,const_comp,u,plot_spec,formula,c,dr,dx):
+from odesolve3 import odesolve as odesolve
 
+
+def model_2(R2, Rgrid, Zgrid, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,
+            Diff_vals, Rtot, \
+            Q1, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec, formula, c, dr, dx):
     #    for i in const_comp:
-#        c[:, :, comp_namelist.index(i)] = const_comp_gird[const_comp.index(i)]
+    #        c[:, :, comp_namelist.index(i)] = const_comp_gird[const_comp.index(i)]
     '''
     should be same in three, but need to change the details
     '''
-
 
     for j in range(numLoop):
         c1 = c.copy()
         old = c1[:, -1, comp_namelist.index(key_spe_for_plot)]
 
         c = odesolve(timesteps, Zgrid, Rgrid, dt, Diff_vals, Rtot, dr, dx, Q1, c, comp_namelist, dydt_vst,
-                                rindx,
-                                nreac, rstoi, rate_values, const_comp, u)
+                     rindx,
+                     nreac, rstoi, rate_values, const_comp, u)
         tim = (j + 1) * timesteps * dt
         comp_plot_index = [comp_namelist.index(plot_spec[i]) for i in range(len(plot_spec))]
 
@@ -38,8 +39,8 @@ def model_2(R2,R1,Rgrid,Zgrid,comp_num,L2,L1,sp_line,numLoop,comp_namelist,key_s
         '''
 
         for i in range(len(plot_spec)):
-            axs[i].pcolor(np.linspace(0, L2+L1, Zgrid), np.linspace(-R2, R2, Rgrid), c[:, :, comp_plot_index[i]],
-                      shading='nearest', cmap='jet')
+            axs[i].pcolor(np.linspace(0, L2 + L1, Zgrid), np.linspace(-R2, R2, Rgrid), c[:, :, comp_plot_index[i]],
+                          shading='nearest', cmap='jet')
 
             axs[i].set_xlabel('L [cm]')
             axs[i].set_ylabel('R [cm]')

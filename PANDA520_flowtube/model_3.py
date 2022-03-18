@@ -1,8 +1,9 @@
+import numpy as np
 from matplotlib import pyplot as plt
+
+from meanconc_cal import meanconc_cal_sim as meanconc_cal_sim
 from odesolve3 import odesolve as odesolve
 from odesolve3_Y import odesolve as odesolve_Y
-import numpy as np
-from meanconc_cal import meanconc_cal_sim as meanconc_cal_sim
 
 
 def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps, Diff_vals,

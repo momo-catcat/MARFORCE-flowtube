@@ -17,7 +17,6 @@ from exp_setup import inputs_setup
 import const_comp_conc_cal
 import csv
 
-
 file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"
 os.chdir(file_path)
 
@@ -50,9 +49,9 @@ T = T_cel + 273.15  # K
 p = 96060  # pressure Pa
 # select experiment name for simulating
 date = ['09.10']  # can be multiple experiments
-#%%
+# %%
 for i in range(len(date)):
-    #%% load the parameters for experiment setup, change the basic_input
+    # %% load the parameters for experiment setup, change the basic_input
     R1, L1, R2, L2, flag_tube, file, s1, s2 = inputs_setup(date[i])
 
     # load H2O Q

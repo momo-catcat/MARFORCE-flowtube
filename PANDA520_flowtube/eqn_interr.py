@@ -15,11 +15,12 @@
 # code to extract the equation information for chemical reactions required for 
 # their solution in PyCHAM 
 
-import numpy as np
 import re
-import formatting
-
 import sys
+
+import numpy as np
+
+import formatting
 
 
 def eqn_interr(num_eqn, eqn_list, chem_scheme_markers):

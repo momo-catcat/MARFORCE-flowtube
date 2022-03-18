@@ -1,5 +1,5 @@
 def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
-    # %% import packages
+    # % import packages
     import numpy as np
     import RO2_conc
     import sch_interr
@@ -26,7 +26,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
     R2 = params['R2']  # diameters for second tube
     L1 = params['L1']  # length for frist tube
     L2 = params['L2']  # length for second tube
-    Q1 = Q1* 1000 / 60  # flow for frist tube
+    Q1 = Q1 * 1000 / 60  # flow for frist tube
     Q2 = Q2 * 1000 / 60  # flow for second tube
     sch_name = params['sch_name']  # file for the MCM file
     chm_sch_mrk = params['chm_sch_mrk']  # markers to isolate sections of chemical scheme based on MCM KPP format
@@ -51,7 +51,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
         num_eqn, eqn_list, chm_sch_mrk)
     # find RO2 and the constant concentration
     RO2_indx, HOMRO2_indx, con_C_indx = eqn_pars.extr_mech(sch_name, chm_sch_mrk,
-                                                             con_infl_nam, const_comp)
+                                                           con_infl_nam, const_comp)
 
     RO2_indi = RO2_indices.RO2_indices(comp_namelist, RO2_names)
     # get the diffusion for all species and  the index of species in C except constant compounds
@@ -76,23 +76,23 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
     # % store the first column of the initial concentration into C0
     C0 = c[0, 0, :]
     # % store indx for products and reactants to dydt_vst, and the initial concentration for first column
-    [y,  M, dydt_vst] = init_conc.init_conc(comp_num, comp_namelist, C0, T, p, comp_namelist, \
-                                                                    rindx, pindx, num_eqn[0], nreac, nprod,
-                                                                    comp_namelist, \
-                                                                    RO2_indx, HOMRO2_indx, rstoi, pstoi)
+    [y, M, dydt_vst] = init_conc.init_conc(comp_num, comp_namelist, C0, T, p, comp_namelist, \
+                                           rindx, pindx, num_eqn[0], nreac, nprod,
+                                           comp_namelist, \
+                                           RO2_indx, HOMRO2_indx, rstoi, pstoi)
     # % calculate the RO2 concentration
     RO2conc = RO2_conc.RO2_conc(RO2_indi, y)
     # % calculate H2O, O2, NO, HO2, NO3
     op = jude_species(y, comp_namelist)
     # % calculate reaction rate coefficients values
     rate_values = rate_coeffs.evaluate_rates(RO2conc, T, 0, M, M * 0.7809, op[0], op[1], op[2], op[3],
-                                                            op[4], p)
+                                             op[4], p)
     # used as the title for the plotted figures
     formula = get_formula(plot_spec)
     # % set the grids parameters
     Rtot, dr, dx, sp_line = grid_para(Zgrid, Rgrid, R2, R1, L2, L1, comp_num)
 
-    # %% run the modules and plot
+    # % run the modules and plot
     if flag_tube == '3':
         c = model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,
                     Diff_vals, Rtot, Q1, Q2, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec, \
@@ -102,9 +102,9 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
                     Diff_vals, Rtot, const_comp_free, const_comp_conc_free, Q1, Q2, dydt_vst, rindx, nreac, rstoi,
                     rate_values,
                     const_comp, u, plot_spec, formula, c, dr, dx)
-    else: # model 1 and model 2 they are same
+    else:  # model 1 and model 2 they are same
         # % run once with two different tubes or one tube
-        c = model_1(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, sp_line, numLoop, comp_namelist, key_spe_for_plot, dt,
+        c = model_1(R2, Rgrid, Zgrid, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt,
                     timesteps, Diff_vals, Rtot, Q1, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u,
                     plot_spec, formula, c, dr, dx)
     # % calculate the meanconc for each species

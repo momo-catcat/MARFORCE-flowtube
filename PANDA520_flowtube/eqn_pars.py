@@ -16,11 +16,11 @@
 # arrays and python files to solve problem
 
 import numpy as np
-import sch_interr
-import eqn_interr
+
 import RO2_indices
+import eqn_interr
+import sch_interr
 import write_dydt_rec
-import write_hyst_eq
 
 
 # define function to extract the chemical mechanism
@@ -61,7 +61,7 @@ def extr_mech(sch_name, chem_sch_mrk,
      nreac_g, nprod_g, comp_namelist, comp_num] = eqn_interr.eqn_interr(eqn_num,
                                                                         eqn_list, chem_sch_mrk)
 
-  # get index of components with constant influx/concentration -----------
+    # get index of components with constant influx/concentration -----------
     # empty array for storing index of components with constant influx
     con_infl_indx = np.zeros((len(con_infl_nam)))
     con_C_indx = np.zeros((len(const_comp))).astype('int')

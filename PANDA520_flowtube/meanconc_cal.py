@@ -1,9 +1,10 @@
 import numpy as np
 from scipy import interpolate
 
-def meanconc_cal(R2,Rgrid,plot_spec,comp_namelist,c):
+
+def meanconc_cal(R2, Rgrid, plot_spec, comp_namelist, c):
     dr_final = R2 / (Rgrid - 1) * 2
-    x = np.arange(0, R2, dr_final) + dr_final # match with y_x
+    x = np.arange(0, R2, dr_final) + dr_final  # match with y_x
 
     rVec = np.arange(0, R2, 0.001)
 
@@ -26,10 +27,11 @@ def meanconc_cal(R2,Rgrid,plot_spec,comp_namelist,c):
         conc1 = 0.001 / R2 ** 2 * np.sum(cVec1 * rVec)
         conc2 = 0.001 / R2 ** 2 * np.sum(cVec2 * rVec)
 
-        meanConc.append(conc1+conc2)
+        meanConc.append(conc1 + conc2)
     return meanConc
 
-def meanconc_cal_sim(R1,Rgrid,comp_namelist,c):
+
+def meanconc_cal_sim(R1, Rgrid, comp_namelist, c):
     dr_final = R1 / (Rgrid - 1) * 2
     x = np.arange(0, R1, dr_final) + dr_final
     rVec = np.arange(0, R1, 0.001)

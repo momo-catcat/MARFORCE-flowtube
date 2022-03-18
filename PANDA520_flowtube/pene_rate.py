@@ -1,11 +1,12 @@
 # this script is used to calculate particle penetration rate according to
 # Gormley & Kennedy, 1948, Diffusion from a stream flowing through a cylindrical tube
 import numpy as np
-from Vapour_calc import Air_density as Air_density
-from Vapour_calc import Dp as Dp
 import pandas as pd
 from molmass import Formula
 from thermo.chemical import Chemical
+
+from Vapour_calc import Air_density as Air_density
+from Vapour_calc import Dp as Dp
 
 
 # Reynolds number of fluid
@@ -18,9 +19,10 @@ def cal_Re(dens, v, d, vis):
     """
     return dens * v * d / vis
 
+
 # Dynamic viscosity (rather than kinetic viscosity which is divided by density)
 # of air using Sutherland equation, Eq. 2-8, P18, Aerosol Measurement, Third Edition
-def cal_vis(T ):
+def cal_vis(T):
     return 18.203 * 10e-6 * (293.15 + 110.4) / (T + 110.4) * (T / 293.15) ** 1.5  # Pa*s
 
 
@@ -42,8 +44,9 @@ def cal_Cs(Kn):
     gamma = 0.999
     return 1 + Kn * (alpha + beta * np.exp(- gamma / Kn))
 
+
 # Diffusion coefficient
-def cal_diffusivity(dp, Cs, vis, T ):
+def cal_diffusivity(dp, Cs, vis, T):
     kB = 1.38064852e-23  # m2 kg s-2 K-1
     return kB * T * Cs / (3 * np.pi * vis * dp)  # in m2/s
 
@@ -89,16 +92,16 @@ def cal_pene_rate(P, T, MM, rho, L, Q, Dia):
 
     export = pd.DataFrame({'Pene': [pene], 'D': [D]})
 
-    return(export)
+    return (export)
 
 
-def cal_diffu(A,p,T):
+def cal_diffu(A, p, T):
     mass = Formula(A).mass
-    
+
     tol = Chemical(A)
-    
+
     tol.calculate(T=T, P=p)
-    
+
     vis = cal_vis(T)
 
     dp = Dp(mass, tol.rho) + 0.3e-9  # correction for mass diameter to mobility diameter
@@ -108,6 +111,6 @@ def cal_diffu(A,p,T):
     Kn = cal_Kn(dp, mfp)
 
     Cs = cal_Cs(Kn)
-    
+
     d = cal_diffusivity(dp, Cs, vis, T)
-    return d*100**2
+    return d * 100 ** 2
