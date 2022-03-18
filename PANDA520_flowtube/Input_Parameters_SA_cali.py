@@ -16,9 +16,11 @@ from cmd_calib5 import cmd_calib5
 from exp_setup import inputs_setup
 import const_comp_conc_cal
 import csv
+from diffusion_const_added import add_diff_const as add_diff_const
 
-file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"
-os.chdir(file_path)
+
+# file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"
+# os.chdir(file_path)
 
 
 # add unit after values
@@ -31,6 +33,7 @@ class UnitFloat(float):
         self.unit = unit
 
 
+'''
 # summary for all the SA cali
 # MION inlet
 # 09.10 the frist SA cali with 41 cm for 3/4 inch and 58.5 cm for 1 inch first tower Br API9
@@ -41,7 +44,8 @@ class UnitFloat(float):
 # 01.27 the fifth SA cali with 26cm for 3/4 inch NO3 inlet API9
 # MION inlet
 # 02.07 the sixth SA cali with 10 cm for 3/4 inch and 61 cm for 1 inch first tower Br karsa
-# %% Prepare the inputs
+'''
+# % Prepare the inputs
 # T_cel = float(input('temperature C:'))
 # date = input('date:')
 T_cel = 25
@@ -101,25 +105,9 @@ for i in range(len(date)):
     # store initial concentration
     Init_comp = ['OH', 'HO2']  # species have inital concentration
     Init_comp_conc = np.transpose([OHconc, OHconc])
-
-    # diffusion constants that you want to input, [cm**2/s]
-    # DOH-air = 165 ± 20 Torr cm2 s-1, DHO2-He = 430 ± 30 Torr cm2 s-1，DO3-He = 410 ± 25 Torr cm2 s-1 at 296 K.
-    # Source OH, HO2, and Ozone Gaseous Diffusion Coefficients
-    dOH = 165 / (0.00750062 * p)  # convert to pa
-    T0 = 296
-    dOH = 101325 / p * dOH * ((T ** (3 / 2)) / (T0 ** (3 / 2)))
-
-    # Source A Measurement of the Diffusion Coefficient of Hydrogen Peroxide Vapor into Air
-    dHO2 = 111 / (0.00750062 * p)  # convert to pa
-    T0 = 296
-    dHO2 = 101325 / p * dHO2 * ((T ** (3 / 2)) / (T0 ** (3 / 2)))
-
-    # https://www.engineeringtoolbox.com/air-diffusion-coefficient-gas-mixture-temperature-d_2010.html
-    dH2O = 0.242  # cm2/s 20C
-    T0 = 273.15 + 20
-    dH2O = 101325 / p * dH2O * ((T ** (3 / 2)) / (T0 ** (3 / 2)))
-
+    # add some diffusion constants add more in diffusion_const_added.py file if you want
     Diff_setname = ['OH', 'H2O', 'HO2', 'SO3']
+    dOH, dH2O, dHO2 = add_diff_const(p, T)
     Diff_set = [dOH, dH2O, dHO2, 0.126]
 
     # grid for length and radius directions

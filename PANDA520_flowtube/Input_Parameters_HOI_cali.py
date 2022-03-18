@@ -23,16 +23,7 @@ class UnitFloat(float):
         self.unit = unit
 
 
-'''
-# setup: box + 50 cm 3/4 inch +68 cm 1 inch+tower
-# first we roughfuly calculate with 3/4 inch at 118 cm long
-3/4 inch inner R is 0.78 cm
-1 inch inner diamerters is 0.78/4*3
-is 2.54 cm, 0.2 for the tube wall
-'''
-''' Prepare the inputs'''
-
-# load H2O Q  
+# load H2O Q
 # file = os.getcwd() + '/input_files/HOI_cali_T1_25Oct21.csv'
 file = os.getcwd() + '/input_files/HOI_cali_T2_20Nov21.csv'
 
