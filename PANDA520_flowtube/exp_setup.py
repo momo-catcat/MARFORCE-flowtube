@@ -8,6 +8,8 @@
 # 01.27 the fifth SA cali with 26cm for 3/4 inch NO3 inlet API9
 # MION inlet
 # 02.07 the sixth SA cali with 10 cm for 3/4 inch and 61 cm for 1 inch first tower Br Karsa
+import os
+import pandas as pd
 
 def inputs_setup(date):
     # flag_tube, '4','3','2','1' refers to the setup of the experiment
@@ -31,6 +33,14 @@ def inputs_setup(date):
         file = 'H2O_1.csv'
         s1 = '1.csv'
         s2 = '1.txt'
+        file = os.getcwd() + '/input_files/' + file
+        H2O_data = pd.read_csv(file)
+        H2O_1 = H2O_data['H2O_1']
+        H2O_2 = H2O_data['H2O_2']
+        H2Oconc_1 = H2O_data['H2Oconc_1']
+        H2Oconc_2 = H2O_data['H2Oconc_2']
+        Q1 = H2O_data['Q1']
+        Q2 = H2O_data['Q1'] + H2O_data['Q2']
     elif date == '10.28':
         flag_tube = '3'
         R1 = 0.78
@@ -40,6 +50,14 @@ def inputs_setup(date):
         file = 'H2O_2.csv'
         s1 = '2.csv'
         s2 = '2.txt'
+        file = os.getcwd() + '/input_files/' + file
+        H2O_data = pd.read_csv(file)
+        H2O_1 = H2O_data['H2O_1']
+        H2O_2 = H2O_data['H2O_2']
+        H2Oconc_1 = H2O_data['H2Oconc_1']
+        H2Oconc_2 = H2O_data['H2Oconc_2']
+        Q1 = H2O_data['Q1']
+        Q2 = H2O_data['Q1'] + H2O_data['Q2']
     elif date == '11.18':
         flag_tube = '3'
         R1 = 0.78
@@ -49,6 +67,14 @@ def inputs_setup(date):
         file = 'H2O_3.csv'
         s1 = '3.csv'
         s2 = '3.txt'
+        file = os.getcwd() + '/input_files/' + file
+        H2O_data = pd.read_csv(file)
+        H2O_1 = H2O_data['H2O_1']
+        H2O_2 = H2O_data['H2O_2']
+        H2Oconc_1 = H2O_data['H2Oconc_1']
+        H2Oconc_2 = H2O_data['H2Oconc_2']
+        Q1 = H2O_data['Q1']
+        Q2 = H2O_data['Q1'] + H2O_data['Q2']
     elif date == '01.04':
         flag_tube = '3'
         R1 = 0.78
@@ -58,6 +84,14 @@ def inputs_setup(date):
         file = 'H2O_4.csv'
         s1 = '4.csv'
         s2 = '4.txt'
+        file = os.getcwd() + '/input_files/' + file
+        H2O_data = pd.read_csv(file)
+        H2O_1 = H2O_data['H2O_1']
+        H2O_2 = H2O_data['H2O_2']
+        H2Oconc_1 = []
+        H2Oconc_2 = []
+        Q1 = H2O_data['Q1']
+        Q2 = H2O_data['Q1'] + H2O_data['Q2']
     elif date == '01.27':
         flag_tube = '1'
         R1 = 0.78
@@ -67,6 +101,14 @@ def inputs_setup(date):
         file = 'H2O_5.csv'
         s1 = '5.csv'
         s2 = '5.txt'
+        file = os.getcwd() + '/input_files/' + file
+        H2O_data = pd.read_csv(file)
+        H2O_1 = H2O_data['H2O_1']
+        H2O_2 = 0
+        H2Oconc_1 = []
+        H2Oconc_2 = []
+        Q1 = H2O_data['Q1']
+        Q2 = H2O_data['Q1']
     # add the experiment as you want
     else:
         flag_tube = '2'
@@ -77,4 +119,12 @@ def inputs_setup(date):
         file = 'H2O_6.csv'
         s1 = '6.csv'
         s2 = '6.txt'
-    return R1, L1, R2, L2, flag_tube, file, s1, s2
+        file = os.getcwd() + '/input_files/' + file
+        H2O_data = pd.read_csv(file)
+        H2O_1 = H2O_data['H2O_1']
+        H2O_2 = 0
+        H2Oconc_1 = H2O_data['H2Oconc_1']
+        H2Oconc_2 = H2O_data['H2Oconc_2']
+        Q1 = H2O_data['Q1']
+        Q2 = H2O_data['Q1']
+    return R1, L1, R2, L2, flag_tube, file, s1, s2, H2O_1, H2O_2, H2Oconc_1, H2Oconc_2, Q1, Q2

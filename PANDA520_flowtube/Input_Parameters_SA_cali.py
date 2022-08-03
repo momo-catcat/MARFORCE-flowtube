@@ -7,8 +7,8 @@ for name in dir():
 del name
 
 # %% import packages and functions
-# import sys
-# sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
+import sys
+sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
 import os
 import numpy as np
 import pandas as pd
@@ -18,8 +18,8 @@ from Calcu_by_flow import const_comp_conc_cal, const_comp_conc_cal_H2O, const_co
 from diffusion_const_added import add_diff_const as add_diff_const
 
 
-# file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"
-# os.chdir(file_path)
+file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"
+os.chdir(file_path)
 
 # add unit after values
 class UnitFloat(float):
@@ -54,55 +54,38 @@ p = 101000  # pressure Pa
 # select experiment name for simulating
 date = ['10.28']  # can be multiple experiments
 
-
+#%%
 for i in range(len(date)):
     # %% load the parameters for experiment setup, change the basic_input
-    R1, L1, R2, L2, flag_tube, file, s1, s2 = inputs_setup(date[i])
-
-    # load H2O Q
-    file = os.getcwd() + '/input_files/' + file
-    H2O_data = pd.read_csv(file)
-
-    # set flow and input concentrations
-    Q1 = H2O_data['Q1']
-    Q2 = H2O_data['Q2']
-    H2O_1 = H2O_data['H2O_1']
-    H2O_2 = H2O_data['H2O_2']
-    H2Oconc_1 = H2O_data['H2Oconc_1']
-    H2Oconc_2 = H2O_data['H2Oconc_2']
-    O2flow = 50  # slpm
-    SO2flow = 5  # slpm
-
-    # set the flow for tube 1 and tube 2 in each experiment
-    if flag_tube in ['3', '4']:
-        Q2 = Q1 + Q2
-    elif flag_tube == '2':
-        Q2 = Q1
-    else:
-        Q2 = 0
+    R1, L1, R2, L2, flag_tube, file, s1, s2, H2O_1, H2O_2, H2Oconc_1, H2Oconc_2, Q1, Q2 = inputs_setup(date[i])
 
     # set the constant precursors, change as you want
     outflowLocation = 'before'  # outflow tube located before or after injecting air, water, and so2
 
     fullOrSimpleModel = 'full'  # simple: Gormley&Kennedy approximation, full: flow model (much slower)
     # in this study, we have the outflow before injecting air, water and SO2
-
+    O2flow = 50.0  # slpm
+    SO2flow = 5.0  # slpm
     sampflow = 22.5  # lpm
     ppm = 1e-6
     O2ratio = 0.209  # O2inAir = 0.209
     SO2ratio = 5000 * ppm
-    N2Flow = 23  # lpm
+    N2Flow = 23.0  # lpm
     const_comp_pre = ['SO2', 'O2']  # species have constant concentration and are calculated from flows
     const_comp_pre_know = ['H2O']  # species have known constant concentration but already known
     const_comp = const_comp_pre + const_comp_pre_know  # species have constant concentration
     # get all the concentrations
-    O2conc = const_comp_conc_cal(O2flow, outflowLocation, sampflow, H2O_1, H2O_2, N2Flow, O2ratio,
+    O2conc = const_comp_conc_cal(O2flow, outflowLocation, sampflow, H2O_1,  N2Flow, O2ratio,
                                  Q1, Q2, T_cel, T, p, flag_tube)
 
-    SO2conc = const_comp_conc_cal(SO2flow, outflowLocation, sampflow, H2O_1, H2O_2, N2Flow, SO2ratio,
+    SO2conc = const_comp_conc_cal(SO2flow, outflowLocation, sampflow, H2O_1,  N2Flow, SO2ratio,
                                   Q1, Q2, T_cel, T, p, flag_tube)
 
-    H2Oconc = np.transpose([H2Oconc_1, H2Oconc_2])
+    if date in [['01.04'], ['01.27']]:
+        H2Oconc = const_comp_conc_cal_H2O(O2flow, outflowLocation, sampflow, H2O_1, H2O_2, N2Flow, O2ratio,
+                                          Q1, Q2, T_cel, T, p, flag_tube)
+    else:
+        H2Oconc = np.transpose([H2Oconc_1, H2Oconc_2])
 
     # % store all the const species to const_comp_conc follow the order of const_comp
     const_comp_conc = np.transpose([SO2conc, O2conc, H2Oconc])
@@ -160,8 +143,8 @@ for i in range(len(date)):
 
     c = []
 
-    for i in range(len(H2O_data)):
-        if H2O_data['H2O_1'][i] > 0:
+    for i in range(len(OHconc)):
+        if OHconc[i] > 0:
             meanConc1, c1 = cmd_calib5(const_comp_conc[:, i, :], params, Init_comp_conc[i], Q1[i], Q2[i])
             meanconc.append(meanConc1)
             c.append(c1)

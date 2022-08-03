@@ -30,8 +30,8 @@ T = T_cel + 273.15  # K
 p = 101000  # pressure Pa
 
 # load input file for flows and concentrations
-# file = os.getcwd() + '/input_files/HOI_cali_T1_25Oct21.csv'
-file = os.getcwd() + '/input_files/HOI_cali_T2_20Nov21.csv'
+file = os.getcwd() + '/input_files/HOI_cali_T1_25Oct21.csv'
+#file = os.getcwd() + '/input_files/HOI_cali_T2_20Nov21.csv'
 H2O_data = pd.read_csv(file)
 
 ''' The format of input file needs to be changed:
@@ -83,13 +83,14 @@ const_comp_pre = ['H2O', 'O2']  # species have constant concentration and are ca
 const_comp_pre_know = ['I2']  # species have known constant concentration but already known
 const_comp = const_comp_pre + const_comp_pre_know  # species have constant concentration
 # get all the concentrations
-O2conc = const_comp_conc_cal(O2flow, outflowLocation, sampflow, H2O_1, H2O_2, N2Flow, O2ratio,
+O2conc = const_comp_conc_cal(O2flow, outflowLocation, sampflow, H2O_1, N2Flow, O2ratio,
                              Q1, Q2, T_cel, T, p, flag_tube)
 
 H2Oconc = const_comp_conc_cal_H2O(O2flow, outflowLocation, sampflow, H2O_1, H2O_2, N2Flow, O2ratio,
                                   Q1, Q2, T_cel, T, p, flag_tube)
 
 I2conc = np.transpose([I2conc_1, I2conc_2])
+
 # % store all the const species to const_comp_conc follow the order of const_comp
 const_comp_conc = np.transpose([H2Oconc, O2conc, I2conc])
 
@@ -113,7 +114,6 @@ sch_name = os.getcwd() + '/input_mechanism/HOI_cali_chem.txt'
 chm_sch_mrk = ['{', 'RO2', '+', '', '', ';', '+', ';', '$', '{', ':', ';', '}']
 key_spe_for_plot = 'HOI'
 plot_spec = ['OH', 'HOI', 'HO2', 'I', 'I2']  # plot species
-
 
 params = {'T': UnitFloat(T, "K"),  # temperature
           'p': UnitFloat(p, "Pa"),  # pressure pa

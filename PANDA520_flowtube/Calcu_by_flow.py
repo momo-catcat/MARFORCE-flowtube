@@ -3,11 +3,14 @@ import numpy as np
 from Vapour_calc import H2O_conc
 
 
-def const_comp_conc_cal(O2flow, outflowLocation, sampflow, H2O_1, H2O_2, N2Flow, O2_ratio,
+def const_comp_conc_cal(O2flow, outflowLocation, sampflow, H2O_1, N2Flow, O2_ratio,
                         Q1, Q2, T_cel, T, p, flag_tube):
 
     kB = 1.3806488e-23  # boltzmann constant
     sumflow = O2flow + H2O_1
+    if type(O2flow) is float:
+        O2flow = np.ones(len(H2O_1)) * O2flow
+
     if outflowLocation in 'after':
         totFlow1 = N2Flow + sumflow / 1000
     elif flag_tube in ['3']:
