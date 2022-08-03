@@ -1,5 +1,5 @@
 def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
-    # % import packages
+    # %% import packages
     import numpy as np
     import RO2_conc
     import sch_interr
@@ -16,6 +16,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
     from model_1 import model_1
     from model_3 import model_3
     from model_4 import model_4
+    from model_5_test import model_5
     from meanconc_cal import meanconc_cal
     from grid_parameters import grid_para as grid_para
 
@@ -92,10 +93,10 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
     # % set the grids parameters
     Rtot, dr, dx, sp_line = grid_para(Zgrid, Rgrid, R2, R1, L2, L1, comp_num)
 
-    # % run the modules and plot
+    # %% run the modules and plot
     if flag_tube == '3':
         c = model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,
-                    Diff_vals, Rtot, Q1, Q2, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec, \
+                    Diff_vals, Rtot, Q1, Q2, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec,
                     formula, c, dr, dx)
     elif flag_tube == '4':
         c = model_4(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,

@@ -40,7 +40,7 @@ def model_1(R2,  Rgrid, Zgrid,  L2, L1,  numLoop, comp_namelist, key_spe_for_plo
         plt.gcf().text(0.7, 0.3, 'Time = ' + str(tim), fontsize=15)
         plt.draw()
         plt.pause(1)
-
+        plt.close('all')
         print(['t = ' + str(tim) + str(key_spe_for_plot) + " difference: " + str(np.sum(new - old))])
 
         if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):

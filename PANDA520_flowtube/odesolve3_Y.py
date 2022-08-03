@@ -103,6 +103,7 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, Rtot, dr, dx, Qtot, c, comp_namelis
                     reac_count += 1
 
         c[:, :, u] = dt * (term1[:, :, u] - term2[:, :, u] + term3[:, :, u]) + initc[:, :, u]
+        #c[:, :, u] = dt * (term1[:, :, u] - term2[:, :, u]) + initc[:, :, u]
         # c[0:Rgrid // 2, :, u] = dt * (term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u])  + initc[0:Rgrid // 2,:, u]
 
         initc = c

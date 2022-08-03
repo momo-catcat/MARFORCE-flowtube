@@ -1,27 +1,25 @@
-# %% import package
-# first clear all the variable that you
+# this file is used for all the inputs
+
+# clear variables
 for name in dir():
     if not name.startswith('_'):
         del globals()[name]
 del name
 
-import sys
-
-sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
-
+# %% import packages and functions
+# import sys
+# sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
 import os
 import numpy as np
 import pandas as pd
 from cmd_calib5 import cmd_calib5
 from exp_setup import inputs_setup
-import const_comp_conc_cal
-import csv
+from Calcu_by_flow import const_comp_conc_cal, const_comp_conc_cal_H2O, const_comp_conc_cal_OH
 from diffusion_const_added import add_diff_const as add_diff_const
 
 
 # file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"
 # os.chdir(file_path)
-
 
 # add unit after values
 class UnitFloat(float):
@@ -45,15 +43,18 @@ class UnitFloat(float):
 # MION inlet
 # 02.07 the sixth SA cali with 10 cm for 3/4 inch and 61 cm for 1 inch first tower Br karsa
 '''
-# % Prepare the inputs
+
+# set temperature and pressure
 # T_cel = float(input('temperature C:'))
 # date = input('date:')
 T_cel = 25
 T = T_cel + 273.15  # K
-p = 96060  # pressure Pa
+p = 101000  # pressure Pa
+
 # select experiment name for simulating
-date = ['09.10']  # can be multiple experiments
-# %%
+date = ['10.28']  # can be multiple experiments
+
+
 for i in range(len(date)):
     # %% load the parameters for experiment setup, change the basic_input
     R1, L1, R2, L2, flag_tube, file, s1, s2 = inputs_setup(date[i])
@@ -61,17 +62,24 @@ for i in range(len(date)):
     # load H2O Q
     file = os.getcwd() + '/input_files/' + file
     H2O_data = pd.read_csv(file)
+
+    # set flow and input concentrations
+    Q1 = H2O_data['Q1']
+    Q2 = H2O_data['Q2']
+    H2O_1 = H2O_data['H2O_1']
+    H2O_2 = H2O_data['H2O_2']
+    H2Oconc_1 = H2O_data['H2Oconc_1']
+    H2Oconc_2 = H2O_data['H2Oconc_2']
+    O2flow = 50  # slpm
+    SO2flow = 5  # slpm
+
     # set the flow for tube 1 and tube 2 in each experiment
     if flag_tube in ['3', '4']:
-        Q1 = H2O_data['Q1']  # lpm
-        Q2 = H2O_data['Q2']
         Q2 = Q1 + Q2
     elif flag_tube == '2':
-        Q1 = H2O_data['Q1']  # lpm
         Q2 = Q1
     else:
-        Q1 = H2O_data['Q1']
-        Q2 = Q1
+        Q2 = 0
 
     # set the constant precursors, change as you want
     outflowLocation = 'before'  # outflow tube located before or after injecting air, water, and so2
@@ -79,32 +87,32 @@ for i in range(len(date)):
     fullOrSimpleModel = 'full'  # simple: Gormley&Kennedy approximation, full: flow model (much slower)
     # in this study, we have the outflow before injecting air, water and SO2
 
-    const_comp_pre = ['SO2', 'O2']  # species always constant concentration
-    const_comp_var = ['H2O']  # although constant for each exp but vary between different exps
-    const_comp = const_comp_pre + const_comp_var
-    N2Flow = 22  # lpm
+    sampflow = 22.5  # lpm
     ppm = 1e-6
+    O2ratio = 0.209  # O2inAir = 0.209
+    SO2ratio = 5000 * ppm
+    N2Flow = 23  # lpm
+    const_comp_pre = ['SO2', 'O2']  # species have constant concentration and are calculated from flows
+    const_comp_pre_know = ['H2O']  # species have known constant concentration but already known
+    const_comp = const_comp_pre + const_comp_pre_know  # species have constant concentration
+    # get all the concentrations
+    O2conc = const_comp_conc_cal(O2flow, outflowLocation, sampflow, H2O_1, H2O_2, N2Flow, O2ratio,
+                                 Q1, Q2, T_cel, T, p, flag_tube)
 
-    # set the flows for the precursors
-    pre_flow = [5, 50]  # slpm  AirFlow = 50  # synthetic air slpm  SO2Flow = 5  # slpm
-    pre_standard_conc = [0.209, 5000 * ppm]  # O2inAir = 0.209 # SO2  SO2BottlePpm = 5000  # ppm
+    SO2conc = const_comp_conc_cal(SO2flow, outflowLocation, sampflow, H2O_1, H2O_2, N2Flow, SO2ratio,
+                                  Q1, Q2, T_cel, T, p, flag_tube)
 
-    # % store all the const species to const_comp_conc
-    const_comp_conc, const_comp_free, const_comp_conc_free, OHconc = const_comp_conc_cal.const_comp_conc_cal(H2O_data,
-                                                                                                             outflowLocation,
-                                                                                                             const_comp_var,
-                                                                                                             const_comp_pre, \
-                                                                                                             pre_flow,
-                                                                                                             N2Flow,
-                                                                                                             pre_standard_conc, \
-                                                                                                             Q1, Q2,
-                                                                                                             T_cel, T,
-                                                                                                             p,
-                                                                                                             flag_tube)
+    H2Oconc = np.transpose([H2Oconc_1, H2Oconc_2])
+
+    # % store all the const species to const_comp_conc follow the order of const_comp
+    const_comp_conc = np.transpose([SO2conc, O2conc, H2Oconc])
+
+    OHconc, const_comp_free, const_comp_conc_free = const_comp_conc_cal_OH(H2Oconc, O2conc, Q1, flag_tube)
 
     # store initial concentration
     Init_comp = ['OH', 'HO2']  # species have inital concentration
     Init_comp_conc = np.transpose([OHconc, OHconc])
+
     # add some diffusion constants add more in diffusion_const_added.py file if you want
     Diff_setname = ['OH', 'H2O', 'HO2', 'SO3']
     dOH, dH2O, dHO2 = add_diff_const(p, T)
@@ -126,12 +134,9 @@ for i in range(len(date)):
               'R2': UnitFloat(R2, "cm"),  # diameters for second tube
               'L1': UnitFloat(L1, "cm"),  # length for first tube
               'L2': UnitFloat(L2, "cm"),  # length for first tube
-              # 'Q1': UnitFloat(Q1, "lpm"),  # flow for first tube
-              # 'Q2': UnitFloat(Q2, "lpm"),  # flow for second tube
               'dt': 0.0001,  # flow for second tube
               'Diff_setname': Diff_setname,  # diffusion for the species that you want to have
               'Diff_set': Diff_set,
-              # 'It': It, # it product for calculation
               'fullOrSimpleModel': fullOrSimpleModel,  # Gormley&Kennedy approximation, full: flow model (much slower)
               'sch_name': sch_name,  # file for the MCM file
               'chm_sch_mrk': chm_sch_mrk,  # markers to isolate sections of chemical scheme based on MCM KPP format
@@ -157,17 +162,18 @@ for i in range(len(date)):
 
     for i in range(len(H2O_data)):
         if H2O_data['H2O_1'][i] > 0:
-            meanConc1, c1 = cmd_calib5(const_comp_conc[:, :, i], params, Init_comp_conc[i], Q1[i], Q2[i])
+            meanConc1, c1 = cmd_calib5(const_comp_conc[:, i, :], params, Init_comp_conc[i], Q1[i], Q2[i])
             meanconc.append(meanConc1)
             c.append(c1)
 
     meanconc_s = pd.DataFrame(np.transpose(meanconc))
     meanconc_s.index = plot_spec
+
     # %% save the modelled SA, HO2
-    meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_mean__' + s1)
+    # meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_mean__' + s1)
 
-    with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_c' + s2, 'w') as f:
-        # using csv.writer method from CSV package
-        write = csv.writer(f)
+    # with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_c' + s2, 'w') as f:
+    #    # using csv.writer method from CSV package
+    #    write = csv.writer(f)
 
-        write.writerows(c)
+    #    write.writerows(c)
