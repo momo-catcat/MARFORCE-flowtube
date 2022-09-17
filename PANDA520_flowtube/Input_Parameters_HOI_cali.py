@@ -10,6 +10,7 @@ del name
 import numpy as np
 import pandas as pd
 import os
+import csv
 from cmd_calib5 import cmd_calib5
 from Calcu_by_flow import const_comp_conc_cal, const_comp_conc_cal_H2O, const_comp_conc_cal_OH
 from diffusion_const_added import add_diff_const as add_diff_const
@@ -30,8 +31,8 @@ T = T_cel + 273.15  # K
 p = 101000  # pressure Pa
 
 # load input file for flows and concentrations
-file = os.getcwd() + '/input_files/HOI_cali_T1_25Oct21.csv'
-#file = os.getcwd() + '/input_files/HOI_cali_T2_20Nov21.csv'
+#file = os.getcwd() + '/input_files/HOI_cali_T1_25Oct21.csv'
+file = os.getcwd() + '/input_files/HOI_cali_T2_20Nov21.csv'
 H2O_data = pd.read_csv(file)
 
 ''' The format of input file needs to be changed:
@@ -97,7 +98,7 @@ const_comp_conc = np.transpose([H2Oconc, O2conc, I2conc])
 OHconc, const_comp_free, const_comp_conc_free = const_comp_conc_cal_OH(H2Oconc, O2conc, Q1, flag_tube)
 
 # store initial concentration
-Init_comp = ['OH', 'HO2']  # species have inital concentration
+Init_comp = ['OH', 'HO2']  # species have initial concentration
 Init_comp_conc = np.transpose([OHconc, OHconc])
 
 # add more diffusion constants in diffusion_const_added.py file if you want
@@ -121,7 +122,7 @@ params = {'T': UnitFloat(T, "K"),  # temperature
           'R2': UnitFloat(R2, "cm"),  # diameters for second tube
           'L1': UnitFloat(L1, "cm"),  # length for first tube
           'L2': UnitFloat(L2, "cm"),  # length for first tube
-          'dt': 0.0001,  # flow for second tube
+          'dt': 0.0001,  # dt * timesteps * numLoop is time elapsed in the final solution
           'Diff_setname': Diff_setname,  # diffusion for the species that you want to have
           'Diff_set': Diff_set,
           'fullOrSimpleModel': fullOrSimpleModel,  # Gormley&Kennedy approximation, full: flow model (much slower)
@@ -155,9 +156,14 @@ for i in range(len(H2O_data)):  # range(H2SO4.size):
 
 meanconc_s = pd.DataFrame(meanconc)
 meanconc_s.columns = plot_spec
-# meanconc_s.to_csv('./Export_files/HOI_cali_25Oct21.csv')
-# meanconc_s.to_csv('./Export_files/HOI_cali_20Nov21.csv')
+# %% export files
 
-# with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_4_c.txt', 'w') as f:
-#     for item in c:
-#         f.write("%s\n" % item)
+#meanconc_s.to_csv(os.getcwd() + '/Export_files/HOI_cali_T1_25Oct21.csv')
+meanconc_s.to_csv(os.getcwd() + '/Export_files/HOI_cali_T2_20Nov21.csv')
+
+#with open(os.getcwd() + '/Export_files/HOI_cali_T1_25Oct21.txt', 'w') as f:
+with open(os.getcwd() + '/Export_files/HOI_cali_T2_20Nov21.txt', 'w') as f:
+    #    # using csv.writer method from CSV package
+        write = csv.writer(f)
+
+        write.writerows(c)

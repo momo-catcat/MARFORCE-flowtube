@@ -67,6 +67,7 @@ def model_4(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
             axs[i].set_xlabel('L [cm]')
             axs[i].set_ylabel('R [cm]')
             axs[i].set_title(formula[i])
+            axs[i].colorbar()
 
         fig.delaxes(axs[5])
         plt.gcf().text(0.7, 0.3, 'Time = ' + str(tim), fontsize=15)

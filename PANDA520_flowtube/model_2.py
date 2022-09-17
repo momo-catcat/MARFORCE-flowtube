@@ -10,9 +10,9 @@ def model_2(R2, Rgrid, Zgrid, L2, L1, numLoop, comp_namelist, key_spe_for_plot, 
             Q1, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec, formula, c, dr, dx):
     #    for i in const_comp:
     #        c[:, :, comp_namelist.index(i)] = const_comp_gird[const_comp.index(i)]
-    '''
+    """
     should be same in three, but need to change the details
-    '''
+    """
 
     for j in range(numLoop):
         c1 = c.copy()
@@ -27,7 +27,7 @@ def model_2(R2, Rgrid, Zgrid, L2, L1, numLoop, comp_namelist, key_spe_for_plot, 
         new = c[:, -1, comp_namelist.index(key_spe_for_plot)]
 
         fig, axs = plt.subplots(2, 3, figsize=(8, 5), facecolor='w', edgecolor='k')
-        fig.subplots_adjust(hspace=.5, wspace=.45)
+        fig.subplots_adjust(hspace=.5, wspace=.4)
         plt.style.use('default')
         plt.rcParams.update(
             {'font.size': 13, 'font.weight': 'bold', 'font.family': 'serif', 'font.serif': 'Times New Roman'})
@@ -45,6 +45,7 @@ def model_2(R2, Rgrid, Zgrid, L2, L1, numLoop, comp_namelist, key_spe_for_plot, 
             axs[i].set_xlabel('L [cm]')
             axs[i].set_ylabel('R [cm]')
             axs[i].set_title(formula[i])
+            axs[i].colorbar()
 
         fig.delaxes(axs[5])
         plt.gcf().text(0.7, 0.3, 'Time = ' + str(tim), fontsize=15)
