@@ -128,3 +128,36 @@ def inputs_setup(date):
         Q1 = H2O_data['Q1']
         Q2 = H2O_data['Q1']
     return R1, L1, R2, L2, flag_tube, file, s1, s2, H2O_1, H2O_2, H2Oconc_1, H2Oconc_2, Q1, Q2
+
+def inputs_setup_CLOUD15(date):
+    # flag_tube, '4','3','2','1' refers to the setup of the experiment
+    # '4' two tubes with different inner diameters and have Y piece, run the second tube with two flows simultaneously
+    # '3' same as '4', but run the second tube with one flow after converting the mean concentrations
+    # '2' two tubes with different inner diameters
+    # '1' one tube
+    # R1, inner diameter for the first tube, unit cm
+    # L1, length for the first tube, unit cm
+    # R2, inner diameter for the second tube if there is any, = 0 for '1', unit cm
+    # L2, length for the second tube, unit cm
+    # file, the file name of water and UV, for example, 'H2O_1.csv'
+    # s1, the file name for saving the mean concentration for each species, e.g., '1.csv'
+    # s2, the file name for saving the C for each stage, e.g., '1.txt'
+    if date == 'CLOUD15_cali1_calibrator1_16Sep22':
+        flag_tube = '2'
+        R1 = 0.78
+        L1 = 13
+        R2 = 1.04
+        L2 = 60
+        file = 'H2O_CLOUD15_16Sep22.csv'
+        s1 = 'CLOUD15_16Sep22.csv'
+        s2 = 'CLOUD15_16Sep22.txt'
+        file = os.getcwd() + '/input_files/' + file
+        H2O_data = pd.read_csv(file, delimiter = ';' )
+        H2O_1 = H2O_data['H2O_1']
+        H2O_2 = H2O_data['H2O_2']
+        H2Oconc_1 = H2O_data['H2Oconc_1']
+        H2Oconc_2 = H2O_data['H2Oconc_2']
+        Q1 = H2O_data['Q1']
+        Q2 = H2O_data['Q1'] + H2O_data['Q2']
+
+    return R1, L1, R2, L2, flag_tube, file, s1, s2, H2O_1, H2O_2, H2Oconc_1, H2Oconc_2, Q1, Q2

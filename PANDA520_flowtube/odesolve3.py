@@ -83,6 +83,9 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, Rtot, dr, dx, Qtot, c, comp_namelis
                         i)  # ensure reaction index is integer - this necessary because the dydt_rec array is float (the tendency to change records beneath its first row are float)
                     gprate = initc[1:Rgrid // 2, 1:, rindx[i, 0:nreac[i]]] ** rstoi[i, 0:nreac[i]]
                     if (len(rstoi[i, 0:nreac[i]]) > 1):
+
+                        # print(rate_values)
+                        # print(gprate[:,:,0], gprate[:, :, -1], rate_values[i])
                         gprate1 = gprate[:, :, 0] * gprate[:, :, -1] * rate_values[i]
                         # gprate2 = gprate[:,:,0] * gprate[:, :,-1] * rate_values[i]
                         # gprate3 = gprate1-gprate2
