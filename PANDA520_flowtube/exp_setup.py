@@ -96,7 +96,7 @@ def inputs_setup(date):
         flag_tube = '1'
         R1 = 0.78
         L1 = 24
-        R2 = 0
+        R2 = R1
         L2 = 0
         file = 'H2O_5.csv'
         s1 = '5.csv'

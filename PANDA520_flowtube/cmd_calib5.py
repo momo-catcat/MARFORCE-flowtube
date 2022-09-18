@@ -22,12 +22,12 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
 
     # % load the inputs
     T = params['T']  # constant species
-    p = params['p']  # temperaure
-    R1 = params['R1']  # diameters for frist tube
+    p = params['p']  # temperature
+    R1 = params['R1']  # diameters for first tube
     R2 = params['R2']  # diameters for second tube
-    L1 = params['L1']  # length for frist tube
+    L1 = params['L1']  # length for first tube
     L2 = params['L2']  # length for second tube
-    Q1 = Q1 * 1000 / 60  # flow for frist tube
+    Q1 = Q1 * 1000 / 60  # flow for first tube
     Q2 = Q2 * 1000 / 60  # flow for second tube
     sch_name = params['sch_name']  # file for the MCM file
     chm_sch_mrk = params['chm_sch_mrk']  # markers to isolate sections of chemical scheme based on MCM KPP format
@@ -38,7 +38,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
     con_infl_nam = const_comp
     Zgrid = params['Zgrid']  # number of grid points in tube length direction
     Rgrid = params['Rgrid']  # number of grid points in tube radius direction
-    key_spe_for_plot = params['key_spe_for_plot']  # key species for ploting
+    key_spe_for_plot = params['key_spe_for_plot']  # key species for plot
     plot_spec = params['plot_spec']  # plot species
     dt = params['dt']
     flag_tube = params['flag_tube']

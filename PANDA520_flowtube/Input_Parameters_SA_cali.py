@@ -8,18 +8,20 @@ del name
 
 # %% import packages and functions
 import sys
+
 sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
 import os
 import numpy as np
 import pandas as pd
+import csv
 from cmd_calib5 import cmd_calib5
 from exp_setup import inputs_setup
 from Calcu_by_flow import const_comp_conc_cal, const_comp_conc_cal_H2O, const_comp_conc_cal_OH
 from diffusion_const_added import add_diff_const as add_diff_const
 
-
 file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"
 os.chdir(file_path)
+
 
 # add unit after values
 class UnitFloat(float):
@@ -32,16 +34,16 @@ class UnitFloat(float):
 
 
 '''
-# summary for all the SA cali
-# MION inlet
-# 09.10 the frist SA cali with 41 cm for 3/4 inch and 58.5 cm for 1 inch first tower Br API9
-# 10.28 the second SA cali with 50 cm for 3/4 inch and 68 cm for 1 inch we have Y pieces first tower Br API9
-# 11.18 the third SA cali with 50 cm for 3/4 inch and 66 cm for 1 inch we have Y pieces and second tower Br API9
-# 01.04 the fourth SA cali with 10 cm for 3/4 inch and 78 cm for 1 inch we have Y pieces and first tower NO3 tower API9
-# NO3 inlet
-# 01.27 the fifth SA cali with 26cm for 3/4 inch NO3 inlet API9
-# MION inlet
-# 02.07 the sixth SA cali with 10 cm for 3/4 inch and 61 cm for 1 inch first tower Br karsa
+ '# summary for all the SA cali'
+ '# MION inlet'
+ '# 09.10 the first SA cali with 41 cm for 3/4 inch and 58.5 cm for 1 inch first tower Br API9'
+ '# 10.28 the second SA cali with 50 cm for 3/4 inch and 68 cm for 1 inch we have Y pieces first tower Br API9'
+ '# 11.18 the third SA cali with 50 cm for 3/4 inch and 66 cm for 1 inch we have Y pieces and second tower Br API9'
+ '# 01.04 the fourth SA cali with 10 cm for 3/4 inch and 78 cm for 1 inch we have Y pieces and first tower NO3 tower API9'
+ '# NO3 inlet'
+ '# 01.27 the fifth SA cali with 26cm for 3/4 inch NO3 inlet API9'
+ '# MION inlet'
+ '# 02.07 the sixth SA cali with 10 cm for 3/4 inch and 61 cm for 1 inch first tower Br karsa'
 '''
 
 # set temperature and pressure
@@ -54,7 +56,7 @@ p = 101000  # pressure Pa
 # select experiment name for simulating
 date = ['10.28']  # can be multiple experiments
 
-#%%
+# %%
 for i in range(len(date)):
     # %% load the parameters for experiment setup, change the basic_input
     R1, L1, R2, L2, flag_tube, file, s1, s2, H2O_1, H2O_2, H2Oconc_1, H2Oconc_2, Q1, Q2 = inputs_setup(date[i])
@@ -75,10 +77,10 @@ for i in range(len(date)):
     const_comp_pre_know = ['H2O']  # species have known constant concentration but already known
     const_comp = const_comp_pre + const_comp_pre_know  # species have constant concentration
     # get all the concentrations
-    O2conc = const_comp_conc_cal(O2flow, outflowLocation, sampflow, H2O_1,  N2Flow, O2ratio,
+    O2conc = const_comp_conc_cal(O2flow, outflowLocation, sampflow, H2O_1, N2Flow, O2ratio,
                                  Q1, Q2, T_cel, T, p, flag_tube)
 
-    SO2conc = const_comp_conc_cal(SO2flow, outflowLocation, sampflow, H2O_1,  N2Flow, SO2ratio,
+    SO2conc = const_comp_conc_cal(SO2flow, outflowLocation, sampflow, H2O_1, N2Flow, SO2ratio,
                                   Q1, Q2, T_cel, T, p, flag_tube)
 
     if date in [['01.04'], ['01.27']]:
@@ -93,7 +95,7 @@ for i in range(len(date)):
     OHconc, const_comp_free, const_comp_conc_free = const_comp_conc_cal_OH(H2Oconc, O2conc, Q1, flag_tube)
 
     # store initial concentration
-    Init_comp = ['OH', 'HO2']  # species have inital concentration
+    Init_comp = ['OH', 'HO2']  # species have initial concentration
     Init_comp_conc = np.transpose([OHconc, OHconc])
 
     # add some diffusion constants add more in diffusion_const_added.py file if you want
@@ -117,7 +119,7 @@ for i in range(len(date)):
               'R2': UnitFloat(R2, "cm"),  # diameters for second tube
               'L1': UnitFloat(L1, "cm"),  # length for first tube
               'L2': UnitFloat(L2, "cm"),  # length for first tube
-              'dt': 0.0001,  # flow for second tube
+              'dt': 0.00001,  # dt * timesteps * numLoop is time elapsed in the final solution
               'Diff_setname': Diff_setname,  # diffusion for the species that you want to have
               'Diff_set': Diff_set,
               'fullOrSimpleModel': fullOrSimpleModel,  # Gormley&Kennedy approximation, full: flow model (much slower)
@@ -143,7 +145,7 @@ for i in range(len(date)):
 
     c = []
 
-    for i in range(len(OHconc)):
+    for i in range(11, 13):
         if OHconc[i] > 0:
             meanConc1, c1 = cmd_calib5(const_comp_conc[:, i, :], params, Init_comp_conc[i], Q1[i], Q2[i])
             meanconc.append(meanConc1)
@@ -152,11 +154,11 @@ for i in range(len(date)):
     meanconc_s = pd.DataFrame(np.transpose(meanconc))
     meanconc_s.index = plot_spec
 
-    # %% save the modelled SA, HO2
-    # meanconc_s.to_csv('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_mean__' + s1)
+    # % save the modelled SA, HO2
+    meanconc_s.to_csv(os.getcwd() + '/Export_files/SA_cali_' + str(date[0]) + '3.csv')
 
-    # with open('C:/Users/jiali/MION2-AMT-paper/MION2-AMT-paper/script/SA_cali/input_files/SA_model_c' + s2, 'w') as f:
-    #    # using csv.writer method from CSV package
-    #    write = csv.writer(f)
+    with open(os.getcwd() + '/Export_files/SA_cali_' + str(date[0]) + '3.txt', 'w') as f:
+        # using csv.writer method from CSV package
+        write = csv.writer(f)
 
-    #    write.writerows(c)
+        write.writerows(c)

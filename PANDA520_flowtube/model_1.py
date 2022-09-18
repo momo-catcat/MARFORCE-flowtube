@@ -20,8 +20,8 @@ def model_1(R2,  Rgrid, Zgrid,  L2, L1,  numLoop, comp_namelist, key_spe_for_plo
 
         new = c[:, -1, comp_namelist.index(key_spe_for_plot)]
 
-        fig, axs = plt.subplots(2, 3, figsize=(8, 5), facecolor='w', edgecolor='k')
-        fig.subplots_adjust(hspace=.5, wspace=.45)
+        fig, axs = plt.subplots(2, 3, figsize=(9, 5), facecolor='w', edgecolor='k')
+        fig.subplots_adjust(hspace=.5, wspace=.35)
         plt.style.use('default')
         plt.rcParams.update(
             {'font.size': 13, 'font.weight': 'bold', 'font.family': 'serif', 'font.serif': 'Times New Roman'})
@@ -29,12 +29,15 @@ def model_1(R2,  Rgrid, Zgrid,  L2, L1,  numLoop, comp_namelist, key_spe_for_plo
         axs = axs.ravel()
 
         for i in range(len(plot_spec)):
-            axs[i].pcolor(np.linspace(0, L2 + L1, Zgrid), np.linspace(-R2, R2, Rgrid), c[:, :, comp_plot_index[i]],
+            cl = axs[i].pcolor(np.linspace(0, L2 + L1, Zgrid), np.linspace(-R2, R2, Rgrid), c[:, :, comp_plot_index[i]],
                           shading='nearest', cmap='jet')
 
             axs[i].set_xlabel('L [cm]')
             axs[i].set_ylabel('R [cm]')
             axs[i].set_title(formula[i])
+            clb = plt.colorbar(cl, ax = axs[i])
+            clb.formatter.set_powerlimits((0, 0))
+            clb.formatter.set_useMathText(True)
 
         fig.delaxes(axs[5])
         plt.gcf().text(0.7, 0.3, 'Time = ' + str(tim), fontsize=15)
