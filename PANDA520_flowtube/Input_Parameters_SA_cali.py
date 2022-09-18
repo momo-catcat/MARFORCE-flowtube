@@ -9,7 +9,7 @@ del name
 # %% import packages and functions
 import sys
 
-sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
+sys.path.append("/Users/hexuchen/Documents/science/coding/git/Projects/PANDA520-flowtube/PANDA520_flowtube/")
 import os
 import numpy as np
 import pandas as pd
@@ -19,7 +19,7 @@ from exp_setup import inputs_setup
 from Calcu_by_flow import const_comp_conc_cal, const_comp_conc_cal_H2O, const_comp_conc_cal_OH
 from diffusion_const_added import add_diff_const as add_diff_const
 
-file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/"
+file_path = "/Users/hexuchen/Documents/science/coding/git/Projects/PANDA520-flowtube/PANDA520_flowtube/"
 os.chdir(file_path)
 
 

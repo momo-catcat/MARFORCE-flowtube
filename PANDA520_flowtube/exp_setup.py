@@ -152,7 +152,7 @@ def inputs_setup_CLOUD15(date):
         s1 = 'CLOUD15_16Sep22.csv'
         s2 = 'CLOUD15_16Sep22.txt'
         file = os.getcwd() + '/input_files/' + file
-        H2O_data = pd.read_csv(file, delimiter = ';' )
+        H2O_data = pd.read_csv(file, delimiter = ';')
         H2O_1 = H2O_data['H2O_1']
         H2O_2 = H2O_data['H2O_2']
         H2Oconc_1 = H2O_data['H2Oconc_1']

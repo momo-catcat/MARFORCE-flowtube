@@ -12,6 +12,7 @@ sys.path.append('/Users/hexuchen/Documents/science/coding/git/Projects/PANDA520-
 import os
 import numpy as np
 import pandas as pd
+import csv
 from cmd_calib5 import cmd_calib5
 from exp_setup import inputs_setup_CLOUD15
 from Calcu_by_flow import const_comp_conc_cal, const_comp_conc_cal_H2O, const_comp_conc_cal_OH
@@ -47,14 +48,17 @@ date = ['CLOUD15_cali1_calibrator1_16Sep22']  # can be multiple experiments
 
 #%%
 for i in range(len(date)):
+
     # %% load the parameters for experiment setup, change the basic_input
     R1, L1, R2, L2, flag_tube, file, s1, s2, H2O_1, H2O_2, H2Oconc_1, H2Oconc_2, Q1, Q2 = inputs_setup_CLOUD15(date[i])
 
-    if H2Oconc_1[0] == 1: #if there is no H2O concentration calculate based on the flows. Temp setting
-        H2Oconc_1 = H2O_conc(T_cel, H2O_1 / 1000 / (H2O_1 / 1000 + Q1))
-        H2Oconc_1 = H2Oconc_1.H2O_conc
-        H2Oconc_2 = H2O_conc(T_cel, H2O_2 / 1000 / (H2O_2 / 1000 + Q2))
-        H2Oconc_2 = H2Oconc_2.H2O_conc
+
+    # if H2Oconc_1[0] == 1: #if there is no H2O concentration calculate based on the flows. Temp setting
+    #     H2Oconc_1 = H2O_conc(T_cel, H2O_1 / 1000 / (H2O_1 / 1000 + Q1))
+    #     H2Oconc_1 = H2Oconc_1.H2O_conc.values[:]
+    #     H2Oconc_2 = H2O_conc(T_cel, H2O_2 / 1000 / (H2O_2 / 1000 + Q2))
+    #     H2Oconc_2 = H2Oconc_2.H2O_conc.values[:]
+
 
     # set the constant precursors, change as you want
     outflowLocation = 'before'  # outflow tube located before or after injecting air, water, and so2
@@ -78,7 +82,11 @@ for i in range(len(date)):
     SO2conc = const_comp_conc_cal(SO2flow, outflowLocation, sampflow, H2O_1,  N2Flow, SO2ratio,
                                   Q1, Q2, T_cel, T, p, flag_tube)
 
-    H2Oconc = np.transpose([H2Oconc_1, H2Oconc_2])
+    H2Oconc = const_comp_conc_cal_H2O(O2flow, outflowLocation, sampflow, H2O_1, H2O_2, N2Flow, O2ratio,
+                                      Q1, Q2, T_cel, T, p, flag_tube)
+
+    print('H2O concentrations')
+    print(H2Oconc)
 
     # % store all the const species to const_comp_conc follow the order of const_comp
     const_comp_conc = np.transpose([SO2conc, O2conc, H2Oconc])
@@ -110,7 +118,7 @@ for i in range(len(date)):
               'R2': UnitFloat(R2, "cm"),  # diameters for second tube
               'L1': UnitFloat(L1, "cm"),  # length for first tube
               'L2': UnitFloat(L2, "cm"),  # length for first tube
-              'dt': 0.0001,  # time step
+              'dt': 0.0001,  # dt * timesteps * numLoop is time elapsed in the final solution
               'Diff_setname': Diff_setname,  # diffusion for the species that you want to have
               'Diff_set': Diff_set,
               'fullOrSimpleModel': fullOrSimpleModel,  # Gormley&Kennedy approximation, full: flow model (much slower)
@@ -128,7 +136,7 @@ for i in range(len(date)):
               'const_comp_conc_free': const_comp_conc_free
               }
     # %
-    for i in range(6):
+    for j in range(6):
         print(list(params.keys())[i], list(params.values())[i], list(params.values())[i].unit)
 
     # %% computation begins
@@ -136,21 +144,22 @@ for i in range(len(date)):
 
     c = []
 
-    for i in range(len(OHconc)):
-        print(OHconc[i])
-        if OHconc[i] > 0:
-            meanConc1, c1 = cmd_calib5(const_comp_conc[:, i, :], params, Init_comp_conc[i], Q1[i], Q2[i])
+    for j in range(len(H2O_1)):
+        if OHconc[j] > 0:
+            meanConc1, c1 = cmd_calib5(const_comp_conc[:, j, :], params, Init_comp_conc[j], Q1[j], Q2[j])
             meanconc.append(meanConc1)
             c.append(c1)
 
-    meanconc_s = pd.DataFrame(np.transpose(meanconc))
+    meanconc_s = pd.DataFrame(meanconc)
     meanconc_s.index = plot_spec
 
-    # save the modelled SA, HO2
-    meanconc_s.to_csv('/Users/hexuchen/Documents/science/projects/CLOUD/CLOUD15/data/calibration/SA_calibration/model/SA_model_mean__' + s1)
 
-    with open('/Users/hexuchen/Documents/science/projects/CLOUD/CLOUD15/data/calibration/SA_calibration/model/SA_model_c' + s2, 'w') as f:
-       # using csv.writer method from CSV package
-       write = csv.writer(f)
+    # % save the modelled SA, HO2
+    meanconc_s.to_csv(os.getcwd() + '/Export_files/SA_cali_' + str(date[0]) + '.csv')
 
-       write.writerows(c)
+    with open(os.getcwd() + '/Export_files/SA_cali_' + str(date[0]) + '.txt', 'w') as f:
+        # using csv.writer method from CSV package
+        write = csv.writer(f)
+
+        write.writerows(c)
+
