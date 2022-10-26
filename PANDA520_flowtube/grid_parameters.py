@@ -2,7 +2,7 @@ import numpy as np
 
 
 def grid_para(Zgrid, Rgrid, R2, R1, L2, L1, comp_num):
-    sp_line = int(Zgrid / 2)
+    sp_line = int(Zgrid * L1 / (L2 + L1))
     if R2 == 0:
         R2 = R1
     dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
