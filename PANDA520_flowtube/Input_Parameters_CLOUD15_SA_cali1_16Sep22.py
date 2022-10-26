@@ -76,13 +76,11 @@ for i in range(len(date)):
     const_comp_pre_know = ['H2O']  # species have known constant concentration but already known
     const_comp = const_comp_pre + const_comp_pre_know  # species have constant concentration
     # get all the concentrations
-    O2conc = const_comp_conc_cal(O2flow, outflowLocation, sampflow, H2O_1,  N2Flow, O2ratio,
+    O2conc, SO2conc = const_comp_conc_cal(O2flow, SO2flow,outflowLocation, sampflow, H2O_1,  N2Flow, O2ratio, SO2ratio,
                                  Q1, Q2, T_cel, T, p, flag_tube)
 
-    SO2conc = const_comp_conc_cal(SO2flow, outflowLocation, sampflow, H2O_1,  N2Flow, SO2ratio,
-                                  Q1, Q2, T_cel, T, p, flag_tube)
 
-    H2Oconc = const_comp_conc_cal_H2O(O2flow, outflowLocation, sampflow, H2O_1, H2O_2, N2Flow, O2ratio,
+    H2Oconc = const_comp_conc_cal_H2O(O2flow, SO2flow, outflowLocation, sampflow, H2O_1, H2O_2, N2Flow, O2ratio,
                                       Q1, Q2, T_cel, T, p, flag_tube)
 
     print('H2O concentrations')
@@ -136,8 +134,8 @@ for i in range(len(date)):
               'const_comp_conc_free': const_comp_conc_free
               }
     # %
-    for j in range(6):
-        print(list(params.keys())[i], list(params.values())[i], list(params.values())[i].unit)
+    # for j in range(6):
+    #     print(list(params.keys())[i], list(params.values())[i], list(params.values())[i].unit)
 
     # %% computation begins
     meanconc = []
@@ -148,10 +146,11 @@ for i in range(len(date)):
         if OHconc[j] > 0:
             meanConc1, c1 = cmd_calib5(const_comp_conc[:, j, :], params, Init_comp_conc[j], Q1[j], Q2[j])
             meanconc.append(meanConc1)
+            print(meanconc)
             c.append(c1)
 
-    meanconc_s = pd.DataFrame(meanconc)
-    meanconc_s.index = plot_spec
+    meanconc_s = pd.DataFrame(meanconc,columns=plot_spec)
+    # meanconc_s.index = plot_spec
 
 
     # % save the modelled SA, HO2

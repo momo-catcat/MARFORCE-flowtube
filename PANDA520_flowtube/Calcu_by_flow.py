@@ -3,13 +3,15 @@ import numpy as np
 from Vapour_calc import H2O_conc
 
 
-def const_comp_conc_cal(O2flow, outflowLocation, sampflow, H2O_1, N2Flow, O2_ratio,
+def const_comp_conc_cal(O2flow, SO2flow, outflowLocation, sampflow, H2O_1, N2Flow, O2_ratio, SO2_ratio,
                         Q1, Q2, T_cel, T, p, flag_tube):
 
     kB = 1.3806488e-23  # boltzmann constant
-    sumflow = O2flow + H2O_1
+    sumflow = O2flow + SO2flow + H2O_1
     if type(O2flow) is float:
         O2flow = np.ones(len(H2O_1)) * O2flow
+    if type(SO2flow) is float:
+        SO2flow = np.ones(len(H2O_1)) * SO2flow
 
     if outflowLocation in 'after':
         totFlow1 = N2Flow + sumflow / 1000
@@ -19,19 +21,22 @@ def const_comp_conc_cal(O2flow, outflowLocation, sampflow, H2O_1, N2Flow, O2_rat
         totFlow1 = sampflow
 
     O2conc1 = O2flow * O2_ratio / 1000 / totFlow1 * p / kB / T / 1e6
+    SO2conc1 = SO2flow * SO2_ratio / 1000 / totFlow1 * p / kB / T / 1e6
 
     if flag_tube in ['1', '2']:
         O2conc2 = O2conc1
+        SO2conc2 = SO2conc1
     else:
         O2conc2 = O2conc1 * Q1 / Q2
+        SO2conc2 = SO2conc1 * Q1 / Q2
 
-    return np.transpose([O2conc1, O2conc2])
+    return np.transpose([O2conc1, O2conc2]), np.transpose([SO2conc1, SO2conc2])
 
 
-def const_comp_conc_cal_H2O(O2flow, outflowLocation, sampflow, H2O_1, H2O_2, N2Flow, O2_ratio,
+def const_comp_conc_cal_H2O(O2flow, SO2flow, outflowLocation, sampflow, H2O_1, H2O_2, N2Flow, O2_ratio,
                         Q1, Q2, T_cel, T, p, flag_tube):
     kB = 1.3806488e-23  # boltzmann constant
-    sumflow = O2flow + H2O_1
+    sumflow = O2flow + SO2flow + H2O_1
 
     if outflowLocation in 'after':
         totFlow1 = N2Flow + sumflow / 1000
