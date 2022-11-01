@@ -8,10 +8,6 @@ def const_comp_conc_cal(O2flow, SO2flow, outflowLocation, sampflow, H2O_1, N2Flo
 
     kB = 1.3806488e-23  # boltzmann constant
     sumflow = O2flow + SO2flow + H2O_1
-    if type(O2flow) is float:
-        O2flow = np.ones(len(H2O_1)) * O2flow
-    if type(SO2flow) is float:
-        SO2flow = np.ones(len(H2O_1)) * SO2flow
 
     if outflowLocation in 'after':
         totFlow1 = N2Flow + sumflow / 1000
@@ -55,10 +51,8 @@ def const_comp_conc_cal_H2O(O2flow, SO2flow, outflowLocation, sampflow, H2O_1, H
     return np.transpose([H2Oconc1, H2Oconc2])
 
 
-def const_comp_conc_cal_OH(H2Oconc, O2conc, Q1, flag_tube):
+def const_comp_conc_cal_OH(H2Oconc, O2conc, Q1, flag_tube, Itx=5.2009e10, Qx=20):
 
-    Itx = 5.2009e10  # at Qx flow rate
-    Qx = 20  # lpm
     csH2O = 7.22e-20  # cm2
     qyH2O = 1
     It = Itx * Qx / Q1
