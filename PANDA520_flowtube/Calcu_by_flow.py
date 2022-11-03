@@ -23,8 +23,8 @@ def const_comp_conc_cal(O2flow, SO2flow, outflowLocation, sampflow, H2O_1, N2Flo
         O2conc2 = O2conc1
         SO2conc2 = SO2conc1
     else:
-        O2conc2 = O2conc1 * Q1 / Q2
-        SO2conc2 = SO2conc1 * Q1 / Q2
+        O2conc2 = O2conc1 * Q1 / Q2 ####!!!!! The situation when Q2 has oxygen is not considered here
+        SO2conc2 = SO2conc1 * Q1 / Q2 ####!!!!! The situation when Q2 has SO2 is not considered here
 
     return np.transpose([O2conc1, O2conc2]), np.transpose([SO2conc1, SO2conc2])
 

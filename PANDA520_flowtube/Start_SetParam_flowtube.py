@@ -86,7 +86,7 @@ def inputs_setup(date):
             R1 = 0.5
             L1 = 39.5
             R2 = 0.5
-            L2 = 39.5
+            L2 = 0
             Itx = 6.186e10
             Qx = 7.6
             file = 'H2O_CLOUD15_UFra_comp_test.csv'
@@ -108,7 +108,7 @@ def inputs_setup(date):
 ## The number of values filled must be the same as that of experiment(s), even values are same
 ## For example, if two experiments have same temeprature: 'T': [30.5, 30.5]+273.15
 para={'P': np.array([101000],dtype=np.float64), #Pressure, Pa
-      'outflowLocation': ['before'], # outflow tube located 'before' or 'after' injecting air, water, and so2
+      'outflowLocation': ['after'], # outflow tube located 'before' or 'after' injecting air, water, and so2
       'fullOrSimpleModel': ['full'], # 'simple': Gormley&Kennedy approximation, 'full': flow model (much slower)
       'sampleflow': np.array([8.5],dtype=np.float64), # inlet sample flow of CIMs, lpm
       'SO2ratio': np.array([1000],dtype=np.float64)*1e-6, # SO2 ratio of the gas bottle, in ppb
