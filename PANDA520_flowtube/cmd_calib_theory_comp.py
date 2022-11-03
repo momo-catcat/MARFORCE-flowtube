@@ -49,6 +49,7 @@ def cmd_calib_theory_comp(const_comp_conc, params, Init_comp_conc):
     total_list_eqn = f_open_eqn.readlines()
     f_open_eqn.close()  # close file
 
+
     eqn_list, num_eqn, rrc, rrc_name, RO2_names, eqn_list_on = sch_interr.sch_interr(total_list_eqn, chm_sch_mrk)
 
     [rindx, rstoi, pindx, pstoi, reac_coef,

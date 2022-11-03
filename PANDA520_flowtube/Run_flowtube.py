@@ -53,7 +53,7 @@ def Run_flowtube(para,folder_flowtube,export_file_folder,inputs_setup):
         OHconc, const_comp_free, const_comp_conc_free = const_comp_conc_cal_OH(H2Oconc, O2conc, Q1, flag_tube, Itx, Qx)
 
         # store initial concentration
-        Init_comp = ['OH', 'HO2']  # species have inital concentration
+        Init_comp = ['OH', 'HO2']  # species have initial concentration
         Init_comp_conc = np.transpose([OHconc, OHconc])
 
         # add some diffusion constants add more in diffusion_const_added.py file if you want

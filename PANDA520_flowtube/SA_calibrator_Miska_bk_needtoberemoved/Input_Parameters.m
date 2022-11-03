@@ -6,7 +6,7 @@ T = 301.15; % K
 p = 101000; % Pa
 
 ID = 10; % mm
-L = 395; % mm
+L = 600; % mm
 Q = 8.5; % lpm, not slpm
 
 Itx = 6.186e10; % at Qx flow rate
@@ -50,7 +50,7 @@ SO2BottlePpm = 1000; % ppm
 
 O2inAir = 0.209;
 
-outflowLocation = 'before'; % outflow tube located before or after injecting air, water, and so2
+outflowLocation = 'after'; % outflow tube located before or after injecting air, water, and so2
 
 fullOrSimpleModel = 'full'; % simple: Gormley&Kennedy approximation, full: flow model (much slower)
 

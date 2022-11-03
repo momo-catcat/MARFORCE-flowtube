@@ -42,7 +42,7 @@ T = T_cel + 273.15  # K
 p = 101000  # pressure Pa
 
 # % set the parameters for the first tube
-flag_tube = 2
+flag_tube = 1
 
 if flag_tube == 2:
     R1 = 0.78
@@ -52,21 +52,21 @@ if flag_tube == 2:
     Q1 = 10
     Q2 = Q1
 else:
-    R1 = 0.78
-    L1 = 200
-    R2 = 0
+    R1 = 0.5
+    L1 = 39.5
+    R2 = 0.5
     L2 = 0
-    Q1 = 22  # lpm
+    Q1 = 8.5  # lpm
     Q2 = 0
 
-Itx = 5.2009e10  # at Qx flow rate
-Qx = 20  # lpm
+Itx = 6.186e10  # at Qx flow rate
+Qx = 7.6  # lpm
 
-N2Flow = 22  # slpm
-AirFlow = 50  # synthetic air slpm
+N2Flow = 10.5  # slpm
+AirFlow = 21.9  # synthetic air smlpm
 O2inAir = 0.209
-SO2Flow = 5  # slpm
-SO2BottlePpm = 5000  # ppm
+SO2Flow = 10.7  # smlpm
+SO2BottlePpm = 1000  # ppm
 
 outflowLocation = 'before'  # outflow tube located before or after injecting air, water, and so2
 
