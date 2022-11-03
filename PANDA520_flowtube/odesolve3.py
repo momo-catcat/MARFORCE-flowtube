@@ -1,5 +1,5 @@
 def odesolve(timesteps, Zgrid, Rgrid, dt, D, Rtot, dr, dx, Qtot, c, comp_namelist, dydt_vst, rindx, nreac, rstoi,
-             rate_values, const_comp, u):
+             rate_values, const_comp, u, model_mode):
     # %import packages
     import numpy as np
     # %%
@@ -95,7 +95,12 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, Rtot, dr, dx, Qtot, c, comp_namelis
                     term3[1:Rgrid // 2, 1:, compi] += reac_sign[reac_count] * (gprate1)
                     reac_count += 1
 
-        c[0:Rgrid // 2, :, u] = dt * (
+        if model_mode == 'kinetic':
+            c[0:Rgrid // 2, :, u] = dt * (
+                   term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u]) + initc[0:Rgrid // 2,:, u]
+
+        else:
+            c[0:Rgrid // 2, :, u] = dt * (
                    term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u] + term3[0:Rgrid // 2, :, u]) + initc[
                                                                                                          0:Rgrid // 2,
                                                                                                         :, u]

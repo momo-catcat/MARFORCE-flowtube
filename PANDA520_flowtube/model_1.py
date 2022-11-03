@@ -9,14 +9,14 @@ from odesolve3 import odesolve as odesolve
 #####################
 def model_1(R2,  Rgrid, Zgrid,  L2, L1,  numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,
             Diff_vals, Rtot, \
-            Q1, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec, formula, c, dr, dx):
+            Q1, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec, formula, c, dr, dx, model_mode):
     for j in range(numLoop):
         c1 = c.copy()
         old = c1[:, -1, comp_namelist.index(key_spe_for_plot)]
 
         c = odesolve(timesteps, Zgrid, Rgrid, dt, Diff_vals, Rtot, dr, dx, Q1, c, comp_namelist, dydt_vst,
                      rindx,
-                     nreac, rstoi, rate_values, const_comp, u)
+                     nreac, rstoi, rate_values, const_comp, u, model_mode)
         tim = (j + 1) * timesteps * dt
         comp_plot_index = [comp_namelist.index(plot_spec[i]) for i in range(len(plot_spec))]
 

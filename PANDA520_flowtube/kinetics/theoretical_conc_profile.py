@@ -18,8 +18,8 @@ def conc_profile_Alonso(R, r, MM, rho, L, Q, P = 101000, T = 298.15):
 
     D = pene_rate.D[0]
 
+    print(D)
 
-    D = 0.0921 * 1e-4 #adopted from matlab
 
     u = Q / (np.pi * R ** 2)
 
@@ -27,7 +27,7 @@ def conc_profile_Alonso(R, r, MM, rho, L, Q, P = 101000, T = 298.15):
 
     beta = D * L / u / R ** 2
 
-    print(beta)
+    print('Beta = ' + str(beta) + '. Note Beta needs to be larger than 0.2')
 
     # for beta * x >= 0.2
     conc_prof = 1.477 * np.exp(-3.659 * beta) * (1 - 1 / 11 * (18 * norm_r ** 2 - 9 * norm_r ** 4 + 2 * norm_r ** 6))
@@ -35,8 +35,8 @@ def conc_profile_Alonso(R, r, MM, rho, L, Q, P = 101000, T = 298.15):
     return(conc_prof)
 
 
-R = 0.0078
-conc_prof = conc_profile_Alonso(R, np.linspace(0, R, 100), 176, 4600, 2, 10  / 60 / 1000)
+R = 0.005
+conc_prof = conc_profile_Alonso(R, np.linspace(0, R, 100), 97, 1830, 2, 8.5  / 60 / 1000)
 ## import theoretical value
 import pandas as pd
 prof_conc_theory = pd.read_csv('../Export_files/Theoretical_model.csv')
@@ -47,11 +47,11 @@ plt.legend(['Theory','Model'])
 plt.show()
 
 
-##data export
-file_path = '/Users/momo/Documents/science/publication/IO3_measurement/data/Figures/Model_kinetic_validation.xlsx'
-Export_data = pd.concat([pd.DataFrame({'Theory_R': np.linspace(0,R,100)}),
-                           pd.DataFrame({'Theory_SA_remain': conc_prof}),
-                           pd.DataFrame({'Model_R': prof_conc_theory.R/100}),
-                           pd.DataFrame({'Model_SA_remain': prof_conc_theory.SA / 1e8})], axis = 1)
-
-Export_data.to_excel(file_path)
+# ##data export
+# file_path = '/Users/momo/Documents/science/publication/IO3_measurement/data/Figures/Model_kinetic_validation.xlsx'
+# Export_data = pd.concat([pd.DataFrame({'Theory_R': np.linspace(0,R,100)}),
+#                            pd.DataFrame({'Theory_SA_remain': conc_prof}),
+#                            pd.DataFrame({'Model_R': prof_conc_theory.R/100}),
+#                            pd.DataFrame({'Model_SA_remain': prof_conc_theory.SA / 1e8})], axis = 1)
+#
+# Export_data.to_excel(file_path)

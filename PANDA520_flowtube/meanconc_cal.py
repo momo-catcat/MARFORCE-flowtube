@@ -1,8 +1,8 @@
 import numpy as np
 from scipy import interpolate
+import pandas as pd
 
-
-def meanconc_cal(R2, Rgrid, plot_spec, comp_namelist, c):
+def meanconc_cal(R2, Rgrid, plot_spec, comp_namelist, c, model_mode):
     dr_final = R2 / (Rgrid - 1) * 2
     x = np.arange(0, R2, dr_final) + dr_final  # match with y_x
 
@@ -22,12 +22,20 @@ def meanconc_cal(R2, Rgrid, plot_spec, comp_namelist, c):
 
         splineres2 = interpolate.splrep(x, y_x)
 
-        cVec2 = interpolate.splev(rVec,
-                                  splineres2)
+        cVec2 = interpolate.splev(rVec,splineres2)
+
         conc1 = 0.001 / R2 ** 2 * np.sum(cVec1 * rVec)
         conc2 = 0.001 / R2 ** 2 * np.sum(cVec2 * rVec)
 
         meanConc.append(conc1 + conc2)
+
+        ####!!!!!!!!!!!!!!!!!Temporary code
+        if model_mode == 'kinetic':
+            if i == 'H2SO4':
+                prof_conc = pd.DataFrame({'R': rVec, 'SA': cVec1})
+                prof_conc.to_csv('./Export_files/Theoretical_model.csv')
+        ####!!!!!!!!!!!!!!!!!!Temporary code
+
     return meanConc
 
 

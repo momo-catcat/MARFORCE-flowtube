@@ -53,8 +53,16 @@ def Run_flowtube(para,folder_flowtube,export_file_folder,inputs_setup):
         OHconc, const_comp_free, const_comp_conc_free = const_comp_conc_cal_OH(H2Oconc, O2conc, Q1, flag_tube, Itx, Qx)
 
         # store initial concentration
-        Init_comp = ['OH', 'HO2']  # species have initial concentration
-        Init_comp_conc = np.transpose([OHconc, OHconc])
+        if para['model_mode'] == 'kinetic': # This mode runs the code in kinetic mode in which chemistry does not exist
+            # define the H2SO4 concentration as 1e8 for convenience. !!!! This needs improvement
+            OHconc = OHconc * 0 + 1e8
+            Init_comp = ['OH', 'HO2', 'H2SO4']
+            Init_comp_conc = np.transpose([OHconc, OHconc, OHconc])
+        else:
+            Init_comp = ['OH', 'HO2']  # species have initial concentration
+            Init_comp_conc = np.transpose([OHconc, OHconc])
+
+
 
         # add some diffusion constants add more in diffusion_const_added.py file if you want
         Diff_setname = ['OH', 'H2O', 'HO2', 'SO3']
@@ -92,7 +100,8 @@ def Run_flowtube(para,folder_flowtube,export_file_folder,inputs_setup):
                 'plot_spec': plot_spec,  # plot species
                 'flag_tube': flag_tube,
                 'const_comp_free': const_comp_free,
-                'const_comp_conc_free': const_comp_conc_free
+                'const_comp_conc_free': const_comp_conc_free,
+                'model_mode': para['model_mode']
                 }
         # %
         

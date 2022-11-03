@@ -102,12 +102,33 @@ def inputs_setup(date):
             T_cel = H2O_data['T']
             Q1 = H2O_data['Q1']
             Q2 = H2O_data['Q1'] + H2O_data['Q2']
+    elif date == 'kinetic_mode':
+            flag_tube = '1'
+            R1 = 0.5
+            L1 = 200
+            R2 = 0.5
+            L2 = 0
+            Itx = 6.186e10
+            Qx = 7.6
+            file = 'H2O_kinetic_mode.csv'
+            file = input_file_folder + file
+            H2O_data = pd.read_csv(file, delimiter = ',')
+            H2O_1 = H2O_data['H2O_1']
+            H2O_2 = H2O_data['H2O_2']
+            H2Oconc_1 = H2O_data['H2Oconc_1']
+            H2Oconc_2 = H2O_data['H2Oconc_2']
+            SO2flow = H2O_data['SO2flow']
+            O2flow = H2O_data['O2flow']
+            N2flow = H2O_data['N2flow']
+            T_cel = H2O_data['T']
+            Q1 = H2O_data['Q1']
+            Q2 = H2O_data['Q1'] + H2O_data['Q2']
     return R1, L1, R2, L2, flag_tube, file, H2O_1, H2O_2, H2Oconc_1, H2Oconc_2, Q1, Q2, Itx, Qx, SO2flow, O2flow, N2flow, T_cel
 
 ##--------/* Input settings for experiment(s) */--------
 ## The number of values filled must be the same as that of experiment(s), even values are same
 ## For example, if two experiments have same temeprature: 'T': [30.5, 30.5]+273.15
-para={'P': np.array([101000],dtype=np.float64), #Pressure, Pa
+para={'P': np.array([101000], dtype=np.float64), #Pressure, Pa
       'outflowLocation': ['after'], # outflow tube located 'before' or 'after' injecting air, water, and so2
       'fullOrSimpleModel': ['full'], # 'simple': Gormley&Kennedy approximation, 'full': flow model (much slower)
       'sampleflow': np.array([8.5],dtype=np.float64), # inlet sample flow of CIMs, lpm
@@ -115,8 +136,9 @@ para={'P': np.array([101000],dtype=np.float64), #Pressure, Pa
       'O2ratio': np.array([0.209],dtype=np.float64), # O2 ratio in synthetic air
       'Zgrid_num': np.array([40],dtype=np.float64), # number of grids in direction of tube length
       'Rgrid_num': np.array([80],dtype=np.float64), # number of grids in direction of radius
-      'dt': np.array([1e-4],dtype=np.float64), # Differential time interval, 
-      'date': ['UFra_comp_test'], # Experiment date(s) which should be the same as the one(s) in function inputs_setup above
+      'dt': np.array([1e-4],dtype=np.float64), # Differential time interval,
+      'model_mode': 'kinetic', #use 'normal' if you don't know what this is for
+      'date': ['kinetic_mode'], # Experiment date(s) which should be the same as the one(s) in function inputs_setup above
       } 
 
 
