@@ -4,7 +4,9 @@ from matplotlib import pyplot as plt
 
 from odesolve3 import odesolve as odesolve
 
-
+###################
+## Resolve the R2/L2 problem. These should not be needed
+#####################
 def model_1(R2,  Rgrid, Zgrid,  L2, L1,  numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,
             Diff_vals, Rtot, \
             Q1, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec, formula, c, dr, dx):

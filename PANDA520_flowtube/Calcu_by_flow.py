@@ -51,13 +51,12 @@ def const_comp_conc_cal_H2O(O2flow, SO2flow, outflowLocation, sampflow, H2O_1, H
     return np.transpose([H2Oconc1, H2Oconc2])
 
 
-def const_comp_conc_cal_OH(H2Oconc, O2conc, Q1, flag_tube, Itx=5.2009e10, Qx=20):
+def const_comp_conc_cal_OH(H2Oconc, O2conc, Q1, flag_tube, Itx, Qx):
 
     csH2O = 7.22e-20  # cm2
     qyH2O = 1
     It = Itx * Qx / Q1
     OHconc = It * csH2O * qyH2O * H2Oconc[:, 0]
-
     if flag_tube == '3':
         const_comp_free = ['H2O', 'O2']
         const_comp_conc_free = [H2Oconc[:, 0], O2conc[:, 0]]

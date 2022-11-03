@@ -8,7 +8,7 @@ del name
 
 # %% import packages and functions
 import sys
-sys.path.append('/Users/hexuchen/Documents/science/coding/git/Projects/PANDA520-flowtube/PANDA520_flowtube/')
+# sys.path.append('/Users/hexuchen/Documents/science/coding/git/Projects/PANDA520-flowtube/PANDA520_flowtube/')
 import os
 import numpy as np
 import pandas as pd
