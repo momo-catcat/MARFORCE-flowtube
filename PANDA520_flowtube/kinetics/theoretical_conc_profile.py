@@ -18,7 +18,8 @@ def conc_profile_Alonso(R, r, MM, rho, L, Q, P = 101000, T = 298.15):
 
     D = pene_rate.D[0]
 
-    print(D)
+
+    D = 0.088e-4
 
 
     u = Q / (np.pi * R ** 2)
@@ -41,9 +42,9 @@ conc_prof = conc_profile_Alonso(R, np.linspace(0, R, 100), 97, 1830, 2, 8.5  / 6
 import pandas as pd
 prof_conc_theory = pd.read_csv('../Export_files/Theoretical_model.csv')
 
-plt.plot(np.linspace(0, R, 100), conc_prof)
-plt.plot(prof_conc_theory.R/100, prof_conc_theory.SA  / 1e8)
-plt.legend(['Theory','Model'])
+plt.plot(np.linspace(0, R, 100), conc_prof, label = 'Theory')
+plt.plot(prof_conc_theory.R/100, prof_conc_theory.SA  / 1e8, label = 'Model')
+plt.legend()
 plt.show()
 
 

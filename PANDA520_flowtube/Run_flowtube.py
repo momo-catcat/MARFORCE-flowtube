@@ -22,7 +22,7 @@ def Run_flowtube(para,folder_flowtube,export_file_folder,inputs_setup):
 
     for i in range(len(para['date'])):
         R1, L1, R2, L2, flag_tube, file, H2O_1, H2O_2, H2Oconc_1, H2Oconc_2, Q1, Q2, Itx, Qx, SO2flow, O2flow, N2flow, T_cel = inputs_setup(para['date'][i])
-        
+
         T_cel=np.mean(T_cel)
         T = T_cel+273.15 # Temperature in K
         p = para['P'][i] # Pressure in Pa
@@ -65,9 +65,10 @@ def Run_flowtube(para,folder_flowtube,export_file_folder,inputs_setup):
 
 
         # add some diffusion constants add more in diffusion_const_added.py file if you want
-        Diff_setname = ['OH', 'H2O', 'HO2', 'SO3']
-        dOH, dH2O, dHO2 = add_diff_const(p, T)
-        Diff_set = [dOH, dH2O, dHO2, 0.126]
+        # set diffusivity according Kurten et al. (10.1021/jp993622j)
+        Diff_setname = ['OH', 'H2O', 'HO2', 'SO3', 'H2SO4'] # the H2SO4 diffusivity is not final
+        dH2O = add_diff_const(p, T)
+        Diff_set = [0.215, dH2O, 0.141, 0.126, 0.088]
 
         # grid for length and radius directions
         Zgrid = np.array(para['Zgrid_num'][i]).astype(int)  # number of grid points in tube length direction
@@ -104,7 +105,7 @@ def Run_flowtube(para,folder_flowtube,export_file_folder,inputs_setup):
                 'model_mode': para['model_mode']
                 }
         # %
-        
+
 
         # %% computation begins
         meanconc = []
