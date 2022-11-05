@@ -38,8 +38,6 @@ def sch_interr(chm_sch_mrk, sch_name):
     RO2_count = 0  # count on number of lines considered in peroxy radical list
     # -------------------------------------------------------------------------
     # open the chemical scheme file
-    print('Print from here')
-    print(sch_name)
     f_open_eqn = open(sch_name, mode='r')
     total_list_eqn = f_open_eqn.readlines()
     f_open_eqn.close()  # close file

@@ -32,10 +32,10 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, Rtot, dr, dx, Qtot, c, comp_namelis
 
         p_b = (initc[2:Rgrid // 2 + 1, 1:-1, u] - 2. * initc[1:Rgrid // 2, 1:-1, u] + initc[0:Rgrid // 2 - 1, 1:-1,
                                                                                       u]) / (
-                          dr[1:Rgrid // 2, 1:-1, u] ** 2)
+                      dr[1:Rgrid // 2, 1:-1, u] ** 2)
 
         p_c = (initc[1:Rgrid // 2, 2:, u] - 2. * initc[1:Rgrid // 2, 1:-1, u] + initc[1:Rgrid // 2, 0:-2, u]) / (
-                    dx * dx)
+                dx * dx)
 
         term1[1:Rgrid // 2, 1:-1, u] = D[1:Rgrid // 2, 1:-1, u] * (p_a + p_b + p_c)  # diffusion of gas molecules
 
@@ -54,10 +54,10 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, Rtot, dr, dx, Qtot, c, comp_namelis
 
         p_b_end = (initc[2:Rgrid // 2 + 1, -1, u] - 2. * initc[1:Rgrid // 2, -1, u] + initc[0:Rgrid // 2 - 1, -1,
                                                                                       u]) / (
-                              dr[1:Rgrid // 2, -1, u] ** 2)
+                          dr[1:Rgrid // 2, -1, u] ** 2)
 
         p_c_end = (initc[1:Rgrid // 2, -1, u] - 2. * initc[1:Rgrid // 2, -2, u] + initc[1:Rgrid // 2, -2, u]) / (
-                    dx * dx)
+                dx * dx)
 
         term1[1:Rgrid // 2, -1, u] = D[1:Rgrid // 2, -1, u] * (p_a_end + p_b_end + p_c_end)
 
@@ -66,44 +66,46 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, Rtot, dr, dx, Qtot, c, comp_namelis
                                      (initc[1:Rgrid // 2, -1, u] - initc[1:Rgrid // 2, -2,
                                                                    u]) / dx  # carried by main flow
 
-        term3 = np.zeros([int(Rgrid), int(Zgrid), num])
 
-        for comp_na in comp_namelist:  # get name of this component
-            if comp_na not in const_comp:
-                key_name = str(str(comp_na) + '_comp_indx')  # get index of this component
-                compi = dydt_vst[key_name]
-                key_name = str(str(comp_na) + '_res')
-                dydt_rec = dydt_vst[key_name]
-                key_name = str(str(comp_na) + '_reac_sign')
-                reac_sign = dydt_vst[key_name]
-                # dydt_for = np.zeros(comp_num)
-                reac_count = 0
-                for i in dydt_rec[0, :]:
-                    i = int(
-                        i)  # ensure reaction index is integer - this necessary because the dydt_rec array is float (the tendency to change records beneath its first row are float)
-                    gprate = initc[1:Rgrid // 2, 1:, rindx[i, 0:nreac[i]]] ** rstoi[i, 0:nreac[i]]
-                    if (len(rstoi[i, 0:nreac[i]]) > 1):
-
-                        # print(rate_values)
-                        # print(gprate[:,:,0], gprate[:, :, -1], rate_values[i])
-                        gprate1 = gprate[:, :, 0] * gprate[:, :, -1] * rate_values[i]
-                        # gprate2 = gprate[:,:,0] * gprate[:, :,-1] * rate_values[i]
-                        # gprate3 = gprate1-gprate2
-                    else:
-                        gprate1 = gprate[:, :, 0] * rate_values[i]
-
-                    term3[1:Rgrid // 2, 1:, compi] += reac_sign[reac_count] * (gprate1)
-                    reac_count += 1
 
         if model_mode == 'kinetic':
             c[0:Rgrid // 2, :, u] = dt * (
-                   term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u]) + initc[0:Rgrid // 2,:, u]
+                    term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u]) + initc[0:Rgrid // 2,:, u]
 
         else:
+            term3 = np.zeros([int(Rgrid), int(Zgrid), num])
+
+            for comp_na in comp_namelist:  # get name of this component
+                if comp_na not in const_comp:
+                    key_name = str(str(comp_na) + '_comp_indx')  # get index of this component
+                    compi = dydt_vst[key_name]
+                    key_name = str(str(comp_na) + '_res')
+                    dydt_rec = dydt_vst[key_name]
+                    key_name = str(str(comp_na) + '_reac_sign')
+                    reac_sign = dydt_vst[key_name]
+                    # dydt_for = np.zeros(comp_num)
+                    reac_count = 0
+                    for i in dydt_rec[0, :]:
+                        i = int(
+                            i)  # ensure reaction index is integer - this necessary because the dydt_rec array is float (the tendency to change records beneath its first row are float)
+                        gprate = initc[1:Rgrid // 2, 1:, rindx[i, 0:nreac[i]]] ** rstoi[i, 0:nreac[i]]
+                        if (len(rstoi[i, 0:nreac[i]]) > 1):
+
+                            # print(rate_values)
+                            # print(gprate[:,:,0], gprate[:, :, -1], rate_values[i])
+                            gprate1 = gprate[:, :, 0] * gprate[:, :, -1] * rate_values[i]
+                            # gprate2 = gprate[:,:,0] * gprate[:, :,-1] * rate_values[i]
+                            # gprate3 = gprate1-gprate2
+                        else:
+                            gprate1 = gprate[:, :, 0] * rate_values[i]
+
+                        term3[1:Rgrid // 2, 1:, compi] += reac_sign[reac_count] * (gprate1)
+                        reac_count += 1
+
             c[0:Rgrid // 2, :, u] = dt * (
-                   term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u] + term3[0:Rgrid // 2, :, u]) + initc[
+                    term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u] + term3[0:Rgrid // 2, :, u]) + initc[
                                                                                                          0:Rgrid // 2,
-                                                                                                        :, u]
+                                                                                                         :, u]
         #c[0:Rgrid // 2, :, u] = dt * (
         #            term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u] ) + initc[
         #                                                                                                 0:Rgrid // 2,
