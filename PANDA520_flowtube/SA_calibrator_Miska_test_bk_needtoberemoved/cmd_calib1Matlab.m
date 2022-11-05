@@ -160,7 +160,7 @@ function [meanH2SO4,c]=cmd_calib1Matlab(O2conc,H2Oconc,SO2conc,R,L,Q,It,T,p,full
     cVec=ppval(splineres, 0:0.001:R);
     meanH2SO4=2*0.001/R^2*sum(cVec.*rVec);
     
-    %not understood algorithm
+    %not understood algorithm. May not be the same as Gomley and Kennedy
     meanWeightedH2SO4=4*0.001/R^2*sum(cVec.*rVec.*(1-rVec.^2/R^2));
     
 %     cVec=ppval(spline(x,y{1}), 0:0.001:R);
