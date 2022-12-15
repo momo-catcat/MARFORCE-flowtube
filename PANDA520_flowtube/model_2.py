@@ -1,13 +1,14 @@
 # %% first tube run
 import numpy as np
 from matplotlib import pyplot as plt
-
+import math
 from odesolve3 import odesolve as odesolve
+
 
 
 def model_2(R2, Rgrid, Zgrid, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,
             Diff_vals, Rtot, \
-            Q1, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec, formula, c, dr, dx):
+            Q1, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec, formula, c, dr, dx,model_mode):
     #    for i in const_comp:
     #        c[:, :, comp_namelist.index(i)] = const_comp_gird[const_comp.index(i)]
     """
@@ -20,13 +21,13 @@ def model_2(R2, Rgrid, Zgrid, L2, L1, numLoop, comp_namelist, key_spe_for_plot, 
 
         c = odesolve(timesteps, Zgrid, Rgrid, dt, Diff_vals, Rtot, dr, dx, Q1, c, comp_namelist, dydt_vst,
                      rindx,
-                     nreac, rstoi, rate_values, const_comp, u)
+                     nreac, rstoi, rate_values, const_comp, u,model_mode)
         tim = (j + 1) * timesteps * dt
         comp_plot_index = [comp_namelist.index(plot_spec[i]) for i in range(len(plot_spec))]
 
         new = c[:, -1, comp_namelist.index(key_spe_for_plot)]
 
-        fig, axs = plt.subplots(2, 3, figsize=(8, 5), facecolor='w', edgecolor='k')
+        fig, axs = plt.subplots(math.ceil((len(plot_spec)/3)), 3, figsize=(9, 5), facecolor='w', edgecolor='k')
         fig.subplots_adjust(hspace=.5, wspace=.4)
         plt.style.use('default')
         plt.rcParams.update(
@@ -49,9 +50,8 @@ def model_2(R2, Rgrid, Zgrid, L2, L1, numLoop, comp_namelist, key_spe_for_plot, 
 
         fig.delaxes(axs[5])
         plt.gcf().text(0.7, 0.3, 'Time = ' + str(tim), fontsize=15)
-        plt.draw()
-        plt.pause(1)
-        plt.close('all')
+        plt.plot()
+        plt.close()
         print(['t = ' + str(tim) + str(key_spe_for_plot) + " difference: " + str(np.sum(new - old))])
 
         if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):

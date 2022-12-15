@@ -2,30 +2,29 @@
 % set these inputs and run the file
 
 
-T = 301.15; % K
+T = 298; % K
 p = 101000; % Pa
 
-ID = 10; % mm
-L = 600; % mm
-Q = 8.5; % lpm, not slpm
+ID = 7.8*2; % mm
+L = 260; % mm
+Q = 10.6; % lpm, not slpm
 
-Itx = 6.186e10; % at Qx flow rate
-Qx = 7.6; % lpm
+Itx = 5.42e10; % at Qx flow rate
+Qx = 20 % lpm
 
 N2Flow = 10.5; % slpm
-AirFlow = 21.9; % smlpm
-WaterFlow = [0.05426566
-0.16198066
-0.21583816
-0.32355316
-0.43126816
-0.53898316
-0.659392
-0.768799
-0.987613
-1.206427] * 1000'; % smlpm
-SO2Flow = 10.7; % smlpm
-SO2BottlePpm = 1000; % ppm
+AirFlow = 50; % smlpm
+WaterFlow = [0.100
+0.2
+0.4
+0.8
+1
+1.2
+1.5
+0.9
+0.6] * 1000'; % smlpm
+SO2Flow = 5; % smlpm
+SO2BottlePpm = 5000; % ppm
 
 % 
 % %% input parameters
@@ -50,7 +49,7 @@ SO2BottlePpm = 1000; % ppm
 
 O2inAir = 0.209;
 
-outflowLocation = 'after'; % outflow tube located before or after injecting air, water, and so2
+outflowLocation = 'before'; % outflow tube located before or after injecting air, water, and so2
 
 fullOrSimpleModel = 'full'; % simple: Gormley&Kennedy approximation, full: flow model (much slower)
 

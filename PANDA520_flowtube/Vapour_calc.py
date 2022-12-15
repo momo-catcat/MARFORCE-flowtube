@@ -4,14 +4,14 @@ import numpy as np
 def H2O_conc(Ts, RH):
     '''
     The input is H2O_conc(Ts, RH)
-    Ts in degree C
+    Ts in K
     RH in '0.1' = 10% form
     The output H2O_conc is in absolute concentration
     '''
     import numpy as np
     import pandas as pd
     # calculate saturation vapor pressure
-    T = Ts + 273.15
+    T = Ts
     Tc = 647.096  # K
     Pc = 220640  # hPa
     C1 = -7.85951783
@@ -32,7 +32,7 @@ def H2O_conc(Ts, RH):
 
     Pw = RH * sat_vapor_p_bubbler
     DPs = Tn / (m / (np.log10(Pw / 100 / A)) - 1)
-    H2Oconcs = sat_vapor_p_bubbler * RH / 1.3806488e-23 / (Ts + 273.15) / 1e6  # #/cm3
+    H2Oconcs = sat_vapor_p_bubbler * RH / 1.3806488e-23 / T / 1e6  # #/cm3
 
     # define value
     Water_datalib = {'DPs': [DPs], 'H2O_conc': [H2Oconcs], 'SatP': sat_vapor_p_bubbler}

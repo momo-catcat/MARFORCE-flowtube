@@ -1,6 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
-
+import math
 from meanconc_cal import meanconc_cal_sim as meanconc_cal_sim
 from odesolve3 import odesolve as odesolve
 from odesolve3_Y import odesolve as odesolve_Y
@@ -8,7 +8,7 @@ from odesolve3_Y import odesolve as odesolve_Y
 
 def model_4(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps, Diff_vals,
             Rtot, const_comp_free, const_comp_conc_free, Q1, Q2, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, \
-            u, plot_spec, formula, c, dr, dx):
+            u, plot_spec, formula, c, dr, dx, model_mode):
     # %% first tube run
     for j in range(numLoop):
         c1 = c.copy()
@@ -16,7 +16,7 @@ def model_4(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
 
         c = odesolve(timesteps, Zgrid, Rgrid, dt, Diff_vals, Rtot, dr, dx, Q1, c, comp_namelist, dydt_vst,
                      rindx,
-                     nreac, rstoi, rate_values, const_comp, u)
+                     nreac, rstoi, rate_values, const_comp, u,model_mode)
 
         new = c[:, -1, comp_namelist.index(key_spe_for_plot)]
 
@@ -52,7 +52,7 @@ def model_4(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
 
         new = c[:, -1, comp_namelist.index(key_spe_for_plot)]
 
-        fig, axs = plt.subplots(2, 3, figsize=(8, 5), facecolor='w', edgecolor='k')
+        fig, axs = plt.subplots(math.ceil((len(plot_spec)/3)), 3, figsize=(9, 5), facecolor='w', edgecolor='k')
         fig.subplots_adjust(hspace=.5, wspace=.45)
         plt.style.use('default')
         plt.rcParams.update(

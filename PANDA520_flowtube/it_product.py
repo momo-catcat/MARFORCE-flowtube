@@ -6,12 +6,15 @@ import sys
 import numpy as np
 import pandas as pd
 
-sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
 
-file = os.getcwd() + '/input_files/input_data_for_it_product.csv'
+sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
+dirpath = 'C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube'
+
+#file = os.getcwd() + '/input_files/input_data_for_it_product.csv'
+file = dirpath + '/input_files/input_data_for_it_product.csv'
 data = pd.read_csv(file)
 # %%
-N2_flow = data['dry N2 af']
+N2_flow = data['dry N2 ']
 N2O_flow = data['N2O']
 NO_conc = data['NO']
 Temp = 20
@@ -49,7 +52,7 @@ It = It_N2O * (N2_flow + N2O_flow) / flow_inlet
 
 N2O_conc = 96060. / 1.38e-23 / (Temp + 273.15) / 1e6 * mixing_N2O
 m = len(mixing_N2O)
-R = 0.94  # cm
+R = 0.94  #0.94  # cm
 # %%
 # for k in range(m):
 #    funcart = @(x,y) np.exp(-sigma_N2O*N2O_conc(k)*(np.sqrt(R**2-y**2)+x))
@@ -80,9 +83,13 @@ It_final = np.median(It_corr)
 It_final_mean = np.mean(It_final)
 It_corr_low = min(It_corr)
 It_corr_high = max(It_corr)
-
+print('It_final_median', "{:.2E}".format(It_final_mean))
 # %% calculate the finalized It
-
+import numpy as np
+from matplotlib import pyplot as plt
+plt.scatter(mixing_N2O[:], It_corr[:])
+#plt.ylim(0,3e11)
+plt.show()
 
 # figure(1)
 # plt.plot(1:length(It_corr_Bromide),It_corr_Bromide)

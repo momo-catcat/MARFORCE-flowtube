@@ -1,6 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
-
+import math
 from meanconc_cal import meanconc_cal_sim as meanconc_cal_sim
 from odesolve3 import odesolve as odesolve
 from odesolve3_Y import odesolve as odesolve_Y
@@ -8,7 +8,7 @@ from odesolve3_Y import odesolve as odesolve_Y
 
 def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps, Diff_vals,
             Rtot, \
-            Q1, Q2, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec, formula, c, dr, dx):
+            Q1, Q2, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec, formula, c, dr, dx,model_mode):
     # %% first tube run
     dx = L1 / (Zgrid - 1)
     dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
@@ -22,7 +22,7 @@ def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
 
         c = odesolve(timesteps, Zgrid, Rgrid, dt, Diff_vals, Rtot, dr, dx, Q1, c, comp_namelist, dydt_vst,
                      rindx,
-                     nreac, rstoi, rate_values, const_comp, u)
+                     nreac, rstoi, rate_values, const_comp, u,model_mode)
 
         new = c[:, -1, comp_namelist.index(key_spe_for_plot)]
 
@@ -58,7 +58,7 @@ def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
 
         new = c[:, -1, comp_namelist.index(key_spe_for_plot)]
 
-        fig, axs = plt.subplots(2, 3, figsize=(9, 5), facecolor='w', edgecolor='k')
+        fig, axs = plt.subplots(math.ceil((len(plot_spec)/3)), 3, figsize=(9, 5), facecolor='w', edgecolor='k')
         fig.subplots_adjust(hspace=.5, wspace=.35)
         plt.style.use('default')
         plt.rcParams.update(
@@ -80,8 +80,9 @@ def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
 
         fig.delaxes(axs[5])
         plt.gcf().text(0.7, 0.3, 'Time = ' + str(tim), fontsize=15)
-        plt.draw()
-        plt.pause(1)
+        plt.show()
+        #plt.pause(1)
+        plt.close()
 
         print(['t = ' + str(tim) + str(key_spe_for_plot) + " difference: " + str(np.sum(new - old))])
 

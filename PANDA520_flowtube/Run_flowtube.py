@@ -63,7 +63,8 @@ def Run_flowtube(para,folder_flowtube,export_file_folder,inputs_setup):
             Init_comp_conc = np.transpose([OHconc, OHconc])
 
 
-
+        print(Init_comp_conc)
+        print(Init_comp)
         # add some diffusion constants add more in diffusion_const_added.py file if you want
         # set diffusivity according Kurten et al. (10.1021/jp993622j)
         Diff_setname = ['OH', 'H2O', 'HO2', 'SO3', 'H2SO4'] # the H2SO4 diffusivity is not final
@@ -105,6 +106,20 @@ def Run_flowtube(para,folder_flowtube,export_file_folder,inputs_setup):
                 'model_mode': para['model_mode']
                 }
         # %
+
+        #print('H2O',H2Oconc)
+        #print('OH', OHconc)
+        #print('const_comp_conc', const_comp_conc[:,1,:])
+        #print('Init_comp_conc', Init_comp_conc[1])
+        #print('params',params)
+        #print('Q1',Q1[1])
+        #print('Q2',Q2[1])
+
+        #### SA
+
+
+
+
 
 
         # %% computation begins

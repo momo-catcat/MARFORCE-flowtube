@@ -19,7 +19,7 @@ from exp_setup import inputs_setup
 from Calcu_by_flow import const_comp_conc_cal, const_comp_conc_cal_H2O, const_comp_conc_cal_OH
 from diffusion_const_added import add_diff_const as add_diff_const
 
-file_path = "/Users/hexuchen/Documents/science/coding/git/Projects/PANDA520-flowtube/PANDA520_flowtube/"
+file_path = "C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube//"
 os.chdir(file_path)
 
 
@@ -54,7 +54,7 @@ T = T_cel + 273.15  # K
 p = 101000  # pressure Pa
 
 # select experiment name for simulating
-date = ['10.28']  # can be multiple experiments
+date = ['01.27']  # can be multiple experiments
 
 # %%
 for i in range(len(date)):

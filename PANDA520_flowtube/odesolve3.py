@@ -77,6 +77,7 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, Rtot, dr, dx, Qtot, c, comp_namelis
 
             for comp_na in comp_namelist:  # get name of this component
                 if comp_na not in const_comp:
+                    #%%
                     key_name = str(str(comp_na) + '_comp_indx')  # get index of this component
                     compi = dydt_vst[key_name]
                     key_name = str(str(comp_na) + '_res')
@@ -84,24 +85,27 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, Rtot, dr, dx, Qtot, c, comp_namelis
                     key_name = str(str(comp_na) + '_reac_sign')
                     reac_sign = dydt_vst[key_name]
                     # dydt_for = np.zeros(comp_num)
+                    #%%
                     reac_count = 0
                     for i in dydt_rec[0, :]:
-                        i = int(
-                            i)  # ensure reaction index is integer - this necessary because the dydt_rec array is float (the tendency to change records beneath its first row are float)
+                        i = int(i)  # ensure reaction index is integer - this necessary because the dydt_rec array is float (the tendency to change records beneath its first row are float)
                         gprate = initc[1:Rgrid // 2, 1:, rindx[i, 0:nreac[i]]] ** rstoi[i, 0:nreac[i]]
+                        #print(i)
                         if (len(rstoi[i, 0:nreac[i]]) > 1):
 
-                            # print(rate_values)
-                            # print(gprate[:,:,0], gprate[:, :, -1], rate_values[i])
+                            #print(rate_values[i])
+                            #print(gprate[:,:,0], gprate[:, :, -1], rate_values[i])
                             gprate1 = gprate[:, :, 0] * gprate[:, :, -1] * rate_values[i]
+                            #print(gprate1)
                             # gprate2 = gprate[:,:,0] * gprate[:, :,-1] * rate_values[i]
                             # gprate3 = gprate1-gprate2
                         else:
                             gprate1 = gprate[:, :, 0] * rate_values[i]
 
                         term3[1:Rgrid // 2, 1:, compi] += reac_sign[reac_count] * (gprate1)
+                        #print(term3[1:Rgrid // 2, 1:, compi])
                         reac_count += 1
-
+#%%
             c[0:Rgrid // 2, :, u] = dt * (
                     term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u] + term3[0:Rgrid // 2, :, u]) + initc[
                                                                                                          0:Rgrid // 2,
