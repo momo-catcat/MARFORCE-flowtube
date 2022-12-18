@@ -67,13 +67,11 @@ def calculate_concs(paras):
 
     kB = 1.3806488e-23  # boltzmann constant
 
-
-
     if outflowLocation in 'after':
         totFlow1 = N2flow + sumflow / 1000
     elif flag_tube in ['3']:
         totFlow1 = N2flow1
-        totFlow2 = N2flow1 + N2flow2
+        totFlow2 = sampflow
         H2Oconc1 = H2Oflow1 / 1000 / totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
     else:
         totFlow1 = sampflow
@@ -121,7 +119,7 @@ def calculate_concs(paras):
         paras['Q1'] = paras['sampleflow'] * np.ones(len(OHconc))
         paras['Q2'] = paras['sampleflow'] * np.ones(len(OHconc))
     else:
-        paras['Q1'] = paras['N2flow1']
+        paras['Q1'] = N2flow1
         paras['Q2'] = paras['sampleflow'] * np.ones(len(OHconc))
 
     paras['const_comp_free'] = const_comp_free

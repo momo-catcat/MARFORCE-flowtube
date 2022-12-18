@@ -1,3 +1,5 @@
+# this file is used for SA calibration, the easiest setup
+
 import numpy as np
 from Calcu_by_flow_SA import calculate_concs
 
@@ -10,7 +12,7 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              R1=np.array(0.78, dtype=np.float64),  # ID for the 1st tube
              L1=np.array(26, dtype=np.float64),  # length for the 1st tube
              Itx=5.42e10,  # add it product at the Qx, if you don't have it then you need to calculate it
-             Qx=20,  # Qx where the it product was calcuated
+             Qx=20,  # Qx where the it product was calculated
              outflowLocation='before',  # outflow tube located 'before' or 'after' injecting air, water, and so2
              fullOrSimpleModel='full',  # 'simple': Gormley & Kennedy approximation, 'full': flow model (much slower)
              sampleflow=np.array(10.6, dtype=np.float64),  # inlet sample flow of CIMS, lpm
