@@ -58,8 +58,8 @@ def find_setup_paras(date):
     return setup_paras
 
 
-setup_paras = find_setup_paras('SA_cali_2021-11-18')
-
+setup_paras = find_setup_paras('SA_cali_2021-10-28')
+#%%
 paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              T=np.array(298, dtype=np.float64),  # Temperature, K
              #R1=np.array(0.78, dtype=np.float64),  # ID for the 1st tube
