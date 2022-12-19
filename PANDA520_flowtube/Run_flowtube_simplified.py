@@ -11,9 +11,11 @@ def Run_flowtube(paras, export_file_folder, const_comp_conc, Init_comp_conc, num
     meanconc = []
     c = []
     if len(num_stage) > 1:  # case for SA calibration
-        for j in range(len(num_stage)):
+        for j in range(10,len(num_stage)):
             if num_stage[j] > 0:
                 print(j)
+                print(const_comp_conc[:, j, :])
+                print(Init_comp_conc[j])
                 meanConc1, c1 = cmd_calib5(const_comp_conc[:, j, :], paras, Init_comp_conc[j], paras['Q1'][j],paras['Q2'][j])
                 meanconc.append(meanConc1)
                 c.append(c1)

@@ -65,7 +65,7 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              #R1=np.array(0.78, dtype=np.float64),  # ID for the 1st tube
              #L1=np.array(26, dtype=np.float64),  # length for the 1st tube
              Itx=5.42e10,  # add it product at the Qx, if you don't have it then you need to calculate it
-             Qx=20,  # Qx where the it product was calculated
+             Qx=20,  # Qx the it product was calculated
              outflowLocation='before',  # outflow tube located 'before' or 'after' injecting air, water, and so2
              fullOrSimpleModel='full',  # 'simple': Gormley & Kennedy approximation, 'full': flow model (much slower)
              #sampleflow=np.array(10.6, dtype=np.float64),  # inlet sample flow of CIMS, lpm
@@ -73,7 +73,7 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              O2ratio=np.array(0.209, dtype=np.float64),  # O2 ratio in synthetic air
              Zgrid=40,  # number of grids in direction of tube length, usually we use 80
              Rgrid=80,  # number of grids in direction of radius, usually we use 40
-             dt=np.array(1e-4, dtype=np.float64),  # Differential time interval
+             dt=np.array(1e-5, dtype=np.float64),  # Differential time interval
              model_mode='normal',
              # use 'normal' if you don't know what this is for. 'kinetic' mode refers to running the model without chemistry module to test the kinetic core.
              Diff_setname=['OH', 'HO2', 'SO3', 'H2SO4'],

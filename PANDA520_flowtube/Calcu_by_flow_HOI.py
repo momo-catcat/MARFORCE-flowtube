@@ -88,7 +88,7 @@ def calculate_concs(paras):
 
         H2Oconc2 = H2Oconc1
     else:
-        O2conc2 = O2conc1 * N2flow1 / N2flow2  ####!!!!! The situation when Q2 has oxygen is not considered here
+        O2conc2 = O2conc1 * N2flow1 / sampflow  ####!!!!! The situation when Q2 has oxygen is not considered here
 
         H2Oconc2 = (H2Oflow1 + H2Oflow2) / 1000 / totFlow2 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
 

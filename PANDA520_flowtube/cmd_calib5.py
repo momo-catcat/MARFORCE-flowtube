@@ -60,7 +60,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
     u, Diff_vals = get_diff_and_u_for_more_species(comp_namelist, Diff_setname, con_C_indx, Diff_set, T, p)
 
     numLoop = 500  # number of times to run to reach the pinhole of the instrument
-    timesteps = 1000  # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
+    timesteps = 10000  # number of timesteps, dt * timesteps * numLoop is time elapsed in the final solution
 
     # Change odd number Rgrid to even number grid
     if (Rgrid % 2) != 0:
