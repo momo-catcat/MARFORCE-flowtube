@@ -70,8 +70,6 @@ def calculate_concs(paras):
 
     kB = 1.3806488e-23  # boltzmann constant
 
-
-
     if outflowLocation in 'after':
         totFlow1 = N2flow + sumflow / 1000
     elif flag_tube in ['3']:
@@ -97,20 +95,20 @@ def calculate_concs(paras):
     csH2O = 7.22e-20  # cm2
     qyH2O = 1
 
-    OHconc = It * csH2O * qyH2O * H2Oconc1
+
 
     O2conc = np.transpose([O2conc1, O2conc2])
     I2conc = np.transpose([I2conc1,I2conc2])
     #%%
     if 'H2Oconc_1' in locals():
         H2Oconc = np.transpose([H2Oconc_1, H2Oconc_2])
-    else:
-        H2Oconc = np.transpose([H2Oconc1, H2Oconc2])
-
-    if 'H2O_concentration ' in locals():
+        OHconc = It * csH2O * qyH2O * H2Oconc_1
+    elif 'H2O_concentration ' in locals():
         H2Oconc = np.transpose([H2O_concentration , H2O_concentration])
+        OHconc = It * csH2O * qyH2O * H2O_concentration
     else:
         H2Oconc = np.transpose([H2Oconc1, H2Oconc2])
+        OHconc = It * csH2O * qyH2O * H2Oconc1
 
     if flag_tube == '3':
         const_comp_free = ['H2O', 'O2']

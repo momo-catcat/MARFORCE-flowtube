@@ -8,8 +8,8 @@ from Vapour_calc import H2O_conc
 #%%
 def calculate_concs(paras):
     # %%
-    dirpath = os.path.dirname(__file__)  # get the current path of this file
-    #dirpath = '/Users/jiali/Documents/work/AMT-MION2-Paper/PANDA520_flowtube' # for test
+    #dirpath = os.path.dirname(__file__)  # get the current path of this file
+    dirpath = '/Users/jiali/Documents/work/AMT-MION2-Paper/PANDA520-flowtube/PANDA520_flowtube' # for test
     folder_flowtube = dirpath + '/'
     sys.path.append(folder_flowtube)
     ## Input file folder
@@ -63,10 +63,7 @@ def calculate_concs(paras):
         H2Oconc_1 = data['H2Oconc1']
         H2Oconc_2 = data['H2Oconc2']
 
-
-
     kB = 1.3806488e-23  # boltzmann constant
-
     if outflowLocation in 'after':
         totFlow1 = N2flow + sumflow / 1000
     elif flag_tube in ['3']:
@@ -92,20 +89,20 @@ def calculate_concs(paras):
     csH2O = 7.22e-20  # cm2
     qyH2O = 1
 
-    OHconc = It * csH2O * qyH2O * H2Oconc1
+
 
     O2conc = np.transpose([O2conc1, O2conc2])
     SO2conc = np.transpose([SO2conc1, SO2conc2])
     #%%
     if 'H2Oconc_1' in locals():
         H2Oconc = np.transpose([H2Oconc_1, H2Oconc_2])
+        OHconc = It * csH2O * qyH2O * H2Oconc_1
+    elif 'H2O_concentration' in locals():
+        H2Oconc = np.transpose([H2O_concentration, H2O_concentration])
+        OHconc = It * csH2O * qyH2O * H2O_concentration
     else:
         H2Oconc = np.transpose([H2Oconc1, H2Oconc2])
-
-    if 'H2O_concentration ' in locals():
-        H2Oconc = np.transpose([H2O_concentration , H2O_concentration])
-    else:
-        H2Oconc = np.transpose([H2Oconc1, H2Oconc2])
+        OHconc = It * csH2O * qyH2O * H2Oconc1
 
     if flag_tube == '3':
         const_comp_free = ['H2O', 'O2']
