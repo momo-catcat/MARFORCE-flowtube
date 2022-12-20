@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import csv
 from cmd_calib5 import cmd_calib5
+from matplotlib import pyplot as plt
 
 #%%
 def Run_flowtube(paras, export_file_folder, const_comp_conc, Init_comp_conc, num_stage):
@@ -15,6 +16,7 @@ def Run_flowtube(paras, export_file_folder, const_comp_conc, Init_comp_conc, num
             if num_stage[j] > 0:
                 print(j)
                 meanConc1, c1 = cmd_calib5(const_comp_conc[:, j, :], paras, Init_comp_conc[j], paras['Q1'][j],paras['Q2'][j])
+                #plt.close()
                 meanconc.append(meanConc1)
                 c.append(c1)
     #%%
