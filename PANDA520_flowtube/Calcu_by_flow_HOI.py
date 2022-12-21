@@ -37,9 +37,10 @@ def calculate_concs(paras):
     if all(x in inputs for x in flag_tube12):
         N2flow = data['N2flow']
         O2flow = data['O2flow']
-        SO2flow = data['SO2flow']
+        I2conc = data['I2conc']
+        I2flow = data['I2flow']
         H2Oflow = data['H2Oflow']
-        sumflow = O2flow + SO2flow + H2Oflow
+        sumflow = O2flow + I2flow + H2Oflow
         It = Itx * Qx / N2flow
         if 'L2' in paras.keys():
             flag_tube = '2'
@@ -87,6 +88,9 @@ def calculate_concs(paras):
         O2conc2 = O2conc1
 
         H2Oconc2 = H2Oconc1
+
+        I2conc1 = I2conc
+        I2conc2 = I2conc
     else:
         O2conc2 = O2conc1 * N2flow1 / sampflow  ####!!!!! The situation when Q2 has oxygen is not considered here
 
@@ -98,7 +102,7 @@ def calculate_concs(paras):
 
 
     O2conc = np.transpose([O2conc1, O2conc2])
-    I2conc = np.transpose([I2conc1,I2conc2])
+    I2conc = np.transpose([I2conc1, I2conc2])
     #%%
     if 'H2Oconc_1' in locals():
         H2Oconc = np.transpose([H2Oconc_1, H2Oconc_2])

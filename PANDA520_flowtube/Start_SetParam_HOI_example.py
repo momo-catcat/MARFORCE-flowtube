@@ -8,15 +8,14 @@ set parameters
 paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              T=np.array(298, dtype=np.float64),  # Temperature, K
              R1=np.array(0.78, dtype=np.float64),  # ID for the 1st tube
-             L1=np.array(100, dtype=np.float64),  # length for the 1st tube
+             L1=np.array(41, dtype=np.float64),  # length for the 1st tube
              R2=np.array(1.04, dtype=np.float64),  # ID for the 1st tube
-             L2=np.array(50, dtype=np.float64),  # length for the 1st tube
+             L2=np.array(58.5, dtype=np.float64),  # length for the 1st tube
              Itx=5.42e10,  # add it product at the Qx, if you don't have it then you need to calculate it
              Qx=20,  # Qx where it product was calcuated
              outflowLocation='before',  # outflow tube located 'before' or 'after' injecting air, water, and so2
              fullOrSimpleModel='full',  # 'simple': Gormley & Kennedy approximation, 'full': flow model (much slower)
              sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
-             #SO2ratio=np.array(5000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppb
              O2ratio=np.array(0.209, dtype=np.float64),  # O2 ratio in synthetic air
              Zgrid=40,  # number of grids in direction of tube length, usually we use 80
              Rgrid=80,  # number of grids in direction of radius, usually we use 40
@@ -33,7 +32,7 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              # Species you think they should have initial concentration in the first frid of tube
              key_spe_for_plot='HOI',  # key species as criterion to stop the loop
              plot_spec=['OH', 'HOI', 'HO2', 'I', 'I2'],  # species that you want to plot
-             file_name='HOI_cali_T1_25Oct21.csv',
+             file_name='HOI_cali_T1_13Sep21.csv',
              # the file you store all the flow data including N2, O2, SO2 in the folder input files
              )
 
