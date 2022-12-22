@@ -43,7 +43,7 @@ def calculate_concs(paras):
         I2flow = data['I2flow']
         H2Oflow = data['H2Oflow']
         sumflow = O2flow + I2flow + H2Oflow + N2flow
-        It = Itx * Qx / Q1
+        It = Itx * Qx / Q1 * 1e3
         if 'L2' in paras.keys():
             flag_tube = '2'
         else:
@@ -60,7 +60,7 @@ def calculate_concs(paras):
         I2conc1 = data['I2conc1']
         I2conc2 = data['I2conc2']
         sumflow1 = O2flow1 +  H2Oflow1 + N2flow1
-        It = Itx * Qx / Q1
+        It = Itx * Qx / Q1 *1e3
         flag_tube = '3'
 #%%
     # check if we have the H2O concentration
@@ -73,16 +73,16 @@ def calculate_concs(paras):
     kB = 1.3806488e-23  # boltzmann constant
 
     if outflowLocation in 'after':
-        totFlow1 = sumflow / 1000
+        totFlow1 = sumflow
     elif flag_tube in ['3']:
         totFlow1 = Q1
-        totFlow2 = sampflow
-        H2Oconc1 = H2Oflow1 / 1000 / totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
-        O2conc1 = O2flow1 * O2ratio / 1000 / totFlow1 * p / kB / T / 1e6
+        totFlow2 = sampflow *1e3
+        H2Oconc1 = H2Oflow1  / totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
+        O2conc1 = O2flow1 * O2ratio  / totFlow1 * p / kB / T / 1e6
     else:
-        totFlow1 = sampflow
-        H2Oconc1 = H2Oflow / 1000 / totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
-        O2conc1 = O2flow * O2ratio / 1000 / totFlow1 * p / kB / T / 1e6
+        totFlow1 = sampflow *1e3
+        H2Oconc1 = H2Oflow/ totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
+        O2conc1 = O2flow * O2ratio / totFlow1 * p / kB / T / 1e6
 
 
 
@@ -94,8 +94,8 @@ def calculate_concs(paras):
         I2conc1 = I2conc
         I2conc2 = I2conc
     else:
-        O2conc2 = (O2flow1 + O2flow2) * O2ratio / 1000 / totFlow2 * p / kB / T / 1e6
-        H2Oconc2 = (H2Oflow1 + H2Oflow2) / 1000 / totFlow2 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
+        O2conc2 = (O2flow1 + O2flow2) * O2ratio  / totFlow2 * p / kB / T / 1e6
+        H2Oconc2 = (H2Oflow1 + H2Oflow2)  / totFlow2 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
 
     csH2O = 7.22e-20  # cm2
     qyH2O = 1

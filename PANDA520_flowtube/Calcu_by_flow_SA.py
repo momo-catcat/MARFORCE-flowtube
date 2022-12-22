@@ -40,7 +40,7 @@ def calculate_concs(paras):
         SO2flow = data['SO2flow']
         H2Oflow = data['H2Oflow']
         sumflow = O2flow + SO2flow + H2Oflow + N2flow
-        It = Itx * Qx / Q1
+        It = Itx * Qx / (Q1/1000)
         if 'L2' in paras.keys():
             flag_tube = '2'
         else:
@@ -56,7 +56,7 @@ def calculate_concs(paras):
         N2flow1 = data['N2flow1']
         N2flow2 = data['N2flow2']
         sumflow1 = O2flow1 + SO2flow + H2Oflow1 + N2flow1
-        It = Itx * Qx / Q1
+        It = Itx * Qx / (Q1/1000)
         flag_tube = '3'
 #%%
     # check if we have the H2O concentration
@@ -68,27 +68,27 @@ def calculate_concs(paras):
 
     kB = 1.3806488e-23  # boltzmann constant
     if outflowLocation in 'after':
-        totFlow1 = sumflow / 1000
+        totFlow1 = sumflow
     elif flag_tube in ['3']:
         totFlow1 = Q1
-        totFlow2 = sampflow
-        H2Oconc1 = H2Oflow1 / 1000 / totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
-        O2conc1 = O2flow1 * O2ratio / 1000 / totFlow1 * p / kB / T / 1e6
+        totFlow2 = sampflow*1e3
+        H2Oconc1 = H2Oflow1 / totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
+        O2conc1 = O2flow1 * O2ratio  / totFlow1 * p / kB / T / 1e6
     else:
-        totFlow1 = sampflow
-        H2Oconc1 = H2Oflow / 1000 / totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
-        O2conc1 = O2flow * O2ratio / 1000 / totFlow1 * p / kB / T / 1e6
+        totFlow1 = sampflow*1e3
+        H2Oconc1 = H2Oflow / totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
+        O2conc1 = O2flow * O2ratio / totFlow1 * p / kB / T / 1e6
 
-    SO2conc1 = SO2flow * SO2ratio / 1000 / totFlow1 * p / kB / T / 1e6
+    SO2conc1 = SO2flow * SO2ratio  / totFlow1 * p / kB / T / 1e6
 
     if flag_tube in ['1', '2']:
         O2conc2 = O2conc1
         SO2conc2 = SO2conc1
         H2Oconc2 = H2Oconc1
     else:
-        O2conc2 = (O2flow1 + O2flow2) * O2ratio / 1000 / totFlow2 * p / kB / T / 1e6
+        O2conc2 = (O2flow1 + O2flow2) * O2ratio  / totFlow2 * p / kB / T / 1e6
         SO2conc2 = SO2conc1 * totFlow1 / totFlow2 ####!!!!! The situation when Q2 has SO2 is not considered here
-        H2Oconc2 = (H2Oflow1 + H2Oflow2) / 1000 / totFlow2 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
+        H2Oconc2 = (H2Oflow1 + H2Oflow2) /  totFlow2 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
 
     csH2O = 7.22e-20  # cm2
     qyH2O = 1
