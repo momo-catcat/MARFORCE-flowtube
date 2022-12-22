@@ -97,7 +97,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
     formula = get_formula(plot_spec)
     # % set the grids parameters
     Rtot, dr, dx, sp_line = grid_para(Zgrid, Rgrid, R2, R1, L2, L1, comp_num)
-    #print(rate_values)
+    print(rate_values)
     #print(comp_namelist)
     #print(eqn_list_on)
     # %% run the modules and plot
