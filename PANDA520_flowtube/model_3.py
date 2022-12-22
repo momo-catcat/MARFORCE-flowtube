@@ -67,7 +67,7 @@ def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
         axs = axs.ravel()
 
         for i in range(len(plot_spec)):
-            cl = axs[i].pcolor(np.linspace(0, L2 + L1, Zgrid), np.linspace(-R2, R2, Rgrid), c[:, :, comp_plot_index[i]],
+            cl = axs[i].pcolor(np.linspace(0, L2, Zgrid), np.linspace(-R2, R2, Rgrid), c[:, :, comp_plot_index[i]],
                               shading='nearest', cmap='jet')
 
             axs[i].set_xlabel('L [cm]')
