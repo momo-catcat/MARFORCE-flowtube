@@ -23,13 +23,13 @@ def find_setup_paras(date):
                    L2=np.array(68, dtype=np.float64),  # length for the 2nd tube
                    file_name='SA_cali_2021-10-281.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
-    elif date == 'SA_cali_2021-11-181':
+    elif date == 'SA_cali_2021-11-182':
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
                    R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
                    L1=np.array(50, dtype=np.float64),  # length for the 1st tube
                    R2=np.array(1.04, dtype=np.float64),  # R for the 2nd tube
                    L2=np.array(66, dtype=np.float64),  # length for the 2nd tube
-                   file_name='SA_cali_2021-11-181.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                   file_name='SA_cali_2021-11-182.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
     elif date == 'SA_cali_2022-01-04':
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
@@ -58,7 +58,7 @@ def find_setup_paras(date):
     return setup_paras
 
 
-setup_paras = find_setup_paras('SA_cali_2021-10-281')
+setup_paras = find_setup_paras('SA_cali_2021-11-182')
 #%%
 paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              T=np.array(298, dtype=np.float64),  # Temperature, K
@@ -73,7 +73,7 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              O2ratio=np.array(0.209, dtype=np.float64),  # O2 ratio in synthetic air
              Zgrid=40,  # number of grids in direction of tube length, usually we use 80
              Rgrid=80,  # number of grids in direction of radius, usually we use 40
-             dt=np.array(1e-4, dtype=np.float64),  # Differential time interval
+             dt=np.array(1e-5, dtype=np.float64),  # Differential time interval
              model_mode='normal',
              # use 'normal' if you don't know what this is for. 'kinetic' mode refers to running the model without chemistry module to test the kinetic core.
              Diff_setname=['OH', 'HO2', 'SO3', 'H2SO4'],

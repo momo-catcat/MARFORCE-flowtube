@@ -28,6 +28,7 @@ def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
 
         if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):
             break
+        c1 = c # keep the first part
         # %% transfer the flow distribution for next run
     meanConc = meanconc_cal_sim(R1, Rgrid, comp_namelist, c)
     #print(meanConc)
@@ -78,7 +79,7 @@ def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
             clb.formatter.set_useMathText(True)
 
 
-        fig.delaxes(axs[5])
+        #fig.delaxes(axs[5])
         plt.gcf().text(0.7, 0.3, 'Time = ' + str(tim), fontsize=15)
         plt.show()
         #plt.pause(1)
@@ -88,4 +89,5 @@ def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
 
         if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):
             break
-    return c
+        c2 = c
+    return c1, c2

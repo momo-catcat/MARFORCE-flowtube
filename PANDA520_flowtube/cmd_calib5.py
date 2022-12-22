@@ -102,7 +102,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
     #print(eqn_list_on)
     # %% run the modules and plot
     if flag_tube == '3':
-        c = model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,
+        c1,c = model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,
                     Diff_vals, Rtot, Q1, Q2, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec,
                     formula, c, dr, dx,params['model_mode'])
     elif flag_tube == '4':
@@ -117,5 +117,7 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
                     plot_spec, formula, c, dr, dx, params['model_mode'])
     # % calculate the meanconc for each species
     meanConc = meanconc_cal(R2, Rgrid, plot_spec, comp_namelist, c, params['model_mode'])
+    if flag_tube == '3':
+        c = [c1,c]
 
     return meanConc, c
