@@ -8,8 +8,8 @@ set parameters
 ## 13Sep21. HOI calibration with straight line
 ## 25Oct21. HOI calibration with Y piece at tower 1
 
-date = '13Sep21'
-# date = '25Oct21'
+# date = '13Sep21'
+date = '25Oct21'
 
 if date == '13Sep21':
     paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
@@ -70,6 +70,7 @@ elif date == '25Oct21':
                  Init_comp=['OH', 'HO2'],
                  # Species you think they should have initial concentration in the first frid of tube
                  key_spe_for_plot='HOI',  # key species as criterion to stop the loop
+
                  plot_spec=['OH', 'HOI', 'HO2', 'I', 'I2'],  # species that you want to plot
                  file_name='HOI_cali_T1_25Oct21.csv',
                  # the file you store all the flow data including N2, O2, SO2 in the folder input files
