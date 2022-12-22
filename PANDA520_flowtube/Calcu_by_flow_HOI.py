@@ -46,8 +46,8 @@ def calculate_concs(paras):
             flag_tube = '2'
         else:
             flag_tube = '1'
-        paras['L2'] = np.array(0, dtype=np.float64)
-        paras['R2'] = paras['R1']
+            paras['L2'] = np.array(0, dtype=np.float64)
+            paras['R2'] = paras['R1']
     else:
         O2flow = data['O2flow']
         H2Oflow1 = data['H2Oflow1']
@@ -133,7 +133,6 @@ def calculate_concs(paras):
     paras['const_comp_conc_free'] = const_comp_conc_free
     paras['sch_name'] = input_mechanism_folder + paras['sch_name']
     paras['OHconc'] = OHconc
-
 
     #if 'N2flow' in locals():
     #    paras['N2flow'] = N2flow

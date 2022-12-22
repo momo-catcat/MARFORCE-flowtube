@@ -43,8 +43,8 @@ def calculate_concs(paras):
             flag_tube = '2'
         else:
             flag_tube = '1'
-        paras['L2'] = np.array(0, dtype=np.float64)
-        paras['R2'] = paras['R1']
+            paras['L2'] = np.array(0, dtype=np.float64)
+            paras['R2'] = paras['R1']
     else:
         O2flow = data['O2flow']
         SO2flow = data['SO2flow']

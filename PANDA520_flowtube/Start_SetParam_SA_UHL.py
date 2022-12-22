@@ -85,7 +85,7 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              Init_comp=['OH', 'HO2'],
              # Species you think they should have initial concentration in the first frid of tube
              key_spe_for_plot='H2SO4',  # key species as criterion to stop the loop
-             plot_spec=['OH', 'HSO3', 'HO2', 'SO3', 'H2SO4'],  # species that you want to plot
+             plot_spec=['OH', 'HSO3', 'HO2', 'SO3', 'H2SO4','SO2'],  # species that you want to plot
              #file_name='H2O_5.csv',
 
              )
