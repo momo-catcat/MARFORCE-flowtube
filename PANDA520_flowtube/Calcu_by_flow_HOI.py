@@ -30,6 +30,8 @@ def calculate_concs(paras):
     T = paras['T']
     Itx = paras['Itx']
     Qx = paras['Qx']
+    Q1 = data['Q1']
+    Q2 = data['Q2']
     # %%
     flag_tube12 = ['H2Oflow',
                    'N2flow']  # flag_tube '1' and '2' should include these two columns otherwise, flag_tube3 = ['H2Oflow1','H2Oflow2','N2flow1','N2flow2']
@@ -40,8 +42,8 @@ def calculate_concs(paras):
         I2conc = data['I2conc']
         I2flow = data['I2flow']
         H2Oflow = data['H2Oflow']
-        sumflow = O2flow + I2flow + H2Oflow
-        It = Itx * Qx / N2flow
+        sumflow = O2flow + I2flow + H2Oflow + N2flow
+        It = Itx * Qx / Q1 * 1e3
         if 'L2' in paras.keys():
             flag_tube = '2'
         else:
@@ -49,15 +51,16 @@ def calculate_concs(paras):
             paras['L2'] = np.array(0, dtype=np.float64)
             paras['R2'] = paras['R1']
     else:
-        O2flow = data['O2flow']
+        O2flow1 = data['O2flow1']
+        O2flow2 = data['O2flow2']
         H2Oflow1 = data['H2Oflow1']
         H2Oflow2 = data['H2Oflow2']
         N2flow1 = data['N2flow1']
         N2flow2 = data['N2flow2']
         I2conc1 = data['I2conc1']
         I2conc2 = data['I2conc2']
-        sumflow = O2flow +  H2Oflow1
-        It = Itx * Qx / N2flow1
+        sumflow1 = O2flow1 +  H2Oflow1 + N2flow1
+        It = Itx * Qx / Q1 *1e3
         flag_tube = '3'
 #%%
     # check if we have the H2O concentration
@@ -67,21 +70,20 @@ def calculate_concs(paras):
         H2Oconc_1 = data['H2Oconc1']
         H2Oconc_2 = data['H2Oconc2']
 
-
-
     kB = 1.3806488e-23  # boltzmann constant
 
     if outflowLocation in 'after':
-        totFlow1 = N2flow + sumflow / 1000
+        totFlow1 = sumflow
     elif flag_tube in ['3']:
-        totFlow1 = N2flow1
-        totFlow2 = sampflow
-        H2Oconc1 = H2Oflow1 / 1000 / totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
+        totFlow1 = Q1
+        totFlow2 = sampflow *1e3
+        H2Oconc1 = H2Oflow1  / totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
+        O2conc1 = O2flow1 * O2ratio  / totFlow1 * p / kB / T / 1e6
     else:
-        totFlow1 = sampflow
-        H2Oconc1 = H2Oflow / 1000 / totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
+        totFlow1 = sampflow *1e3
+        H2Oconc1 = H2Oflow/ totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
+        O2conc1 = O2flow * O2ratio / totFlow1 * p / kB / T / 1e6
 
-    O2conc1 = O2flow * O2ratio / 1000 / totFlow1 * p / kB / T / 1e6
 
 
     if flag_tube in ['1', '2']:
@@ -92,14 +94,11 @@ def calculate_concs(paras):
         I2conc1 = I2conc
         I2conc2 = I2conc
     else:
-        O2conc2 = O2conc1 * N2flow1 / sampflow  ####!!!!! The situation when Q2 has oxygen is not considered here
-
-        H2Oconc2 = (H2Oflow1 + H2Oflow2) / 1000 / totFlow2 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
+        O2conc2 = (O2flow1 + O2flow2) * O2ratio  / totFlow2 * p / kB / T / 1e6
+        H2Oconc2 = (H2Oflow1 + H2Oflow2)  / totFlow2 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
 
     csH2O = 7.22e-20  # cm2
     qyH2O = 1
-
-
 
     O2conc = np.transpose([O2conc1, O2conc2])
     I2conc = np.transpose([I2conc1, I2conc2])
@@ -121,23 +120,22 @@ def calculate_concs(paras):
         const_comp_free = []
         const_comp_conc_free = [0]
 
-    paras['flag_tube'] = flag_tube
-    if paras['flag_tube'] in ['1', '2']:
-        paras['Q1'] = paras['sampleflow'] * np.ones(len(OHconc))
-        paras['Q2'] = paras['sampleflow'] * np.ones(len(OHconc))
-    else:
-        paras['Q1'] = N2flow1
-        paras['Q2'] = paras['sampleflow'] * np.ones(len(OHconc))
+
+    paras['Q1'] = Q1
+    paras['Q2'] = Q2
 
     paras['const_comp_free'] = const_comp_free
     paras['const_comp_conc_free'] = const_comp_conc_free
     paras['sch_name'] = input_mechanism_folder + paras['sch_name']
     paras['OHconc'] = OHconc
+    paras['flag_tube'] = flag_tube
 
     #if 'N2flow' in locals():
     #    paras['N2flow'] = N2flow
     #else:
     #    paras['N2flow1'] = N2flow1
     #    paras['N2flow2'] = N2flow2
+    print('Q1',Q1)
+    print('Q2',Q2)
     # %%
     return O2conc, I2conc, H2Oconc, paras, export_file_folder

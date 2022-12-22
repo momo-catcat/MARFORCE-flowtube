@@ -27,8 +27,8 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
     R2 = params['R2']  # diameters for second tube
     L1 = params['L1']  # length for first tube
     L2 = params['L2']  # length for second tube
-    Q1 = Q1 * 1000 / 60  # flow for first tube
-    Q2 = Q2 * 1000 / 60  # flow for second tube
+    Q1 = Q1 / 60  # flow for first tube
+    Q2 = Q2  / 60  # flow for second tube
     sch_name = params['sch_name']  # file for the MCM file
     chm_sch_mrk = ['{', 'RO2', '+', '', '', ';', '+', ';', '$', '{', ':', ';', '}'] #params['chm_sch_mrk']  # markers to isolate sections of chemical scheme based on MCM KPP format
     const_comp = params['const_comp']
