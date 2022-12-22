@@ -30,7 +30,6 @@ def calculate_concs(paras):
     T = paras['T']
     Itx = paras['Itx']
     Qx = paras['Qx']
-
     # %%
     flag_tube12 = ['H2Oflow',
                    'N2flow']  # flag_tube '1' and '2' should include these two columns otherwise, flag_tube3 = ['H2Oflow1','H2Oflow2','N2flow1','N2flow2']
@@ -81,10 +80,14 @@ def calculate_concs(paras):
         totFlow2 = sampflow *1e3
         H2Oconc1 = H2Oflow1  / totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
         O2conc1 = O2flow1 * O2ratio  / totFlow1 * p / kB / T / 1e6
+        paras['Q1'] = Q1
+        paras['Q2'] = Q2
     else:
         totFlow1 = sampflow * 1e3
         H2Oconc1 = H2Oflow/ totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
         O2conc1 = O2flow * O2ratio / totFlow1 * p / kB / T / 1e6
+        paras['Q1'] = Q
+        paras['Q2'] = Q
 
 
 
@@ -122,10 +125,6 @@ def calculate_concs(paras):
         const_comp_free = []
         const_comp_conc_free = [0]
 
-
-    paras['Q1'] = Q1
-    paras['Q2'] = Q2
-
     paras['const_comp_free'] = const_comp_free
     paras['const_comp_conc_free'] = const_comp_conc_free
     paras['sch_name'] = input_mechanism_folder + paras['sch_name']
@@ -137,7 +136,7 @@ def calculate_concs(paras):
     #else:
     #    paras['N2flow1'] = N2flow1
     #    paras['N2flow2'] = N2flow2
-    print('Q1',Q1)
-    print('Q2',Q2)
+    print('Q1',paras['Q1'])
+    print('Q2',paras['Q1'])
     # %%
     return O2conc, I2conc, H2Oconc, paras, export_file_folder

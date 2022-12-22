@@ -28,8 +28,7 @@ def calculate_concs(paras):
     T = paras['T']
     Itx = paras['Itx']
     Qx = paras['Qx']
-    Q1 = data['Q1']
-    Q2 = data['Q2']
+
     # %%
     flag_tube12 = ['H2Oflow',
                    'N2flow']  # flag_tube '1' and '2' should include these two columns otherwise, flag_tube3 = ['H2Oflow1','H2Oflow2','N2flow1','N2flow2']
@@ -39,8 +38,9 @@ def calculate_concs(paras):
         O2flow = data['O2flow']
         SO2flow = data['SO2flow']
         H2Oflow = data['H2Oflow']
+        Q = data['Q']
         sumflow = O2flow + SO2flow + H2Oflow + N2flow
-        It = Itx * Qx / (Q1/1000)
+        It = Itx * Qx / (Q/1000)
         if 'L2' in paras.keys():
             flag_tube = '2'
         else:
@@ -55,6 +55,8 @@ def calculate_concs(paras):
         H2Oflow2 = data['H2Oflow2']
         N2flow1 = data['N2flow1']
         N2flow2 = data['N2flow2']
+        Q1 = data['Q1']
+        Q2 = data['Q2']
         sumflow1 = O2flow1 + SO2flow + H2Oflow1 + N2flow1
         It = Itx * Qx / (Q1/1000)
         flag_tube = '3'
@@ -74,10 +76,15 @@ def calculate_concs(paras):
         totFlow2 = sampflow*1e3
         H2Oconc1 = H2Oflow1 / totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
         O2conc1 = O2flow1 * O2ratio  / totFlow1 * p / kB / T / 1e6
+        paras['Q1'] = Q1
+        paras['Q2'] = Q2
     else:
         totFlow1 = sampflow*1e3
         H2Oconc1 = H2Oflow / totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
         O2conc1 = O2flow * O2ratio / totFlow1 * p / kB / T / 1e6
+        paras['Q1'] = Q
+        paras['Q2'] = Q
+
 
     SO2conc1 = SO2flow * SO2ratio  / totFlow1 * p / kB / T / 1e6
 
@@ -113,8 +120,6 @@ def calculate_concs(paras):
         const_comp_free = []
         const_comp_conc_free = [0]
 
-    paras['Q1'] = Q1
-    paras['Q2'] = Q2
 
     paras['const_comp_free'] = const_comp_free
     paras['const_comp_conc_free'] = const_comp_conc_free
@@ -128,7 +133,7 @@ def calculate_concs(paras):
     #else:
     #    paras['N2flow1'] = N2flow1
     #    paras['N2flow2'] = N2flow2
-    print('Q1',Q1)
-    print('Q2',Q2)
+    print('Q1',paras['Q1'])
+    print('Q2',paras['Q2'])
     # %%
     return O2conc, SO2conc, H2Oconc, paras, export_file_folder

@@ -39,7 +39,7 @@ def write_rate_file(reac_coef_g, p, rrc, rrc_name, testf):  # define function
     f.write('\'\'\'module for calculating reaction rate coefficients (automatically generated)\'\'\'\n')
     f.write(
         '# module to hold expressions for calculating rate coefficients # \n')  # python will convert \n to os.linesep
-    f.write('# created at %s\n' % (datetime.datetime.now()))
+   # f.write('# created at %s\n' % (datetime.datetime.now()))
     f.write('\n')
     f.write('import numpy\n')
     # 	f.write('import photolysisRates\n')
