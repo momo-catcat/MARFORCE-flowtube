@@ -105,13 +105,13 @@ def calculate_concs(paras):
     #%%
     if 'H2Oconc_1' in locals():
         H2Oconc = np.transpose([H2Oconc_1, H2Oconc_2])
-        OHconc = It * csH2O * qyH2O * H2Oconc_1
+
     elif 'H2O_concentration' in locals():
         H2Oconc = np.transpose([H2O_concentration, H2O_concentration])
-        OHconc = It * csH2O * qyH2O * H2O_concentration
+
     else:
         H2Oconc = np.transpose([H2Oconc1, H2Oconc2])
-        OHconc = It * csH2O * qyH2O * H2Oconc1
+
 
     if flag_tube == '3':
         const_comp_free = ['H2O', 'O2']
@@ -120,7 +120,10 @@ def calculate_concs(paras):
         const_comp_free = []
         const_comp_conc_free = [0]
 
-
+    idx = H2Oflow1 < 1000
+    H2Oconc[idx] = np.transpose([H2Oconc1[idx], H2Oconc2[idx]])
+    OHconc = It * csH2O * qyH2O * H2Oconc[:,0]
+    
     paras['const_comp_free'] = const_comp_free
     paras['const_comp_conc_free'] = const_comp_conc_free
     paras['sch_name'] = input_mechanism_folder + paras['sch_name']
@@ -133,7 +136,7 @@ def calculate_concs(paras):
     #else:
     #    paras['N2flow1'] = N2flow1
     #    paras['N2flow2'] = N2flow2
-    print('Q1',paras['Q1'])
-    print('Q2',paras['Q2'])
+    #print('Q1',paras['Q1'])
+    #print('Q2',paras['Q2'])
     # %%
     return O2conc, SO2conc, H2Oconc, paras, export_file_folder

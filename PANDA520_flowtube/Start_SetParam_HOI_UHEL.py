@@ -8,8 +8,8 @@ set parameters
 ## 13Sep21. HOI calibration with straight line
 ## 25Oct21. HOI calibration with Y piece at tower 1
 
-#date = '13Sep21'
-date = '25Oct21'
+date = '13Sep21'
+#date = '25Oct21'
 # date = '20Nov21'
 
 if date == '13Sep21':

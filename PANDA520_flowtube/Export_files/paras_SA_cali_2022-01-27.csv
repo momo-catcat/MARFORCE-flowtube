@@ -1,0 +1,65 @@
+items,Data
+p,101000.0
+T,298.0
+Itx,54200000000.0
+Qx,20
+outflowLocation,before
+fullOrSimpleModel,full
+SO2ratio,0.005
+O2ratio,0.209
+Zgrid,40
+Rgrid,80
+dt,0.0001
+model_mode,normal
+Diff_setname,"['OH', 'HO2', 'SO3', 'H2SO4']"
+Diff_set,"[0.215, 0.141, 0.126, 0.088]"
+sch_name,/Users/jiali/Documents/work/AMT-MION2-Paper/PANDA520-flowtube/PANDA520_flowtube/input_mechanism/SO2_SA.txt
+const_comp,"['SO2', 'O2', 'H2O']"
+Init_comp,"['OH', 'HO2']"
+key_spe_for_plot,H2SO4
+plot_spec,"['OH', 'HSO3', 'HO2', 'SO3', 'H2SO4', 'SO2']"
+sampleflow,10.6
+R1,0.78
+L1,26.0
+file_name,SA_cali_2022-01-27.csv
+L2,0.0
+R2,0.78
+Q1,"0     10600.0
+1     10600.0
+2     10600.0
+3     10600.0
+4     10600.0
+5     10600.0
+6     10600.0
+7     10600.0
+8     10600.0
+9     10600.0
+10    10600.0
+Name: Q, dtype: float64"
+Q2,"0     10600.0
+1     10600.0
+2     10600.0
+3     10600.0
+4     10600.0
+5     10600.0
+6     10600.0
+7     10600.0
+8     10600.0
+9     10600.0
+10    10600.0
+Name: Q, dtype: float64"
+const_comp_free,[]
+const_comp_conc_free,[0]
+OHconc,"0     0.000000e+00
+1     5.318687e+07
+2     1.063737e+08
+3     2.127475e+08
+4     4.254950e+08
+5     5.318687e+08
+6     6.382425e+08
+7     7.978031e+08
+8     4.786818e+08
+9     3.191212e+08
+10    3.191212e+08
+dtype: float64"
+flag_tube,1

@@ -66,7 +66,6 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
     if (Rgrid % 2) != 0:
         Rgrid = Rgrid + 1
     # % apply all the concentration for the constant comp
-
     const_comp_gird = cal_const_comp_conc.cal_const_comp_conc(Rgrid, Zgrid, const_comp_conc, L1, L2, const_comp)
     # % set the concentration for all the species for the grid of 80*40 in c
     c = np.zeros([Rgrid, Zgrid, comp_num])
@@ -99,12 +98,12 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
     Rtot, dr, dx, sp_line = grid_para(Zgrid, Rgrid, R2, R1, L2, L1, comp_num)
     #print(rate_values)
     #print(comp_namelist)
-    #print(eqn_list_on)
+    #print(comp_num)
     # %% run the modules and plot
     if flag_tube == '3':
-        c1,c = model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,
+        c = model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,
                     Diff_vals, Rtot, Q1, Q2, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec,
-                    formula, c, dr, dx,params['model_mode'])
+                    formula, c, dr, dx,params['model_mode'],const_comp_conc)
     elif flag_tube == '4':
         c = model_4(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps,
                     Diff_vals, Rtot, const_comp_free, const_comp_conc_free, Q1, Q2, dydt_vst, rindx, nreac, rstoi,
@@ -117,7 +116,5 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
                     plot_spec, formula, c, dr, dx, params['model_mode'])
     # % calculate the meanconc for each species
     meanConc = meanconc_cal(R2, Rgrid, plot_spec, comp_namelist, c, params['model_mode'])
-    if flag_tube == '3':
-        c = [c1,c]
 
     return meanConc, c
