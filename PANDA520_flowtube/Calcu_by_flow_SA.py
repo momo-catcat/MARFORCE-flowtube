@@ -38,6 +38,7 @@ def calculate_concs(paras):
         O2flow = data['O2flow']
         SO2flow = data['SO2flow']
         H2Oflow = data['H2Oflow']
+        idx = H2Oflow < 1000
         Q = data['Q']
         sumflow = O2flow + SO2flow + H2Oflow + N2flow
         It = Itx * Qx / (Q/1000)
@@ -55,6 +56,7 @@ def calculate_concs(paras):
         H2Oflow2 = data['H2Oflow2']
         N2flow1 = data['N2flow1']
         N2flow2 = data['N2flow2']
+        idx = H2Oflow1 < 1000
         Q1 = data['Q1']
         Q2 = data['Q2']
         sumflow1 = O2flow1 + SO2flow + H2Oflow1 + N2flow1
@@ -120,7 +122,7 @@ def calculate_concs(paras):
         const_comp_free = []
         const_comp_conc_free = [0]
 
-    idx = H2Oflow1 < 1000
+
     H2Oconc[idx] = np.transpose([H2Oconc1[idx], H2Oconc2[idx]])
     OHconc = It * csH2O * qyH2O * H2Oconc[:,0]
     

@@ -57,7 +57,7 @@ def find_setup_paras(date):
                    )
     return setup_paras
 
-date = 'SA_cali_2021-11-181'
+date = 'SA_cali_2022-01-04'
 setup_paras = find_setup_paras(date)
 #%%
 paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa

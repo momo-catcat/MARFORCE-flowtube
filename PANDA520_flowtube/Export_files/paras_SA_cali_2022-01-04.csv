@@ -17,7 +17,7 @@ sch_name,/Users/jiali/Documents/work/AMT-MION2-Paper/PANDA520-flowtube/PANDA520_
 const_comp,"['SO2', 'O2', 'H2O']"
 Init_comp,"['OH', 'HO2']"
 key_spe_for_plot,H2SO4
-plot_spec,"['OH', 'HSO3', 'HO2', 'SO3', 'H2SO4', 'SO2']"
+plot_spec,"['OH', 'HSO3', 'HO2', 'SO3', 'H2SO4', 'H2O']"
 sampleflow,22.5
 R1,0.78
 L1,10.0
@@ -73,5 +73,5 @@ OHconc,"0     0.000000e+00
 10    2.711264e+08
 11    9.037545e+07
 12    0.000000e+00
-dtype: float64"
+Name: Q1, dtype: float64"
 flag_tube,3
