@@ -86,7 +86,7 @@ def calculate_concs(paras):
             totFlow1 = sumflow
         else:
             totFlow1 = Q1
-        totFlow2 = sampflow*1e3
+        totFlow2 = sampflow * 1e3
         H2Oconc1 = [H2Oflow1[i] / totFlow1[i] * H2O_conc(T[i], 1).SatP[0] / kB / T[i] / 1e6 for i in range(len(T))]
         O2conc1 = [O2flow1[i] * O2ratio / totFlow1[i] * p / kB / T[i] / 1e6 for i in range(len(T))]
         paras['Q1'] = Q1
@@ -96,8 +96,8 @@ def calculate_concs(paras):
             totFlow1 = sumflow
         else:
             totFlow1 = Q
-        H2Oconc1 = [H2Oflow[i] / totFlow1 * H2O_conc(T[i], 1).SatP[0] / kB / T[i] / 1e6 for i in range(len(T))]
-        O2conc1 = [O2flow[i] * O2ratio / totFlow1 * p / kB / T[i] / 1e6 for i in range(len(T))]
+        H2Oconc1 = [H2Oflow[i] / totFlow1[i] * H2O_conc(T[i], 1).SatP[0] / kB / T[i] / 1e6 for i in range(len(T))]
+        O2conc1 = [O2flow[i] * O2ratio / totFlow1[i] * p / kB / T[i] / 1e6 for i in range(len(T))]
         paras['Q1'] = Q
         paras['Q2'] = Q
 
@@ -109,8 +109,8 @@ def calculate_concs(paras):
         SO2conc2 = SO2conc1
         H2Oconc2 = H2Oconc1
     else:
-        O2conc2 = [(O2conc1[i] * totFlow1[i] + O2flow2[i] * O2ratio  * p / kB / T[i] / 1e6) / totFlow2 for i in range(len(T))]
-        H2Oconc2 = [(H2Oflow1[i] * totFlow1[i] + H2Oflow2[i] * H2O_conc(T[i], 1).SatP[0] / kB / T[i] / 1e6)/ totFlow2 for i in range(len(T))]
+        O2conc2 = [(O2conc1[i] * totFlow1[i] + O2flow2[i] * O2ratio  * p / kB / T[i] / 1e6  ) / totFlow2 for i in range(len(T))]
+        H2Oconc2 = [(H2Oconc1[i] * totFlow1[i] + H2Oflow2[i] * H2O_conc(T[i], 1).SatP[0] / kB / T[i] / 1e6)/ totFlow2 for i in range(len(T))]
         #O2conc2 = (O2flow1 + O2flow2) * O2ratio  / totFlow2 * p / kB / T / 1e6
         SO2conc2 = [SO2conc1[i] * totFlow1[i] / totFlow2 for i in range(len(SO2conc1))]####!!!!! The situation when Q2 has SO2 is not considered here
         #H2Oconc2 = (H2Oflow1 + H2Oflow2) /  totFlow2 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
@@ -133,7 +133,7 @@ def calculate_concs(paras):
 
     if flag_tube == '3':
         const_comp_free = ['H2O', 'O2']
-        const_comp_conc_free = [H2Oconc[:, 0], O2conc[:, 0]]
+        const_comp_conc_free = [H2Oconc[:, 1], O2conc[:, 1]]
     else:
         const_comp_free = []
         const_comp_conc_free = [0]

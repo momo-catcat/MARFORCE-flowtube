@@ -35,7 +35,7 @@ def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
     #print(meanConc)
     c = np.zeros([Rgrid, Zgrid, comp_num])
     for i in range(len(comp_namelist)):
-        c[:, 0, i] = meanConc[i] * Q1 /Q2
+        c[:, 0, i] = meanConc[i] * Q1 / Q2
     for i in const_comp:
         c[:, :, comp_namelist.index(i)] = const_comp_conc[1,const_comp.index(i)] # conc should equal to the 2nd tube
 

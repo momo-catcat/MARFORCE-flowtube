@@ -98,7 +98,7 @@ def calculate_concs(paras):
         if outflowLocation in 'after':
             totFlow1 = sumflow
         else:
-            totFlow1 = Q * 1e3
+            totFlow1 = Q
         H2Oconc1 = [H2Oflow[i] / totFlow1[i] * H2O_conc(T[i], 1).SatP[0] / kB / T[i] / 1e6 for i in range(len(T))]
         O2conc1 = [O2flow[i] * O2ratio / totFlow1[i] * p / kB / T[i] / 1e6 for i in range(len(T))]
         paras['Q1'] = Q
@@ -114,8 +114,8 @@ def calculate_concs(paras):
         I2conc1 = I2conc
         I2conc2 = I2conc
     else:
-        O2conc2 = [(O2conc1[i] * totFlow1[i] + O2flow2[i] * O2ratio  * p / kB / T[i] / 1e6)/ totFlow2[i] for i in range(len(T))]
-        H2Oconc2 = [(H2Oflow1[i] * totFlow1[i] + H2Oflow2[i] * H2O_conc(T[i], 1).SatP[0] / kB / T[i] / 1e6)/ totFlow2 for i in range(len(T))]
+        O2conc2 = [(O2conc1[i] * totFlow1[i] + O2flow2[i] * O2ratio  * p / kB / T[i] / 1e6)/ totFlow2 for i in range(len(T))]
+        H2Oconc2 = [(H2Oconc1[i] * totFlow1[i] + H2Oflow2[i] * H2O_conc(T[i], 1).SatP[0] / kB / T[i] / 1e6)/ totFlow2 for i in range(len(T))]
 
     csH2O = 7.22e-20  # cm2
     qyH2O = 1
@@ -135,7 +135,7 @@ def calculate_concs(paras):
 
     if flag_tube == '3':
         const_comp_free = ['H2O', 'O2']
-        const_comp_conc_free = [H2Oconc[:, 0], O2conc[:, 0]]
+        const_comp_conc_free = [H2Oconc[:, 1], O2conc[:, 1]]
     else:
         const_comp_free = []
         const_comp_conc_free = [0]
