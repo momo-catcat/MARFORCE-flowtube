@@ -11,7 +11,7 @@ def find_setup_paras(date):
         setup_paras = dict(sampleflow=np.array(20, dtype=np.float64),  # inlet sample flow of CIMS, lpm
                    R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
                    L1=np.array(41, dtype=np.float64),  # length for the 1st tube
-                   R2=np.array(1.04, dtype=np.float64),  # R for the 2nd tube
+                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
                    L2=np.array(58.5, dtype=np.float64),  # length for the 2nd tube
                    file_name='SA_cali_2021-09-10.csv'  # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
@@ -19,23 +19,23 @@ def find_setup_paras(date):
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
                    R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
                    L1=np.array(50, dtype=np.float64),  # length for the 1st tube
-                   R2=np.array(1.04, dtype=np.float64),  # R for the 2nd tube
+                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
                    L2=np.array(68, dtype=np.float64),  # length for the 2nd tube
                    file_name='SA_cali_2021-10-281.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
-    elif date == 'SA_cali_2021-11-182':
+    elif date == 'SA_cali_2021-11-181':
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
                    R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
                    L1=np.array(50, dtype=np.float64),  # length for the 1st tube
-                   R2=np.array(1.04, dtype=np.float64),  # R for the 2nd tube
+                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
                    L2=np.array(66, dtype=np.float64),  # length for the 2nd tube
-                   file_name='SA_cali_2021-11-182.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                   file_name='SA_cali_2021-11-181.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
     elif date == 'SA_cali_2022-01-04':
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
                            R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
                            L1=np.array(10, dtype=np.float64),  # length for the 1st tube
-                           R2=np.array(1.04, dtype=np.float64),  # R for the 2nd tube
+                           R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
                            L2=np.array(78, dtype=np.float64),  # length for the 2nd tube
                            file_name='SA_cali_2022-01-04.csv'
                            # the file you store all the flow data including N2, O2, SO2 in the folder input files
@@ -51,14 +51,14 @@ def find_setup_paras(date):
         setup_paras = dict(sampleflow=np.array(17.6, dtype=np.float64),  # inlet sample flow of CIMS, lpm
                    R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
                    L1=np.array(10, dtype=np.float64),  # length for the 1st tube
-                   R2=np.array(1.04, dtype=np.float64),  # R for the 2nd tube
+                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
                    L2=np.array(61, dtype=np.float64),  # length for the 2nd tube
                    file_name='SA_cali_2022-02-07.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
     return setup_paras
 
-
-setup_paras = find_setup_paras('SA_cali_2021-11-182')
+date = 'SA_cali_2022-01-04'
+setup_paras = find_setup_paras(date)
 #%%
 paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              T=np.array(298, dtype=np.float64),  # Temperature, K
@@ -73,7 +73,7 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              O2ratio=np.array(0.209, dtype=np.float64),  # O2 ratio in synthetic air
              Zgrid=40,  # number of grids in direction of tube length, usually we use 80
              Rgrid=80,  # number of grids in direction of radius, usually we use 40
-             dt=np.array(1e-5, dtype=np.float64),  # Differential time interval
+             dt=np.array(1e-4, dtype=np.float64),  # Differential time interval
              model_mode='normal',
              # use 'normal' if you don't know what this is for. 'kinetic' mode refers to running the model without chemistry module to test the kinetic core.
              Diff_setname=['OH', 'HO2', 'SO3', 'H2SO4'],
@@ -85,7 +85,7 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              Init_comp=['OH', 'HO2'],
              # Species you think they should have initial concentration in the first frid of tube
              key_spe_for_plot='H2SO4',  # key species as criterion to stop the loop
-             plot_spec=['OH', 'HSO3', 'HO2', 'SO3', 'H2SO4','SO2'],  # species that you want to plot
+             plot_spec=['OH', 'HSO3', 'HO2', 'SO3', 'H2SO4','H2O'],  # species that you want to plot
              #file_name='H2O_5.csv',
 
              )
@@ -130,3 +130,4 @@ from Run_flowtube_simplified import Run_flowtube
 
 ### to run the flowtube, you need input the const
 Run_flowtube(paras, export_file_folder, const_comp_conc, Init_comp_conc, num_stage)
+

@@ -27,7 +27,7 @@ def model_1(R2,  Rgrid, Zgrid,  L2, L1,  numLoop, comp_namelist, key_spe_for_plo
         #print('HO2', "{:.2E}".format(c[5, -1, comp_namelist.index('HO2')]))
 
         # print('H2SO4',c[5, -1, comp_namelist.index('H2SO4')])
-        print('OH',"{:.2E}".format(c[5, -1, comp_namelist.index('OH')]))
+        #print('OH',"{:.2E}".format(c[5, -1, comp_namelist.index('OH')]))
         
         fig, axs = plt.subplots(math.ceil((len(plot_spec)/3)), 3, figsize=(9,5), facecolor='w', edgecolor='k')
         fig.subplots_adjust(hspace=.5, wspace=.35)
@@ -51,7 +51,6 @@ def model_1(R2,  Rgrid, Zgrid,  L2, L1,  numLoop, comp_namelist, key_spe_for_plo
         #fig.delaxes(axs[5])
         plt.gcf().text(0.9, 0.1, 'Time = ' + str(tim), fontsize=15)
         plt.show()
-
         plt.close()
         print(['t = ' + str(tim) + str(key_spe_for_plot) + " difference: " + str(np.sum(new - old))])
 

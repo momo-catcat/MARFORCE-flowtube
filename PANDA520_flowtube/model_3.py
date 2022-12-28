@@ -8,7 +8,7 @@ from odesolve3_Y import odesolve as odesolve_Y
 
 def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_spe_for_plot, dt, timesteps, Diff_vals,
             Rtot, \
-            Q1, Q2, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec, formula, c, dr, dx,model_mode):
+            Q1, Q2, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u, plot_spec, formula, c, dr, dx,model_mode,const_comp_conc):
     # %% first tube run
     dx = L1 / (Zgrid - 1)
     dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
@@ -28,15 +28,16 @@ def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
 
         if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):
             break
-        c1 = c # keep the first part
+        #c1 = c # keep the first part
+
         # %% transfer the flow distribution for next run
     meanConc = meanconc_cal_sim(R1, Rgrid, comp_namelist, c)
     #print(meanConc)
     c = np.zeros([Rgrid, Zgrid, comp_num])
     for i in range(len(comp_namelist)):
-        c[:, 0, i] = meanConc[i] * Q1 /Q2
+        c[:, 0, i] = meanConc[i] * Q1 / Q2
     for i in const_comp:
-        c[:, :, comp_namelist.index(i)] = meanConc[comp_namelist.index(i)]
+        c[:, :, comp_namelist.index(i)] = const_comp_conc[1,const_comp.index(i)] # conc should equal to the 2nd tube
 
         # c[int(Rgrid / 2):, 0, :] = np.zeros([int(Rgrid / 2), comp_num])
         # for i in const_comp_free:
@@ -89,5 +90,5 @@ def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
 
         if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):
             break
-        c2 = c
-    return c1, c2
+        #c2 = c
+    return c
