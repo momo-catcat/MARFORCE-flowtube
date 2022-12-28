@@ -40,7 +40,10 @@ def calculate_concs(paras):
         I2conc = data['I2conc']
         I2flow = data['I2flow']
         H2Oflow = data['H2Oflow']
+        idx = H2Oflow < 1000
         Q = data['Q']
+        if all(Q!= sampflow*1e3):
+            print('WARNING: Q is not equal to sample flow')
         sumflow = O2flow + I2flow + H2Oflow + N2flow
         It = Itx * Qx / Q * 1e3
         if 'L2' in paras.keys():
@@ -60,7 +63,10 @@ def calculate_concs(paras):
         I2conc2 = data['I2conc2']
         Q1 = data['Q1']
         Q2 = data['Q2']
-        sumflow1 = O2flow1 +  H2Oflow1 + N2flow1
+        idx = H2Oflow1 < 1000
+        if all(Q2 != sampflow*1e3):
+            print('WARNING: Q2 is not equal to sample flow')
+        sumflow = O2flow1 +  H2Oflow1 + N2flow1
         It = Itx * Qx / Q1 *1e3
         flag_tube = '3'
 #%%
@@ -71,21 +77,30 @@ def calculate_concs(paras):
         H2Oconc_1 = data['H2Oconc1']
         H2Oconc_2 = data['H2Oconc2']
 
+    if all(x in inputs for x in ['T']):
+        T = data['T']
+    else:
+        T = np.ones(len(data)) * T
+
     kB = 1.3806488e-23  # boltzmann constant
 
-    if outflowLocation in 'after':
-        totFlow1 = sumflow
-    elif flag_tube in ['3']:
-        totFlow1 = Q1
+    if flag_tube in ['3','4']:
+        if outflowLocation in 'after':
+            totFlow1 = sumflow
+        else:
+            totFlow1 = Q1
         totFlow2 = sampflow *1e3
-        H2Oconc1 = H2Oflow1  / totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
-        O2conc1 = O2flow1 * O2ratio  / totFlow1 * p / kB / T / 1e6
+        H2Oconc1 = [H2Oflow1[i] / totFlow1[i] * H2O_conc(T[i], 1).SatP[0] / kB / T[i] /1e6 for i in range(len(T))]
+        O2conc1 = [O2flow1[i] * O2ratio  / totFlow1[i] * p / kB / T[i] / 1e6 for i in range(len(T))]
         paras['Q1'] = Q1
         paras['Q2'] = Q2
     else:
-        totFlow1 = sampflow * 1e3
-        H2Oconc1 = H2Oflow/ totFlow1 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
-        O2conc1 = O2flow * O2ratio / totFlow1 * p / kB / T / 1e6
+        if outflowLocation in 'after':
+            totFlow1 = sumflow
+        else:
+            totFlow1 = Q * 1e3
+        H2Oconc1 = [H2Oflow[i] / totFlow1[i] * H2O_conc(T[i], 1).SatP[0] / kB / T[i] / 1e6 for i in range(len(T))]
+        O2conc1 = [O2flow[i] * O2ratio / totFlow1[i] * p / kB / T[i] / 1e6 for i in range(len(T))]
         paras['Q1'] = Q
         paras['Q2'] = Q
 
@@ -99,8 +114,8 @@ def calculate_concs(paras):
         I2conc1 = I2conc
         I2conc2 = I2conc
     else:
-        O2conc2 = (O2flow1 + O2flow2) * O2ratio  / totFlow2 * p / kB / T / 1e6
-        H2Oconc2 = (H2Oflow1 + H2Oflow2)  / totFlow2 * H2O_conc(T, 1).SatP[0] / kB / T / 1e6
+        O2conc2 = [(O2conc1[i] * totFlow1[i] + O2flow2[i] * O2ratio  * p / kB / T[i] / 1e6)/ totFlow2[i] for i in range(len(T))]
+        H2Oconc2 = [(H2Oflow1[i] * totFlow1[i] + H2Oflow2[i] * H2O_conc(T[i], 1).SatP[0] / kB / T[i] / 1e6)/ totFlow2 for i in range(len(T))]
 
     csH2O = 7.22e-20  # cm2
     qyH2O = 1
@@ -110,13 +125,13 @@ def calculate_concs(paras):
     #%%
     if 'H2Oconc_1' in locals():
         H2Oconc = np.transpose([H2Oconc_1, H2Oconc_2])
-        OHconc = It * csH2O * qyH2O * H2Oconc_1
+        #OHconc = It * csH2O * qyH2O * H2Oconc_1
     elif 'H2O_concentration ' in locals():
         H2Oconc = np.transpose([H2O_concentration , H2O_concentration])
-        OHconc = It * csH2O * qyH2O * H2O_concentration
+        #OHconc = It * csH2O * qyH2O * H2O_concentration
     else:
         H2Oconc = np.transpose([H2Oconc1, H2Oconc2])
-        OHconc = It * csH2O * qyH2O * H2Oconc1
+        #OHconc = It * csH2O * qyH2O * H2Oconc1
 
     if flag_tube == '3':
         const_comp_free = ['H2O', 'O2']
@@ -124,6 +139,9 @@ def calculate_concs(paras):
     else:
         const_comp_free = []
         const_comp_conc_free = [0]
+
+    H2Oconc[idx] = np.transpose([np.array(H2Oconc1)[idx], np.array(H2Oconc2)[idx]])
+    OHconc = It * csH2O * qyH2O * H2Oconc[:,0]
 
     paras['const_comp_free'] = const_comp_free
     paras['const_comp_conc_free'] = const_comp_conc_free
@@ -136,7 +154,6 @@ def calculate_concs(paras):
     #else:
     #    paras['N2flow1'] = N2flow1
     #    paras['N2flow2'] = N2flow2
-    print('Q1',paras['Q1'])
-    print('Q2',paras['Q1'])
+
     # %%
     return O2conc, I2conc, H2Oconc, paras, export_file_folder

@@ -11,7 +11,7 @@ def find_setup_paras(date):
         setup_paras = dict(sampleflow=np.array(20, dtype=np.float64),  # inlet sample flow of CIMS, lpm
                    R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
                    L1=np.array(41, dtype=np.float64),  # length for the 1st tube
-                   R2=np.array(1.04, dtype=np.float64),  # R for the 2nd tube
+                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
                    L2=np.array(58.5, dtype=np.float64),  # length for the 2nd tube
                    file_name='SA_cali_2021-09-10.csv'  # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
@@ -19,7 +19,7 @@ def find_setup_paras(date):
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
                    R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
                    L1=np.array(50, dtype=np.float64),  # length for the 1st tube
-                   R2=np.array(1.04, dtype=np.float64),  # R for the 2nd tube
+                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
                    L2=np.array(68, dtype=np.float64),  # length for the 2nd tube
                    file_name='SA_cali_2021-10-281.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
@@ -27,7 +27,7 @@ def find_setup_paras(date):
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
                    R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
                    L1=np.array(50, dtype=np.float64),  # length for the 1st tube
-                   R2=np.array(1.04, dtype=np.float64),  # R for the 2nd tube
+                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
                    L2=np.array(66, dtype=np.float64),  # length for the 2nd tube
                    file_name='SA_cali_2021-11-181.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
@@ -35,7 +35,7 @@ def find_setup_paras(date):
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
                            R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
                            L1=np.array(10, dtype=np.float64),  # length for the 1st tube
-                           R2=np.array(1.04, dtype=np.float64),  # R for the 2nd tube
+                           R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
                            L2=np.array(78, dtype=np.float64),  # length for the 2nd tube
                            file_name='SA_cali_2022-01-04.csv'
                            # the file you store all the flow data including N2, O2, SO2 in the folder input files
@@ -51,7 +51,7 @@ def find_setup_paras(date):
         setup_paras = dict(sampleflow=np.array(17.6, dtype=np.float64),  # inlet sample flow of CIMS, lpm
                    R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
                    L1=np.array(10, dtype=np.float64),  # length for the 1st tube
-                   R2=np.array(1.04, dtype=np.float64),  # R for the 2nd tube
+                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
                    L2=np.array(61, dtype=np.float64),  # length for the 2nd tube
                    file_name='SA_cali_2022-02-07.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
@@ -122,13 +122,6 @@ const_comp_conc = np.transpose([SO2conc, O2conc, H2Oconc])
 ## in other case, this number need to be added by user
 num_stage = paras['OHconc']
 
-import csv
-
-with open(export_file_folder +'paras_'+date+'.csv', 'w') as csv_file:
-    writer = csv.writer(csv_file)
-    writer.writerow(['items','Data'])
-    for key, value in paras.items():
-       writer.writerow([key, value])
 
 # %%
 ##--------/* Run flowtube model */--------
