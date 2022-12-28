@@ -19,7 +19,7 @@ if date == '13Sep21':
                  L1=np.array(41, dtype=np.float64),  # length for the 1st tube
                  R2=np.array(1.04, dtype=np.float64),  # ID for the 1st tube
                  L2=np.array(58.5, dtype=np.float64),  # length for the 1st tube
-                 Itx=5.42e10,  # add it product at the Qx, if you don't have it then you need to calculate it
+                 Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
                  Qx=20,  # Qx where it product was calcuated
                  outflowLocation='before',  # outflow tube located 'before' or 'after' injecting air, water, and so2
                  fullOrSimpleModel='full',  # 'simple': Gormley & Kennedy approximation, 'full': flow model (much slower)

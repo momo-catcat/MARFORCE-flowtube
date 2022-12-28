@@ -52,7 +52,7 @@ It = It_N2O * (N2_flow + N2O_flow) / flow_inlet
 
 N2O_conc = 96060. / 1.38e-23 / (Temp + 273.15) / 1e6 * mixing_N2O
 m = len(mixing_N2O)
-R = 0.94  #0.94  # cm
+R = 0.78  #0.94  # cm
 # %%
 # for k in range(m):
 #    funcart = @(x,y) np.exp(-sigma_N2O*N2O_conc(k)*(np.sqrt(R**2-y**2)+x))
