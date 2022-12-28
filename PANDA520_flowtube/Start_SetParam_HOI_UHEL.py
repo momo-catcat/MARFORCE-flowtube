@@ -17,7 +17,7 @@ if date == '13Sep21':
                  T=np.array(298, dtype=np.float64),  # Temperature, K
                  R1=np.array(0.78, dtype=np.float64),  # ID for the 1st tube
                  L1=np.array(41, dtype=np.float64),  # length for the 1st tube
-                 R2=np.array(1.04, dtype=np.float64),  # ID for the 1st tube
+                 R2=np.array(1.2, dtype=np.float64),  # ID for the 1st tube
                  L2=np.array(58.5, dtype=np.float64),  # length for the 1st tube
                  Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
                  Qx=20,  # Qx where it product was calcuated
@@ -48,7 +48,7 @@ elif date == '25Oct21':
                  T=np.array(298, dtype=np.float64),  # Temperature, K
                  R1=np.array(0.78, dtype=np.float64),  # ID for the 1st tube
                  L1=np.array(50, dtype=np.float64),  # length for the 1st tube
-                 R2=np.array(1.04, dtype=np.float64),  # ID for the 1st tube
+                 R2=np.array(1.2, dtype=np.float64),  # ID for the 1st tube
                  L2=np.array(68, dtype=np.float64),  # length for the 1st tube
                  Itx=5.42e10,  # add it product at the Qx, if you don't have it then you need to calculate it
                  Qx=20,  # Qx where it product was calcuated
@@ -80,7 +80,7 @@ elif date == '20Nov21':
                  T=np.array(298, dtype=np.float64),  # Temperature, K
                  R1=np.array(0.78, dtype=np.float64),  # ID for the 1st tube
                  L1=np.array(50, dtype=np.float64),  # length for the 1st tube
-                 R2=np.array(1.04, dtype=np.float64),  # ID for the 1st tube
+                 R2=np.array(1.2, dtype=np.float64),  # ID for the 1st tube
                  L2=np.array(66, dtype=np.float64),  # length for the 1st tube
                  Itx=5.42e10,  # add it product at the Qx, if you don't have it then you need to calculate it
                  Qx=20,  # Qx where it product was calcuated
