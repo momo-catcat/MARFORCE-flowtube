@@ -7,10 +7,11 @@ set parameters
 
 ## 13Sep21. HOI calibration with straight line
 ## 25Oct21. HOI calibration with Y piece at tower 1
+## 20Nov21. HOI calibration with Y piece at tower 2
 
-date = '13Sep21'
-#date = '25Oct21'
-# date = '20Nov21'
+# date = '13Sep21'
+# date = '25Oct21'
+date = '20Nov21'
 
 if date == '13Sep21':
     paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
