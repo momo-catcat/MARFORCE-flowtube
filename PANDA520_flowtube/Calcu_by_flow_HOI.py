@@ -40,7 +40,7 @@ def calculate_concs(paras):
         I2conc = data['I2conc']
         I2flow = data['I2flow']
         H2Oflow = data['H2Oflow']
-        idx = H2Oflow < 1000
+        #idx = H2Oflow < 1000
         Q = data['Q']
         if all(Q!= sampflow*1e3):
             print('WARNING: Q is not equal to sample flow')
@@ -63,7 +63,7 @@ def calculate_concs(paras):
         I2conc2 = data['I2conc2']
         Q1 = data['Q1']
         Q2 = data['Q2']
-        idx = H2Oflow1 < 1000
+        #idx = H2Oflow1 < 1000
         if all(Q2 != sampflow*1e3):
             print('WARNING: Q2 is not equal to sample flow')
         sumflow = O2flow1 +  H2Oflow1 + N2flow1
@@ -140,7 +140,7 @@ def calculate_concs(paras):
         const_comp_free = []
         const_comp_conc_free = [0]
 
-    H2Oconc[idx] = np.transpose([np.array(H2Oconc1)[idx], np.array(H2Oconc2)[idx]])
+    #H2Oconc[idx] = np.transpose([np.array(H2Oconc1)[idx], np.array(H2Oconc2)[idx]])
     OHconc = It * csH2O * qyH2O * H2Oconc[:,0]
 
     paras['const_comp_free'] = const_comp_free
