@@ -7,21 +7,55 @@ from Calcu_by_flow_SA import calculate_concs
 set parameters
 '''''''''
 def find_setup_paras(date):
-    if date == 'SA_cali_2021-09-10':
+    if date == 'SA_cali_2021-09-10_0.75':
         setup_paras = dict(sampleflow=np.array(20, dtype=np.float64),  # inlet sample flow of CIMS, lpm
                    R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
                    L1=np.array(41, dtype=np.float64),  # length for the 1st tube
                    R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
                    L2=np.array(58.5, dtype=np.float64),  # length for the 2nd tube
-                   file_name='SA_cali_2021-09-10.csv'  # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                   file_name='SA_cali_2021-09-10_0.75.csv'  # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
-    elif date == 'SA_cali_2021-10-282':
+    elif date == 'water-effect-SA-H2Oflow2-constant-2021-10-28':
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
                    R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
                    L1=np.array(50, dtype=np.float64),  # length for the 1st tube
                    R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
                    L2=np.array(68, dtype=np.float64),  # length for the 2nd tube
-                   file_name='SA_cali_2021-10-282.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                   file_name='water-effect-SA-H2Oflow2-constant-2021-10-28.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                   )
+    elif date == 'water-effect-SA-2021-10-28':
+        setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
+                   R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                   L1=np.array(50, dtype=np.float64),  # length for the 1st tube
+                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
+                   L2=np.array(68, dtype=np.float64),  # length for the 2nd tube
+                   file_name='water-effect-SA-2021-10-28.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                   )
+    elif date == 'SA_cali_2021-10-281':
+        setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
+                           R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                           L1=np.array(50, dtype=np.float64),  # length for the 1st tube
+                           R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
+                           L2=np.array(68, dtype=np.float64),  # length for the 2nd tube
+                           file_name='SA_cali_2021-10-281.csv'
+                           # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                           )
+    elif date == 'SA_cali_2021-10-282':
+        setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
+                           R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                           L1=np.array(50, dtype=np.float64),  # length for the 1st tube
+                           R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
+                           L2=np.array(68, dtype=np.float64),  # length for the 2nd tube
+                           file_name='SA_cali_2021-10-282.csv'
+                           # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                           )
+    elif date == 'SA_cali_2021-11-18':
+        setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
+                   R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                   L1=np.array(50, dtype=np.float64),  # length for the 1st tube
+                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
+                   L2=np.array(66, dtype=np.float64),  # length for the 2nd tube
+                   file_name='SA_cali_2021-11-18.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
     elif date == 'SA_cali_2021-11-182':
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
@@ -57,8 +91,9 @@ def find_setup_paras(date):
                    )
     return setup_paras
 
-date = 'SA_cali_2021-11-182'
-setup_paras = find_setup_paras(date)
+date = ['SA_cali_2021-10-281','SA_cali_2021-10-282','SA_cali_2021-11-18','SA_cali_2021-11-182','SA_cali_2022-01-04','SA_cali_2022-02-07']
+#date =['water-effect-SA-2021-10-28','water-effect-SA-H2Oflow2-constant-2021-10-28','water-effect-SA-2021-11-18','water-effect-SA-H2Oflow2-constant-2021-11-18']
+setup_paras = find_setup_paras(date[4])
 #%%
 paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              T=np.array(298, dtype=np.float64),  # Temperature, K
@@ -73,7 +108,7 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              O2ratio=np.array(0.209, dtype=np.float64),  # O2 ratio in synthetic air
              Zgrid=40,  # number of grids in direction of tube length, usually we use 80
              Rgrid=80,  # number of grids in direction of radius, usually we use 40
-             dt=np.array(1e-5, dtype=np.float64),  # Differential time interval
+             dt=np.array(1e-4, dtype=np.float64),  # Differential time interval
              model_mode='normal',
              # use 'normal' if you don't know what this is for. 'kinetic' mode refers to running the model without chemistry module to test the kinetic core.
              Diff_setname=['OH', 'HO2', 'SO3', 'H2SO4'],
@@ -87,7 +122,6 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              key_spe_for_plot='H2SO4',  # key species as criterion to stop the loop
              plot_spec=['OH', 'HSO3', 'HO2', 'SO3', 'H2SO4','H2O'],  # species that you want to plot
              #file_name='H2O_5.csv',
-
              )
 
 paras = paras | setup_paras

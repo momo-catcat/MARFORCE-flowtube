@@ -8,9 +8,9 @@ set parameters
 ## 13Sep21. HOI calibration with straight line
 ## 25Oct21. HOI calibration with Y piece at tower 1
 
-date = '13Sep21'
-#date = '25Oct21'
-# date = '20Nov21'
+#date= '13Sep21'
+date = '25Oct21'
+#date = '20Nov21'
 
 if date == '13Sep21':
     paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
@@ -50,7 +50,7 @@ elif date == '25Oct21':
                  L1=np.array(50, dtype=np.float64),  # length for the 1st tube
                  R2=np.array(1.2, dtype=np.float64),  # ID for the 1st tube
                  L2=np.array(68, dtype=np.float64),  # length for the 1st tube
-                 Itx=5.42e10,  # add it product at the Qx, if you don't have it then you need to calculate it
+                 Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
                  Qx=20,  # Qx where it product was calcuated
                  outflowLocation='before',  # outflow tube located 'before' or 'after' injecting air, water, and so2
                  fullOrSimpleModel='full',  # 'simple': Gormley & Kennedy approximation, 'full': flow model (much slower)
@@ -82,7 +82,7 @@ elif date == '20Nov21':
                  L1=np.array(50, dtype=np.float64),  # length for the 1st tube
                  R2=np.array(1.2, dtype=np.float64),  # ID for the 1st tube
                  L2=np.array(66, dtype=np.float64),  # length for the 1st tube
-                 Itx=5.42e10,  # add it product at the Qx, if you don't have it then you need to calculate it
+                 Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
                  Qx=20,  # Qx where it product was calcuated
                  outflowLocation='before',  # outflow tube located 'before' or 'after' injecting air, water, and so2
                  fullOrSimpleModel='full',  # 'simple': Gormley & Kennedy approximation, 'full': flow model (much slower)
