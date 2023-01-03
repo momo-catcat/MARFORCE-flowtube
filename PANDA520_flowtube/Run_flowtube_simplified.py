@@ -28,9 +28,9 @@ def Run_flowtube(paras, export_file_folder, const_comp_conc, Init_comp_conc, num
             c.append(c1)
 
     meanconc_s = pd.DataFrame(meanconc, columns=paras['plot_spec'])
-    meanconc_s.to_csv(export_file_folder + str(paras['file_name'][:-4]) + '.csv')
+    meanconc_s.to_csv(export_file_folder + str(paras['file_name'][:-4]) + '_output.csv')
 
-    with open(export_file_folder + str(paras['file_name'][:-4]) + '.txt', 'w') as f:
+    with open(export_file_folder + str(paras['file_name'][:-4]) + '_output.txt', 'w') as f:
         # using csv.writer method from CSV package
         write = csv.writer(f)
         write.writerows(c)
