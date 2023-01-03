@@ -36,8 +36,8 @@ def conc_profile_Alonso(R, r, MM, rho, L, Q, P = 101000, T = 298.15):
     return(conc_prof)
 
 
-R = 0.005
-conc_prof = conc_profile_Alonso(R, np.linspace(0, R, 100), 97, 1830, 2, 8.5  / 60 / 1000)
+R = 0.0078
+conc_prof = conc_profile_Alonso(R, np.linspace(0, R, 100), 97, 1830, 2, 10  / 60 / 1000)
 ## import theoretical value
 import pandas as pd
 prof_conc_theory = pd.read_csv('../Export_files/Theoretical_model.csv')
