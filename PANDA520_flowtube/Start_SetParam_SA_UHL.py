@@ -89,27 +89,72 @@ def find_setup_paras(date):
                    L2=np.array(61, dtype=np.float64),  # length for the 2nd tube
                    file_name='SA_cali_2022-02-07.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
+    elif date == 'SA_cali_2022-09-16':
+        setup_paras = dict(sampleflow=np.array(21.8, dtype=np.float64),  # inlet sample flow of CIMS, lpm
+                   R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                   L1=np.array(13, dtype=np.float64),  # length for the 1st tube
+                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
+                   L2=np.array(61, dtype=np.float64),  # length for the 2nd tube
+                   file_name='SA_cali_16Sep22_APi9_Br_calibrator1.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                   )
+    elif date == 'SA_cali_2022-11-04_Br':
+        setup_paras = dict(sampleflow=np.array(21.8, dtype=np.float64),  # inlet sample flow of CIMS, lpm
+                   R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                   L1=np.array(13, dtype=np.float64),  # length for the 1st tube
+                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
+                   L2=np.array(61, dtype=np.float64),  # length for the 2nd tube
+                   file_name='SA_cali_04Nov22_APi9_Br_calibrator1.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                   )
+    # dt=1e-4 would be too large for UFRA LTOF because of the small total flow (use dt=5e-5 instead)
+    elif date == 'SA_cali_2022-11-03_LTOF_UHL_attenuator':
+        setup_paras = dict(sampleflow=np.array(8.8, dtype=np.float64),  # inlet sample flow of CIMS, lpm
+                   R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                   L1=np.array(10.5, dtype=np.float64),  # length for the 1st tube
+                   R2=np.array(0.5, dtype=np.float64),  # R for the 2nd tube
+                   L2=np.array(30, dtype=np.float64),  # length for the 2nd tube
+                   file_name='SA_cali_03Nov22_LTOF_calibrator1_UHLattenuator.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                   )
+    elif date == 'SA_cali_2022-11-03_LTOF_ORIGINAL_attenuator':
+        setup_paras = dict(sampleflow=np.array(8.8, dtype=np.float64),  # inlet sample flow of CIMS, lpm
+                   R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                   L1=np.array(10.5, dtype=np.float64),  # length for the 1st tube
+                   R2=np.array(0.5, dtype=np.float64),  # R for the 2nd tube
+                   L2=np.array(30, dtype=np.float64),  # length for the 2nd tube
+                   file_name='SA_cali_03Nov22_LTOF_calibrator1_ORIGNALattenuator.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                   )
+    elif date == 'SA_kinetic_limit_simulation':
+        setup_paras = dict(sampleflow=np.array(10, dtype=np.float64),  # inlet sample flow of CIMS, lpm
+                   R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                   L1=np.array(200, dtype=np.float64),  # length for the 1st tube
+                   file_name='Theoretical_model.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                   )
     return setup_paras
 
-date = ['SA_cali_2021-10-281','SA_cali_2021-10-282','SA_cali_2021-11-18','SA_cali_2021-11-182','SA_cali_2022-01-04','SA_cali_2022-02-07']
+
+#date = ['SA_cali_2021-10-281','SA_cali_2021-10-282','SA_cali_2021-11-18','SA_cali_2021-11-182','SA_cali_2022-01-04','SA_cali_2022-02-07']
 #date =['water-effect-SA-2021-10-28','water-effect-SA-H2Oflow2-constant-2021-10-28','water-effect-SA-2021-11-18','water-effect-SA-H2Oflow2-constant-2021-11-18']
-setup_paras = find_setup_paras(date[4])
+#setup_paras = find_setup_paras(date[4])
+
+date = 'SA_kinetic_limit_simulation'
+setup_paras = find_setup_paras(date)
+
 #%%
 paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              T=np.array(298, dtype=np.float64),  # Temperature, K
              #R1=np.array(0.78, dtype=np.float64),  # ID for the 1st tube
              #L1=np.array(26, dtype=np.float64),  # length for the 1st tube
              Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
+             #Itx=8.28e10,  # add it product at the Qx, if you don't have it then you need to calculate it
              Qx=20,  # Qx the it product was calculated
              outflowLocation='before',  # outflow tube located 'before' or 'after' injecting air, water, and so2
              fullOrSimpleModel='full',  # 'simple': Gormley & Kennedy approximation, 'full': flow model (much slower)
              #sampleflow=np.array(10.6, dtype=np.float64),  # inlet sample flow of CIMS, lpm
-             SO2ratio=np.array(5000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppb
+             SO2ratio=np.array(1000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppm
              O2ratio=np.array(0.209, dtype=np.float64),  # O2 ratio in synthetic air
              Zgrid=40,  # number of grids in direction of tube length, usually we use 80
              Rgrid=80,  # number of grids in direction of radius, usually we use 40
              dt=np.array(1e-4, dtype=np.float64),  # Differential time interval
-             model_mode='normal',
+             model_mode='kinetic',
              # use 'normal' if you don't know what this is for. 'kinetic' mode refers to running the model without chemistry module to test the kinetic core.
              Diff_setname=['OH', 'HO2', 'SO3', 'H2SO4'],
              # diffusion for the species that you want to define by yourself, otherwise it will be calculated automatically based on the elements it contains
@@ -124,7 +169,7 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              #file_name='H2O_5.csv',
              )
 
-paras = paras | setup_paras
+paras = {**paras , **setup_paras}
 #%%
 
 '''''''''
@@ -154,7 +199,7 @@ const_comp_conc = np.transpose([SO2conc, O2conc, H2Oconc])
 
 ## in this case, the number of stages refer to OHconc since we want to check the stage without light on
 ## in other case, this number need to be added by user
-num_stage = paras['OHconc']
+num_stage = 1
 
 
 # %%

@@ -11,7 +11,13 @@ def Run_flowtube(paras, export_file_folder, const_comp_conc, Init_comp_conc, num
     #%%
     meanconc = []
     c = []
-    if len(num_stage) > 1:  # case for SA calibration
+    if isinstance(num_stage, int):
+        for j in range(num_stage):
+            meanConc1, c1 = cmd_calib5(const_comp_conc[:, j, :], paras, Init_comp_conc[j], paras['Q1'][j],
+                                       paras['Q2'][j])
+            meanconc.append(meanConc1)
+            c.append(c1)
+    else: # SA calibraiton case
         for j in range(len(num_stage)):
             if num_stage[j] > 0:
                 print(j)
@@ -19,18 +25,12 @@ def Run_flowtube(paras, export_file_folder, const_comp_conc, Init_comp_conc, num
                 #plt.close()
                 meanconc.append(meanConc1)
                 c.append(c1)
-    #%%
-    else:  ## general cases
-        for j in range(num_stage):
 
-            meanConc1, c1 = cmd_calib5(const_comp_conc[:, j, :], paras, Init_comp_conc[j], paras['Q1'][j], paras['Q2'][j])
-            meanconc.append(meanConc1)
-            c.append(c1)
 
     meanconc_s = pd.DataFrame(meanconc, columns=paras['plot_spec'])
-    meanconc_s.to_csv(export_file_folder + str(paras['file_name'][:-4]) + '.csv')
+    meanconc_s.to_csv(export_file_folder + str(paras['file_name'][:-4]) + '_output.csv')
 
-    with open(export_file_folder + str(paras['file_name'][:-4]) + '.txt', 'w') as f:
+    with open(export_file_folder + str(paras['file_name'][:-4]) + '_output.txt', 'w') as f:
         # using csv.writer method from CSV package
         write = csv.writer(f)
         write.writerows(c)

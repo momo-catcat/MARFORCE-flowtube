@@ -57,6 +57,9 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
 
     RO2_indi = RO2_indices.RO2_indices(comp_namelist, RO2_names)
     # get the diffusion for all species and  the index of species in C except constant compounds
+    print('comp',comp_namelist)
+    print('Diff_set',Diff_set)
+    print('Diff_setname', Diff_setname)
     u, Diff_vals = get_diff_and_u_for_more_species(comp_namelist, Diff_setname, con_C_indx, Diff_set, T, p)
 
     numLoop = 500  # number of times to run to reach the pinhole of the instrument

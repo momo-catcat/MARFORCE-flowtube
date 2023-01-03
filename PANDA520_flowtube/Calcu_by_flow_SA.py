@@ -8,8 +8,8 @@ from Vapour_calc import H2O_conc
 #%%
 def calculate_concs(paras):
     # %%
-    #dirpath = os.path.dirname(__file__)  # get the current path of this file
-    dirpath = '/Users/jiali/Documents/work/AMT-MION2-Paper/PANDA520-flowtube/PANDA520_flowtube' # for test
+    dirpath = os.path.dirname(__file__)  # get the current path of this file
+    # dirpath = '/Users/jiali/Documents/work/AMT-MION2-Paper/PANDA520-flowtube/PANDA520_flowtube' # for test
     folder_flowtube = dirpath + '/'
     sys.path.append(folder_flowtube)
     ## Input file folder
