@@ -2,7 +2,12 @@ KMT06 = 1 + (1.40D-21*EXP(2200/TEMP)*H2O);
 
 #EQUATIONS
 
-{2.} I2 + OH = HOI + I : 1.8D-10 ;  #Saiz-Lopez 2014
-{6.} OH + OH = H2O2 : 2 * 6.9D-31 * (TEMP / 300) ** -0.8 * p / 1.3806488D-23 / TEMP / 1D6 ;
-{8.} OH + HO2 = H2O + O2  : 4.8D-11 * EXP(250 / TEMP) ;
 
+{1.} I2 + OH = HOI + I : 2.1D-10 ;  # Tham 2020 at 298K
+{2.} O3 + I = IO + O2 : 1.3D-12;
+{3.} HO2 + IO = HOI + O2 : 8.4D-11 ;
+{4.} HOI + OH = IO + H2O  : 5D-12  ;
+
+#{2.} I2 + OH = HOI + I : 1.8D-10 ;  #Saiz-Lopez 2014
+#{6.} OH + OH = H2O2 : 2 * 6.9D-31 * (TEMP / 300) ** -0.8 * p / 1.3806488D-23 / TEMP / 1D6 ;
+#{8.} OH + HO2 = H2O + O2  : 4.8D-11 * EXP(250 / TEMP) ;

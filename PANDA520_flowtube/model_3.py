@@ -82,7 +82,7 @@ def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
 
         #fig.delaxes(axs[5])
         plt.gcf().text(0.7, 0.3, 'Time = ' + str(tim), fontsize=15)
-        plt.show()
+        plt.draw()
         #plt.pause(1)
         plt.close()
 

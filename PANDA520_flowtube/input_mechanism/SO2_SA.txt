@@ -96,11 +96,11 @@ CALL mcm_constants(time, temp, M, N2, O2, RO2, H2O)
 {above lines go into the SUBROUTINES UPDATE_RCONST and UPDATE_PHOTO}
 #EQUATIONS
 
-{1.} OH + SO2 = HSO3 : 1.32D-12 * (TEMP / 300) ** -0.7;
-{2.} OH + HO2 = H2O + O2  : 4.8D-11*EXP(250/TEMP) ;
-{2.} HO2 + HO2 = H2O2  : 2.20D-13*KMT06*EXP(600/TEMP)+1.90D-33*M*KMT06*EXP(980/TEMP);
-{4.} OH + OH = H2O2 : 6.9D-31 * (TEMP / 300) ** -0.8 * p / 1.3806488D-23 / TEMP / 1D6;
-{2.} OH + OH  = H2O  : 6.2D-14 * (TEMP / 298)**2.6 * EXP(945/TEMP);
-{6.} HSO3 + O2 = HO2 + SO3 : 1.3D-12*EXP(-330/TEMP);
-{7.} SO3 + 2H2O = H2SO4 :  3.9D-41 * EXP(6830.6 / TEMP);
+{1.} OH + SO2 = HSO3 : 1.32D-12 * (TEMP / 300) ** -0.7; # Wine et al.,1984
+{2.} OH + HO2 = H2O + O2  : 4.8D-11*EXP(250/TEMP) ; # IUPAC https://iupac-aeris.ipsl.fr/htdocs/datasheets/pdf/HOx11_HO_HO2.pdf
+{2.} HO2 + HO2 = H2O2  : 2.20D-13*KMT06*EXP(600/TEMP)+1.90D-33*M*KMT06*EXP(980/TEMP); # IUPAC https://iupac-aeris.ipsl.fr/htdocs/datasheets/pdf/HOx14_2HO2_(M).pdf
+{4.} OH + OH = H2O2 : 6.9D-31 * (TEMP / 300) ** -0.8 * p / 1.3806488D-23 / TEMP / 1D6; # Zellner et al., 1988
+{2.} OH + OH  = H2O + O : 6.2D-14 * (TEMP / 298)**2.6 * EXP(945/TEMP); # IUPAC https://iupac-aeris.ipsl.fr/htdocs/datasheets/pdf/HOx9_2HO.pdf
+{6.} HSO3 + O2 = HO2 + SO3 : 1.3D-12*EXP(-330/TEMP); # IUPAC https://iupac-aeris.ipsl.fr/htdocs/datasheets/pdf/SOx16_HOSO2_O2.pdf
+{7.} SO3 + 2H2O = H2SO4 :  3.9D-41 * EXP(6830.6 / TEMP); # IUPAC https://iupac-aeris.ipsl.fr/htdocs/datasheets/pdf/SOx47_SO3_H2O.pdf
 

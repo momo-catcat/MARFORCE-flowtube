@@ -7,10 +7,12 @@ set parameters
 
 ## 13Sep21. HOI calibration with straight line
 ## 25Oct21. HOI calibration with Y piece at tower 1
+## 20Nov21. HOI calibration with Y piece at tower 2
 
-#date= '13Sep21'
-date = '25Oct21'
+date= '13Sep21'
+#date = '25Oct21'
 #date = '20Nov21'
+
 
 if date == '13Sep21':
     paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
@@ -30,17 +32,17 @@ if date == '13Sep21':
                  dt=np.array(1e-4, dtype=np.float64),  # Differential time interval
                  model_mode='normal',
                  # use 'normal' if you don't know what this is for. 'kinetic' mode refers to running the model without chemistry module to test the kinetic core.
-                 Diff_setname=['OH', 'HO2'],
+                 Diff_setname=['OH', 'HO2','HOI','I2'],
                  # diffusion for the species that you want to define by yourself, otherwise it will be calculated automatically based on the elements it contains
-                 Diff_set=[0.215, 0.141],  # add the value according to the Diff_setname
-                 sch_name='HOI_cali_chem.txt',  # chemical scheme file name store in the input_mechanism folder
+                 Diff_set=[0.215, 0.141, 0.122, 0.070],  # add the value according to the Diff_setname
+                 sch_name='HOI_cali_chem_simp.txt',  # chemical scheme file name store in the input_mechanism folder
                  const_comp=['I2', 'O2', 'H2O'],
                  # Species you think they should have constant concentrations in the whole tube
                  Init_comp=['OH', 'HO2'],
                  # Species you think they should have initial concentration in the first frid of tube
                  key_spe_for_plot='HOI',  # key species as criterion to stop the loop
                  plot_spec=['OH', 'HOI', 'HO2', 'I', 'I2'],  # species that you want to plot
-                 file_name='HOI_cali_T1_13Sep21.csv',
+                 file_name='HOI_cali_T1_13Sep21_simp.csv',
                  # the file you store all the flow data including N2, O2, SO2 in the folder input files
                  )
 elif date == '25Oct21':
@@ -61,9 +63,9 @@ elif date == '25Oct21':
                  dt=np.array(1e-4, dtype=np.float64),  # Differential time interval
                  model_mode='normal',
                  # use 'normal' if you don't know what this is for. 'kinetic' mode refers to running the model without chemistry module to test the kinetic core.
-                 Diff_setname=['OH', 'HO2'],
+                 Diff_setname=['OH', 'HO2','HOI','I2'],
                  # diffusion for the species that you want to define by yourself, otherwise it will be calculated automatically based on the elements it contains
-                 Diff_set=[0.215, 0.141],  # add the value according to the Diff_setname
+                 Diff_set=[0.215, 0.141, 0.122, 0.070],  # add the value according to the Diff_setname
                  sch_name='HOI_cali_chem.txt',  # chemical scheme file name store in the input_mechanism folder
                  const_comp=['I2', 'O2', 'H2O'],
                  # Species you think they should have constant concentrations in the whole tube
@@ -93,9 +95,9 @@ elif date == '20Nov21':
                  dt=np.array(1e-4, dtype=np.float64),  # Differential time interval
                  model_mode='normal',
                  # use 'normal' if you don't know what this is for. 'kinetic' mode refers to running the model without chemistry module to test the kinetic core.
-                 Diff_setname=['OH', 'HO2'],
+                 Diff_setname=['OH', 'HO2','HOI','I2'],
                  # diffusion for the species that you want to define by yourself, otherwise it will be calculated automatically based on the elements it contains
-                 Diff_set=[0.215, 0.141],  # add the value according to the Diff_setname
+                 Diff_set=[0.215, 0.141, 0.122, 0.070],  # add the value according to the Diff_setname
                  sch_name='HOI_cali_chem.txt',  # chemical scheme file name store in the input_mechanism folder
                  const_comp=['I2', 'O2', 'H2O'],
                  # Species you think they should have constant concentrations in the whole tube

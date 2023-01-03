@@ -225,9 +225,9 @@ para={'P': np.array([101000], dtype=np.float64), #Pressure, Pa
       'Zgrid_num': np.array([80],dtype=np.float64), # number of grids in direction of tube length
       'Rgrid_num': np.array([80],dtype=np.float64), # number of grids in direction of radius
       'dt': np.array([1e-3],dtype=np.float64), # Differential time interval,
-      'model_mode': 'normal', #use 'normal' if you don't know what this is for. 'kinetic' mode refers to running
+      'model_mode': 'kinetic', #use 'normal' if you don't know what this is for. 'kinetic' mode refers to running
                                #the model without chemistry module to test the kinetic core.
-      'date': ['Flotus'], # Experiment date(s) which should be the same as the one(s) in function inputs_setup above
+      'date': ['kinetic_mode'], # Experiment date(s) which should be the same as the one(s) in function inputs_setup above
       } 
 
 

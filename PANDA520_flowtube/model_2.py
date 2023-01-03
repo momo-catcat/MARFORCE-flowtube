@@ -50,7 +50,7 @@ def model_2(R2, Rgrid, Zgrid, L2, L1, numLoop, comp_namelist, key_spe_for_plot, 
 
         fig.delaxes(axs[5])
         plt.gcf().text(0.7, 0.3, 'Time = ' + str(tim), fontsize=15)
-        plt.plot()
+        plt.draw()
         plt.close()
         print(['t = ' + str(tim) + str(key_spe_for_plot) + " difference: " + str(np.sum(new - old))])
 
