@@ -88,9 +88,15 @@ def find_setup_paras(date):
                    L2=np.array(30, dtype=np.float64),  # length for the 2nd tube
                    file_name='SA_cali_03Nov22_LTOF_calibrator1_ORIGNALattenuator.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
+    elif date == 'SA_kinetic_limit_simulation':
+        setup_paras = dict(sampleflow=np.array(10, dtype=np.float64),  # inlet sample flow of CIMS, lpm
+                   R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                   L1=np.array(200, dtype=np.float64),  # length for the 1st tube
+                   file_name='Theoretical_model.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                   )
     return setup_paras
 
-date = 'SA_cali_2022-11-03_LTOF_ORIGINAL_attenuator'
+date = 'SA_kinetic_limit_simulation'
 setup_paras = find_setup_paras(date)
 #%%
 paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
@@ -107,7 +113,7 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              Zgrid=40,  # number of grids in direction of tube length, usually we use 80
              Rgrid=80,  # number of grids in direction of radius, usually we use 40
              dt=np.array(5e-5, dtype=np.float64),  # Differential time interval
-             model_mode='normal',
+             model_mode='kinetic',
              # use 'normal' if you don't know what this is for. 'kinetic' mode refers to running the model without chemistry module to test the kinetic core.
              Diff_setname=['OH', 'HO2', 'SO3', 'H2SO4'],
              # diffusion for the species that you want to define by yourself, otherwise it will be calculated automatically based on the elements it contains
