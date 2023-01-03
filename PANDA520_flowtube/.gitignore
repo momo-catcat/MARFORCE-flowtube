@@ -1,4 +1,20 @@
 
+# ignores all .md files
+#.md
+
+# does not ignore the README.md file
+#!README.md
+#/test/text.txt
+
 #ignore cache directory
 /__pycache__
+test_with_matlab_bk_needtoberemoved/
+SA_calibrator_Miska_bk_needtoberemoved/
+SA_calibrator_Miska_test_bk_needtoberemoved/
+/input_mechanism/ex_chem_scheme.txt
+/input_mechanism/Flotus.txt
+/input_mechanism/HOI_cali_chem_simp.txt
+/input_mechanism/mcm_subset_DMS.txt
+/input_mechanism/mcm_subset.txt
+.xml
 
