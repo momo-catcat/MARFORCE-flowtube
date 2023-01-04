@@ -16,7 +16,7 @@ SA_calibrator_Miska_test_bk_needtoberemoved/
 /input_mechanism/HOI_cali_chem_simp.txt
 /input_mechanism/mcm_subset_DMS.txt
 /input_mechanism/mcm_subset.txt
-.xml
+*.xmlGI
 .pyc
 test\
 files_can_deleted/
