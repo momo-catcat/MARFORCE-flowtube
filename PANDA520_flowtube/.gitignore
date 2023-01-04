@@ -7,7 +7,7 @@
 #/test/text.txt
 
 #ignore cache directory
-/__pycache__
+__pycache__/
 test_with_matlab_bk_needtoberemoved/
 SA_calibrator_Miska_bk_needtoberemoved/
 SA_calibrator_Miska_test_bk_needtoberemoved/
@@ -17,6 +17,7 @@ SA_calibrator_Miska_test_bk_needtoberemoved/
 /input_mechanism/mcm_subset_DMS.txt
 /input_mechanism/mcm_subset.txt
 .xml
+.pyc
 test\
-files_can_deleted\
+files_can_deleted/
 
