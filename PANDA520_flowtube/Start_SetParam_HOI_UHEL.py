@@ -42,6 +42,8 @@ if date == '13Sep21':
                  # Species you think they should have initial concentration in the first frid of tube
                  key_spe_for_plot='HOI',  # key species as criterion to stop the loop
                  plot_spec=['OH', 'HOI', 'HO2', 'I', 'I2'],  # species that you want to plot
+                 input_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/input_files/',
+                 export_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/Export_files/',
                  file_name='HOI_cali_T1_13Sep21_simp.csv',
                  # the file you store all the flow data including N2, O2, SO2 in the folder input files
                  )
@@ -72,7 +74,8 @@ elif date == '25Oct21':
                  Init_comp=['OH', 'HO2'],
                  # Species you think they should have initial concentration in the first frid of tube
                  key_spe_for_plot='HOI',  # key species as criterion to stop the loop
-
+                 input_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/input_files/',
+                 export_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/Export_files/',
                  plot_spec=['OH', 'HOI', 'HO2', 'I', 'I2'],  # species that you want to plot
                  file_name='HOI_cali_T1_25Oct21.csv',
                  # the file you store all the flow data including N2, O2, SO2 in the folder input files
@@ -104,7 +107,8 @@ elif date == '20Nov21':
                  Init_comp=['OH', 'HO2'],
                  # Species you think they should have initial concentration in the first frid of tube
                  key_spe_for_plot='HOI',  # key species as criterion to stop the loop
-
+                 input_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/input_files/',
+                 export_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/Export_files/',
                  plot_spec=['OH', 'HOI', 'HO2', 'I', 'I2'],  # species that you want to plot
                  file_name='HOI_cali_T2_20Nov21.csv',
                  # the file you store all the flow data including N2, O2, SO2 in the folder input files
@@ -145,7 +149,7 @@ num_stage = paras['OHconc']
 # %%
 ##--------/* Run flowtube model */--------
 
-from Funcs.Run_flowtube_simplified import Run_flowtube
+from Funcs.Run_flowtube import Run_flowtube
 
 ### to run the flowtube, you need input the const
 Run_flowtube(paras, export_file_folder, const_comp_conc, Init_comp_conc, num_stage)

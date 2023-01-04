@@ -7,29 +7,50 @@ from Funcs.Calcu_by_flow_SA import calculate_concs
 set parameters
 '''''''''
 def find_setup_paras(date):
-    if date == 'SA_cali_2021-09-10_0.75':
+    if date == 'SA_cali_2021-09-10':
         setup_paras = dict(sampleflow=np.array(20, dtype=np.float64),  # inlet sample flow of CIMS, lpm
-                   R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
-                   L1=np.array(41, dtype=np.float64),  # length for the 1st tube
-                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
-                   L2=np.array(58.5, dtype=np.float64),  # length for the 2nd tube
-                   file_name='SA_cali_2021-09-10_0.75.csv'  # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                           R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                           L1=np.array(41, dtype=np.float64),  # length for the 1st tube
+                           R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
+                           L2=np.array(58.5, dtype=np.float64),  # length for the 2nd tube
+                           Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
+                           Qx=20,  # Qx the it product was calculated
+                           SO2ratio=np.array(5000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppm
+                           outflowLocation='before',
+                           # outflow tube located 'before' or 'after' injecting air, water, and so2
+                           input_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/input_files/',
+                           export_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/Export_files/',
+                           file_name='SA_cali_2021-09-10.csv'  # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
     elif date == 'water-effect-SA-H2Oflow2-constant-2021-10-28':
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
-                   R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
-                   L1=np.array(50, dtype=np.float64),  # length for the 1st tube
-                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
-                   L2=np.array(68, dtype=np.float64),  # length for the 2nd tube
-                   file_name='water-effect-SA-H2Oflow2-constant-2021-10-28.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                           R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                           L1=np.array(50, dtype=np.float64),  # length for the 1st tube
+                           R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
+                           L2=np.array(68, dtype=np.float64),  # length for the 2nd tube
+                           Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
+                           Qx=20,  # Qx the it product was calculated
+                           SO2ratio=np.array(5000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppm
+                           outflowLocation='before',
+                           # outflow tube located 'before' or 'after' injecting air, water, and so2
+                           input_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/input_files/',
+                           export_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/Export_files/',
+                           file_name='water-effect-SA-H2Oflow2-constant-2021-10-28.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
     elif date == 'water-effect-SA-2021-10-28':
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
-                   R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
-                   L1=np.array(50, dtype=np.float64),  # length for the 1st tube
-                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
-                   L2=np.array(68, dtype=np.float64),  # length for the 2nd tube
-                   file_name='water-effect-SA-2021-10-28.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                           R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                           L1=np.array(50, dtype=np.float64),  # length for the 1st tube
+                           R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
+                           L2=np.array(68, dtype=np.float64),  # length for the 2nd tube
+                           Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
+                           Qx=20,  # Qx the it product was calculated
+                           SO2ratio=np.array(5000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppm
+                           outflowLocation='before',
+                           # outflow tube located 'before' or 'after' injecting air, water, and so2
+                           input_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/input_files/',
+                           export_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/Export_files/',
+                           file_name='water-effect-SA-2021-10-28.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
     elif date == 'SA_cali_2021-10-281':
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
@@ -40,6 +61,10 @@ def find_setup_paras(date):
                            Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
                            Qx=20,  # Qx the it product was calculated
                            SO2ratio=np.array(5000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppm
+                           outflowLocation='before',
+                           # outflow tube located 'before' or 'after' injecting air, water, and so2
+                           input_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/input_files/',
+                           export_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/Export_files/',
                            file_name='SA_cali_2021-10-281.csv'
                            # the file you store all the flow data including N2, O2, SO2 in the folder input files
                            )
@@ -49,24 +74,45 @@ def find_setup_paras(date):
                            L1=np.array(50, dtype=np.float64),  # length for the 1st tube
                            R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
                            L2=np.array(68, dtype=np.float64),  # length for the 2nd tube
+                           Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
+                           Qx=20,  # Qx the it product was calculated
+                           SO2ratio=np.array(5000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppm
+                           outflowLocation='before',
+                           # outflow tube located 'before' or 'after' injecting air, water, and so2
+                           input_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/input_files/',
+                           export_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/Export_files/',
                            file_name='SA_cali_2021-10-282.csv'
                            # the file you store all the flow data including N2, O2, SO2 in the folder input files
                            )
     elif date == 'SA_cali_2021-11-18':
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
-                   R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
-                   L1=np.array(50, dtype=np.float64),  # length for the 1st tube
-                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
-                   L2=np.array(66, dtype=np.float64),  # length for the 2nd tube
-                   file_name='SA_cali_2021-11-18.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                           R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                           L1=np.array(50, dtype=np.float64),  # length for the 1st tube
+                           R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
+                           L2=np.array(66, dtype=np.float64),  # length for the 2nd tube
+                           Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
+                           Qx=20,  # Qx the it product was calculated
+                           SO2ratio=np.array(5000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppm
+                           outflowLocation='before',
+                           # outflow tube located 'before' or 'after' injecting air, water, and so2
+                           input_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/input_files/',
+                           export_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/Export_files/',
+                           file_name='SA_cali_2021-11-18.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
     elif date == 'SA_cali_2021-11-182':
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
-                   R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
-                   L1=np.array(50, dtype=np.float64),  # length for the 1st tube
-                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
-                   L2=np.array(66, dtype=np.float64),  # length for the 2nd tube
-                   file_name='SA_cali_2021-11-182.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                           R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                           L1=np.array(50, dtype=np.float64),  # length for the 1st tube
+                           R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
+                           L2=np.array(66, dtype=np.float64),  # length for the 2nd tube
+                           Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
+                           Qx=20,  # Qx the it product was calculated
+                           SO2ratio=np.array(5000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppm
+                           outflowLocation='before',
+                           # outflow tube located 'before' or 'after' injecting air, water, and so2
+                           input_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/input_files/',
+                           export_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/Export_files/',
+                           file_name='SA_cali_2021-11-182.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
     elif date == 'SA_cali_2022-01-04':
         setup_paras = dict(sampleflow=np.array(22.5, dtype=np.float64),  # inlet sample flow of CIMS, lpm
@@ -74,6 +120,13 @@ def find_setup_paras(date):
                            L1=np.array(10, dtype=np.float64),  # length for the 1st tube
                            R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
                            L2=np.array(78, dtype=np.float64),  # length for the 2nd tube
+                           Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
+                           Qx=20,  # Qx the it product was calculated
+                           SO2ratio=np.array(5000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppm
+                           outflowLocation='before',
+                           # outflow tube located 'before' or 'after' injecting air, water, and so2
+                           input_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/input_files/',
+                           export_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/Export_files/',
                            file_name='SA_cali_2022-01-04.csv'
                            # the file you store all the flow data including N2, O2, SO2 in the folder input files
                            )
@@ -81,16 +134,30 @@ def find_setup_paras(date):
         setup_paras = dict(sampleflow=np.array(10.6, dtype=np.float64),  # inlet sample flow of CIMS, lpm
                            R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
                            L1=np.array(26, dtype=np.float64),  # length for the 1st tube
+                           Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
+                           Qx=20,  # Qx the it product was calculated
+                           SO2ratio=np.array(5000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppm
+                           outflowLocation='before',
+                           # outflow tube located 'before' or 'after' injecting air, water, and so2
+                           input_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/input_files/',
+                           export_file_folder='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/Export_files/',
                            file_name='SA_cali_2022-01-27.csv'
                            # the file you store all the flow data including N2, O2, SO2 in the folder input files
                            )
     elif date == 'SA_cali_2022-02-07':
         setup_paras = dict(sampleflow=np.array(17.6, dtype=np.float64),  # inlet sample flow of CIMS, lpm
-                   R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
-                   L1=np.array(10, dtype=np.float64),  # length for the 1st tube
-                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
-                   L2=np.array(61, dtype=np.float64),  # length for the 2nd tube
-                   file_name='SA_cali_2022-02-07.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                           R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
+                           L1=np.array(10, dtype=np.float64),  # length for the 1st tube
+                           R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
+                           L2=np.array(61, dtype=np.float64),  # length for the 2nd tube
+                           Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
+                           Qx=20,  # Qx the it product was calculated
+                           outflowLocation='before',
+                           # outflow tube located 'before' or 'after' injecting air, water, and so2
+                           SO2ratio=np.array(5000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppm
+                           input_file_folder ='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/input_files/',
+                           export_file_folder ='/Users/jiali/Documents/work/AMT-MION2-Paper/Data_analysis/MION2-AMT-paper/data/model/Export_files/',
+                           file_name='SA_cali_2022-02-07.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
     elif date == 'SA_cali_2022-09-16':
         setup_paras = dict(sampleflow=np.array(21.8, dtype=np.float64),  # inlet sample flow of CIMS, lpm
@@ -160,7 +227,7 @@ def find_setup_paras(date):
 # date = ['SA_cali_2021-10-281','SA_cali_2021-10-282','SA_cali_2021-11-18','SA_cali_2021-11-182','SA_cali_2022-01-04','SA_cali_2022-02-07']
 #date =['water-effect-SA-2021-10-28','water-effect-SA-H2Oflow2-constant-2021-10-28','water-effect-SA-2021-11-18','water-effect-SA-H2Oflow2-constant-2021-11-18']
 #setup_paras = find_setup_paras(date[4])
-date = ['SA_cali_2022-09-18']
+date = ['SA_cali_2021-09-10']
 
 #date = 'SA_kinetic_limit_simulation'
 setup_paras = find_setup_paras(date[0])
@@ -232,7 +299,7 @@ num_stage = paras['OHconc']
 # %%
 ##--------/* Run flowtube model */--------
 
-from Funcs.Run_flowtube_simplified import Run_flowtube
+from Funcs.Run_flowtube import Run_flowtube
 
 ### to run the flowtube, you need input the const
 Run_flowtube(paras, export_file_folder, const_comp_conc, Init_comp_conc, num_stage)

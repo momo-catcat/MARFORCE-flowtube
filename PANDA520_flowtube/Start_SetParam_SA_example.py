@@ -71,7 +71,7 @@ num_stage = paras['OHconc']
 # %%
 ##--------/* Run flowtube model */--------
 
-from Funcs.Run_flowtube_simplified import Run_flowtube
+from Funcs.Run_flowtube import Run_flowtube
 
 ### to run the flowtube, you need input the const
 Run_flowtube(paras, export_file_folder, const_comp_conc, Init_comp_conc, num_stage)

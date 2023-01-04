@@ -55,12 +55,13 @@ def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
         c = odesolve_Y(timesteps, Zgrid, Rgrid, dt, Diff_vals, R2, dr, dx, Q2, c, comp_namelist, dydt_vst, rindx,
                            nreac, rstoi, rate_values, const_comp, u)
 
-        tim = (j + 1) * timesteps * dt
+        tim = round((j + 1) * timesteps * dt,2)
         comp_plot_index = [comp_namelist.index(plot_spec[i]) for i in range(len(plot_spec))]
 
         new = c[:, -1, comp_namelist.index(key_spe_for_plot)]
 
         fig, axs = plt.subplots(math.ceil((len(plot_spec)/3)), 3, figsize=(9, 5), facecolor='w', edgecolor='k')
+        plt.cla()
         fig.subplots_adjust(hspace=.5, wspace=.35)
         plt.style.use('default')
         plt.rcParams.update(
@@ -86,9 +87,9 @@ def model_3(R2, R1, Rgrid, Zgrid, comp_num, L2, L1, numLoop, comp_namelist, key_
         plt.pause(1)
         plt.close()
 
-        print(['t = ' + str(tim) + str(key_spe_for_plot) + " difference: " + str(np.sum(new - old))])
-
-        if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):
-            break
+        print(['t = ' + str(tim) + ' ' + str(key_spe_for_plot) + " difference: " + str(np.sum(new - old))])
+        if np.sum(old) > 0:
+            if (j > 5) & (np.sum(new - old) / np.sum(old) < 1e-5):
+                break
         #c2 = c
     return c

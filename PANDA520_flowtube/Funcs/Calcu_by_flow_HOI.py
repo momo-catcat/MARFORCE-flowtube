@@ -16,10 +16,17 @@ def calculate_concs(paras):
     folder_flowtube = dirpath + '/'
     sys.path.append(folder_flowtube)
     ## Input file folder
-    input_file_folder = dirpath + '/input_files/'
-    input_mechanism_folder = dirpath + '/input_mechanism/'
+    if 'input_file_folder' in paras:
+        input_file_folder = paras['input_file_folder']
+    else:
+        input_file_folder = dirpath + '/../input_files/'
+    ## define the mechanism folder
+    input_mechanism_folder = dirpath + '/../input_mechanism/'
     ## Add the folder where the final results will be exported
-    export_file_folder = dirpath + '/export_files/'
+    if 'output_file_folder' in paras:
+        export_file_folder = paras['output_file_folder']
+    else:
+        export_file_folder = dirpath + '/../Export_files/'
     file_name = paras['file_name']
     data = pd.read_csv(input_file_folder + file_name)
     inputs: Index = data.columns.tolist()
@@ -133,9 +140,16 @@ def calculate_concs(paras):
         H2Oconc = np.transpose([H2Oconc1, H2Oconc2])
         #OHconc = It * csH2O * qyH2O * H2Oconc1
 
+    if 'flag_tube' in paras:
+        flag_tube1 = paras['flag_tube']
+        if flag_tube1 == '4' & flag_tube == '3':
+            flag_tube = flag_tube1
+
     if flag_tube == '3':
-        const_comp_free = ['H2O', 'O2']
-        const_comp_conc_free = [H2Oconc[:, 1], O2conc[:, 1]]
+        H2Oconc_free = [H2Oflow2[i] / (totFlow2-totFlow1[i]) * H2O_conc(T[i], 1).SatP[0] / kB / T[i] / 1e6 for i in range(len(T))]
+        O2conc_free = [O2flow2[i] / (totFlow2-totFlow1[i]) * O2ratio * p / kB / T[i] / 1e6  for i in
+                   range(len(T))]
+        const_comp_conc_free = [H2Oconc_free, O2conc_free]
     else:
         const_comp_free = []
         const_comp_conc_free = [0]
@@ -149,6 +163,7 @@ def calculate_concs(paras):
     paras['OHconc'] = OHconc
     paras['flag_tube'] = flag_tube
 
+    print('flag_tube =', paras['flag_tube'])
     #if 'N2flow' in locals():
     #    paras['N2flow'] = N2flow
     #else:
