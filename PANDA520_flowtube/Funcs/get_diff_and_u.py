@@ -7,7 +7,7 @@ Created on Thu Jan 20 17:10:03 2022
 # get the diffusion for all species and
 # the index of species in C except constant compounds
 from kinetics.diff_coef import diff_coef
-from files_can_deleted.diffusion_const_added import add_diff_const as add_diff_const
+from Funcs.diffusion_const_added import add_diff_const as add_diff_const
 
 
 def get_diff_and_u(comp_namelist, Diff_setname, con_C_indx, Diff_set, T, p):
