@@ -17,7 +17,7 @@ import re
 
 import numpy as np
 
-import formatting
+from Funcs import formatting
 
 
 # define function

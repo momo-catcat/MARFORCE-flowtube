@@ -30,11 +30,11 @@ def write_rate_file(reac_coef_g, p, rrc, rrc_name, testf):  # define function
 
     # open/create relevant file to write module to
     if (testf == 0):
-        f = open('rate_coeffs.py', mode='w')
+        f = open('Funcs/rate_coeffs.py', mode='w')
     if (testf == 3):
-        f = open('rate_coeffs_aq.py', mode='w')
+        f = open('Funcs/rate_coeffs_aq.py', mode='w')
     if (testf == 2):
-        f = open('rate_coeffs.py', mode='w')
+        f = open('Funcs/rate_coeffs.py', mode='w')
 
     f.write('\'\'\'module for calculating reaction rate coefficients (automatically generated)\'\'\'\n')
     f.write(

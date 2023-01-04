@@ -1,5 +1,5 @@
 import numpy as np
-from Vapour_calc import H2O_conc
+from Funcs.Vapour_calc import H2O_conc
 
 def const_comp_conc_cal(H2O_data, outflowLocation, const_comp_var, const_comp_pre, pre_flow, N2Flow, pre_standard_conc, Q1, Q2, T_cel, T, p, flag_tube):
     kB = 1.3806488e-23  # boltzmann constant

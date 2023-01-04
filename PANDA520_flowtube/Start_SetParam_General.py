@@ -1,5 +1,5 @@
 import numpy as np
-from Calcu_by_flow_SA import calculate_concs
+from Funcs.Calcu_by_flow_SA import calculate_concs
 
 '''''''''
 set parameters
@@ -70,7 +70,7 @@ num_stage = 1
 # %%
 ##--------/* Run flowtube model */--------
 
-from Run_flowtube_simplified import Run_flowtube
+from Funcs.Run_flowtube_simplified import Run_flowtube
 
 ### to run the flowtube, you need input the const
 Run_flowtube(paras, export_file_folder, const_comp_conc, Init_comp_conc, num_stage)

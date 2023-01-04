@@ -7,8 +7,8 @@ del name
 #%% import functions 
 import numpy as np
 import pandas as pd
-from Vapour_calc import H2O_conc as H2O_conc
-from cmd_calib5 import cmd_calib5
+from Funcs.Vapour_calc import H2O_conc as H2O_conc
+from Funcs.cmd_calib5 import cmd_calib5
 import os
 
 

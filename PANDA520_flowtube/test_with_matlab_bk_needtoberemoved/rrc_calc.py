@@ -6,7 +6,7 @@
 import numpy as np
 import scipy.constants as si
 try:
-	import rate_coeffs
+	from Funcs import rate_coeffs
 except:
 	import os
 	if os.path.exists('rate_coeffs'): # remove any bad functions
@@ -15,8 +15,6 @@ import importlib
 
 
 def rrc_calc(RO2_indices, H2O, TEMP, lightm, y, PInit,  NO, HO2, NO3):
-
-	import rate_coeffs # in case failure to import previous version using import command above
 
 	# ---------------------------------------------
 	# inputs:
@@ -63,8 +61,8 @@ def rrc_calc(RO2_indices, H2O, TEMP, lightm, y, PInit,  NO, HO2, NO3):
 		
 	importlib.reload(rate_coeffs) # ensure latest version uploaded
 	# calculate the new rate coefficient array (/s) 
-	[rrc, erf, err_mess] = rate_coeffs.evaluate_rates(RO2, H2O, TEMP, lightm, M_val, N2_val, 
-					O2_val, NO, HO2, NO3)
+	[rrc, erf, err_mess] = rate_coeffs.evaluate_rates(RO2, H2O, TEMP, lightm, M_val, N2_val,
+                                                      O2_val, NO, HO2, NO3)
 	#except:
 	#	import os
 	#	if os.path.exists('rate_coeffs'):

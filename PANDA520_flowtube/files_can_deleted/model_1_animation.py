@@ -2,7 +2,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 import math
-from odesolve3 import odesolve as odesolve
+from Funcs.odesolve3 import odesolve as odesolve
 
 ###################
 ## Resolve the R2/L2 problem. These should not be needed

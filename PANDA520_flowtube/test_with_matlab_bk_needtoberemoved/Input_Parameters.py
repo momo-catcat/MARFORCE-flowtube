@@ -2,8 +2,8 @@
 #just try to change something in this file
 import numpy as np
 # from cmd_calib1 import cmd_calib1
-from Vapour_calc import H2O_conc as H2O_conc
-from cmd_calib5 import cmd_calib5
+from Funcs.Vapour_calc import H2O_conc as H2O_conc
+from Funcs.cmd_calib5 import cmd_calib5
 
 
 #calculate vapor pressure

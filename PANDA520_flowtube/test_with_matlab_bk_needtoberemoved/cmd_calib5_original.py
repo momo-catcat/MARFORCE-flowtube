@@ -1,22 +1,22 @@
 def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     # %% import packages
     import numpy as np
-    import RO2_conc
-    import sch_interr
-    import eqn_interr
-    import eqn_pars
-    import init_conc
-    import RO2_indices
-    import write_rate_file
-    import cal_const_comp_conc
-    from judg_spe_reac_rates import jude_species as jude_species
+    from Funcs import RO2_conc
+    from Funcs import sch_interr
+    from Funcs import eqn_interr
+    from Funcs import eqn_pars
+    from Funcs import init_conc
+    from Funcs import RO2_indices
+    from Funcs import write_rate_file
+    from Funcs import cal_const_comp_conc
+    from Funcs.judg_spe_reac_rates import jude_species as jude_species
     import matplotlib.pyplot as plt
     from scipy import interpolate
     from odesolve3_single import odesolve as odesolve_single
-    from odesolve3 import odesolve as odesolve_double
-    from odesolve3_Y import odesolve as odesolve_Y
-    from get_diff_and_u import get_diff_and_u
-    from get_formula import get_formula
+    from Funcs.odesolve3 import odesolve as odesolve_double
+    from Funcs.odesolve3_Y import odesolve as odesolve_Y
+    from Funcs.get_diff_and_u import get_diff_and_u
+    from Funcs.get_formula import get_formula
     
     '''
     delete the odesolve.py and odesolve_single.py
@@ -61,8 +61,8 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
     [rindx, rstoi, pindx, pstoi, reac_coef, nreac, nprod, comp_namelist, comp_list, comp_num] = eqn_interr.eqn_interr(num_eqn, eqn_list, chm_sch_mrk)
 
     [RO2_indx, HOMRO2_indx, con_C_indx] = eqn_pars.extr_mech(sch_name, chm_sch_mrk,
-                                                     con_infl_nam, const_comp,
-                                                     drh_str, erh_str)
+                                                             con_infl_nam, const_comp,
+                                                             drh_str, erh_str)
 
     RO2_indi = RO2_indices.RO2_indices(comp_namelist, RO2_names)
     u, Diff_vals = get_diff_and_u(comp_namelist, Diff_setname, con_C_indx, Diff_set, T, p)
@@ -93,11 +93,11 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc):
 
     [y, comp_num, M, dydt_vst,
      comp_namelist] = init_conc.init_conc(comp_num, comp_namelist, C0, T, \
-                                                         p, comp_namelist, rindx, pindx, \
-                                                         num_eqn[0], nreac, nprod, comp_namelist, \
-                                                         RO2_indx, HOMRO2_indx, rstoi, pstoi)
+                                          p, comp_namelist, rindx, pindx, \
+                                          num_eqn[0], nreac, nprod, comp_namelist, \
+                                          RO2_indx, HOMRO2_indx, rstoi, pstoi)
 
-    import rate_coeffs
+    from Funcs import rate_coeffs
     RO2conc = RO2_conc.RO2_conc(RO2_indi, y)
     op = jude_species(y, comp_namelist)
 

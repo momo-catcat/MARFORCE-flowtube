@@ -1,6 +1,6 @@
 import numpy as np
 
-from Vapour_calc import H2O_conc
+from Funcs.Vapour_calc import H2O_conc
 
 
 def const_comp_conc_cal(O2flow, SO2flow, outflowLocation, sampflow, H2O_1, N2Flow, O2_ratio, SO2_ratio,

@@ -1,9 +1,8 @@
 ## This file is used to run the flowtube model
-import os
 import numpy as np
 import pandas as pd
 import csv
-from cmd_calib5 import cmd_calib5
+from Funcs.cmd_calib5 import cmd_calib5
 from Calcu_by_flow import const_comp_conc_cal, const_comp_conc_cal_H2O, const_comp_conc_cal_OH
 from diffusion_const_added import add_diff_const as add_diff_const
 
@@ -17,18 +16,16 @@ class UnitFloat(float):
     def __init__(self, value, unit=None):
         self.unit = unit
 
-#%%
+
 def Run_flowtube(para,folder_flowtube,export_file_folder,inputs_setup):
 
     for i in range(len(para['date'])):
-
         R1, L1, R2, L2, flag_tube, file, H2O_1, H2O_2, H2Oconc_1, H2Oconc_2, Q1, Q2, Itx, Qx, SO2flow, O2flow, N2flow, T_cel = inputs_setup(para['date'][i])
- #%%
+
         T_cel=np.mean(T_cel)
         T = T_cel+273.15 # Temperature in K
         p = para['P'][i] # Pressure in Pa
-        kB = 1.3806488e-23  # boltzmann constant
-        Nair = p / kB / T / 1e6
+
         outflowLocation = para['outflowLocation'][i]  # outflow tube located before or after injecting air, water, and so2
 
         fullOrSimpleModel = para['fullOrSimpleModel'][i]  # simple: Gormley&Kennedy approximation, full: flow model (much slower)
@@ -37,8 +34,8 @@ def Run_flowtube(para,folder_flowtube,export_file_folder,inputs_setup):
         O2ratio = para['O2ratio'][i]  # O2inAir = 0.209
         SO2ratio = para['SO2ratio'][i]
 
-        const_comp_pre = ['O2']  # species have constant concentration and are calculated from flows
-        const_comp_pre_know = ['H2O','SO2','O3','CO','OH','P']  # species have known constant concentration but already known
+        const_comp_pre = ['SO2', 'O2']  # species have constant concentration and are calculated from flows
+        const_comp_pre_know = ['H2O']  # species have known constant concentration but already known
         const_comp = const_comp_pre + const_comp_pre_know  # species have constant concentration
         # get all the concentrations
         O2conc, SO2conc = const_comp_conc_cal(O2flow, SO2flow,outflowLocation, sampflow, H2O_1,  N2flow, O2ratio, SO2ratio,
@@ -50,18 +47,10 @@ def Run_flowtube(para,folder_flowtube,export_file_folder,inputs_setup):
 
 
         # % store all the const species to const_comp_conc follow the order of const_comp
-
+        const_comp_conc = np.transpose([SO2conc, O2conc, H2Oconc])
 
         OHconc, const_comp_free, const_comp_conc_free = const_comp_conc_cal_OH(H2Oconc, O2conc, Q1, flag_tube, Itx, Qx)
-        #print(OHconc)
-        SO2conc = [[1*Nair*1e-9,1*Nair*1e-9]]
-        OHconc = [[1e10, 1e10]]
-        O3conc =[[60*Nair*1e-9,60*Nair*1e-9]]
-        COconc = [[100*Nair*1e-9,100*Nair*1e-9]]
-        Pconc = [[1E20,1E20]]
-        #print(OHconc)
-        print(O3conc)
-        const_comp_conc = np.transpose([O2conc, H2Oconc, SO2conc, O3conc, COconc,OHconc,Pconc])
+
         # store initial concentration
         if para['model_mode'] == 'kinetic': # This mode runs the code in kinetic mode in which chemistry does not exist
             # define the H2SO4 concentration as 1e8 for convenience. !!!! This needs improvement
@@ -69,27 +58,27 @@ def Run_flowtube(para,folder_flowtube,export_file_folder,inputs_setup):
             Init_comp = ['OH', 'HO2', 'H2SO4']
             Init_comp_conc = np.transpose([OHconc, OHconc, OHconc])
         else:
-            Init_comp = ['HO2']  # species have initial concentration
-            Init_comp_conc = [[0]]
+            Init_comp = ['OH', 'HO2']  # species have initial concentration
+            Init_comp_conc = np.transpose([OHconc, OHconc])
 
 
-        #print(Init_comp_conc)
-        #print(Init_comp)
+        print(Init_comp_conc)
+        print(Init_comp)
         # add some diffusion constants add more in diffusion_const_added.py file if you want
         # set diffusivity according Kurten et al. (10.1021/jp993622j)
-        Diff_setname = ['OH', 'H2O', 'HO2', 'SO3', 'H2SO4','P'] # the H2SO4 diffusivity is not final
+        Diff_setname = ['OH', 'H2O', 'HO2', 'SO3', 'H2SO4'] # the H2SO4 diffusivity is not final
         dH2O = add_diff_const(p, T)
-        Diff_set = [0.215, dH2O[1], 0.141, 0.126, 0.088,0.001]
+        Diff_set = [0.215, dH2O, 0.141, 0.126, 0.088]
 
         # grid for length and radius directions
         Zgrid = np.array(para['Zgrid_num'][i]).astype(int)  # number of grid points in tube length direction
         Rgrid = np.array(para['Rgrid_num'][i]).astype(int)  # number of grid points in tube radius direction
 
         # chemistry part
-        sch_name = folder_flowtube + 'input_mechanism/Flotus.txt'
+        sch_name = folder_flowtube + 'input_mechanism/SO2_SA.txt'
         chm_sch_mrk = ['{', 'RO2', '+', '', '', ';', '+', ';', '$', '{', ':', ';', '}']
         key_spe_for_plot = 'H2SO4'
-        plot_spec = ['OH', 'SO2', 'HSO3', 'HO2', 'H2O', 'O2', 'H2O2', 'SO3', 'H2SO4', 'CO', 'O3']  # plot species
+        plot_spec = ['OH', 'HSO3', 'HO2', 'SO3', 'H2SO4']  # plot species
 
         params = {'T': UnitFloat(T, "K"),  # temperature
                 'p': UnitFloat(p, "Pa"),  # pressure pa
@@ -124,23 +113,25 @@ def Run_flowtube(para,folder_flowtube,export_file_folder,inputs_setup):
         #print('params',params)
         #print('Q1',Q1[1])
         #print('Q2',Q2[1])
-        #j =0
-        #const_comp_conc =  const_comp_conc[:, j, :]
 
-       # Init_comp_conc = Init_comp_conc[j]
-       # Q1 = Q1[j]
-       # Q2 = Q2[j]
+        #### SA
+
+
+
+
+
+
         # %% computation begins
         meanconc = []
 
         c = []
 
         for j in range(len(H2O_1)):
-
-            meanConc1, c1 = cmd_calib5(const_comp_conc[:, j, :], params, Init_comp_conc[j], Q1[j], Q2[j])
-            meanconc.append(meanConc1)
-            print(meanconc)
-            c.append(c1)
+            if OHconc[j] > 0:
+                meanConc1, c1 = cmd_calib5(const_comp_conc[:, j, :], params, Init_comp_conc[j], Q1[j], Q2[j])
+                meanconc.append(meanConc1)
+                print(meanconc)
+                c.append(c1)
 
         meanconc_s = pd.DataFrame(meanconc,columns=plot_spec)
 

@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import sys
 from pandas import Index
-from Vapour_calc import H2O_conc
+from Funcs.Vapour_calc import H2O_conc
 
 #%%
 def calculate_concs(paras):
@@ -13,10 +13,10 @@ def calculate_concs(paras):
     folder_flowtube = dirpath + '/'
     sys.path.append(folder_flowtube)
     ## Input file folder
-    input_file_folder = dirpath + '/input_files/'
-    input_mechanism_folder = dirpath + '/input_mechanism/'
+    input_file_folder = dirpath + '/../input_files/'
+    input_mechanism_folder = dirpath + '/../input_mechanism/'
     ## Add the folder where the final results will be exported
-    export_file_folder = dirpath + '/export_files/'
+    export_file_folder = dirpath + '/../Export_files/'
     file_name = paras['file_name']
     data = pd.read_csv(input_file_folder + file_name)
     inputs: Index = data.columns.tolist()

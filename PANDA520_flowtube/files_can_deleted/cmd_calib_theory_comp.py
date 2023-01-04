@@ -1,21 +1,21 @@
 def cmd_calib_theory_comp(const_comp_conc, params, Init_comp_conc):
     # %% import packages
     import numpy as np
-    import RO2_conc
-    import rate_coeffs
-    import sch_interr
-    import eqn_interr
-    import eqn_pars
-    import init_conc
-    import RO2_indices
-    import write_rate_file
-    import cal_const_comp_conc
-    from judg_spe_reac_rates import jude_species as jude_species
+    from Funcs import RO2_conc
+    from Funcs import rate_coeffs
+    from Funcs import sch_interr
+    from Funcs import eqn_interr
+    from Funcs import eqn_pars
+    from Funcs import init_conc
+    from Funcs import RO2_indices
+    from Funcs import write_rate_file
+    from Funcs import cal_const_comp_conc
+    from Funcs.judg_spe_reac_rates import jude_species as jude_species
     import matplotlib.pyplot as plt
     from scipy import interpolate
     from odesolve_theory_comp import odesolve as odesolve
-    from get_diff_and_u import get_diff_and_u
-    from get_formula import get_formula
+    from Funcs.get_diff_and_u import get_diff_and_u
+    from Funcs.get_formula import get_formula
     import pandas as pd
 
     # % get the inputs

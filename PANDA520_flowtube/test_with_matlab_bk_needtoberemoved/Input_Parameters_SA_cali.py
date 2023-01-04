@@ -12,8 +12,8 @@ sys.path.append("C:/Users/jiali/PANDA520-flowtube/PANDA520_flowtube/")
 import os
 import numpy as np
 import pandas as pd
-from cmd_calib5 import cmd_calib5
-from exp_setup import inputs_setup
+from Funcs.cmd_calib5 import cmd_calib5
+from files_can_deleted.exp_setup import inputs_setup
 import const_comp_conc_cal
 import csv
 

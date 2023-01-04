@@ -16,11 +16,7 @@
 # arrays and python files to solve problem
 
 import numpy as np
-import sch_interr
-import eqn_interr
-import RO2_indices
-import write_dydt_rec
-import write_hyst_eq
+from Funcs import eqn_interr, RO2_indices, sch_interr, write_dydt_rec
 
 
 # define function to extract the chemical mechanism

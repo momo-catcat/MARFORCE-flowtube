@@ -9,10 +9,8 @@ Created on Mon Nov 29 15:59:02 2021
 import os
 import pandas as pd
 import numpy as np
-from cmd_calib1 import cmd_calib1
-from cmd_calib2 import cmd_calib2
 from cmd_calib3 import cmd_calib3
-from Vapour_calc import H2O_conc as H2O_conc
+from Funcs.Vapour_calc import H2O_conc as H2O_conc
 
 
 #%% 1. SA_cali model at 2021.9.10
@@ -103,7 +101,7 @@ model_1.to_csv(file)
 import os
 import pandas as pd
 import numpy as np
-from cmd_calib5 import cmd_calib5
+from Funcs.cmd_calib5 import cmd_calib5
 path = os.getcwd()
 
 file=os.path.join(path, "input_files/H2O_2.csv")

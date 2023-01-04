@@ -1,6 +1,6 @@
 # %% first tube run
 from matplotlib import pyplot as plt
-from odesolve3 import odesolve as odesolve
+from Funcs.odesolve3 import odesolve as odesolve
 import numpy as np
 
 def model_1(R2,R1,Rgrid,Zgrid,comp_num,L2,L1,sp_line,numLoop,comp_namelist,key_spe_for_plot,dt,timesteps,Diff_vals,Rtot,\

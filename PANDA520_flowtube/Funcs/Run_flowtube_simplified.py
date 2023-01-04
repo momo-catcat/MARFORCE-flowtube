@@ -1,10 +1,9 @@
 ## This file is used to run the flowtube model
 
 import pandas as pd
-import numpy as np
 import csv
-from cmd_calib5 import cmd_calib5
-from matplotlib import pyplot as plt
+from Funcs.cmd_calib5 import cmd_calib5
+
 
 #%%
 def Run_flowtube(paras, export_file_folder, const_comp_conc, Init_comp_conc, num_stage):

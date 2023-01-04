@@ -100,7 +100,7 @@ def odesolve(timesteps, Zgrid, Rgrid, dt, D, Rtot, dr, dx, Qtot, c, comp_namelis
         #            term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u] ) + initc[
         #                                                                                                 0:Rgrid // 2,
         #                                                                                                 :, u]
-        from meanconc_cal import meanconc_cal_sim as meanconc_cal_sim
+        from Funcs.meanconc_cal import meanconc_cal_sim as meanconc_cal_sim
         c[Rgrid // 2:, :, u] = np.flipud(c[0:Rgrid // 2, :, u])
         c1 = c[:, :sp_line, :]
         # c[0:Rgrid // 2, :, u] = dt * (term1[0:Rgrid // 2, :, u] - term2[0:Rgrid // 2, :, u])  + initc[0:Rgrid // 2,:, u]

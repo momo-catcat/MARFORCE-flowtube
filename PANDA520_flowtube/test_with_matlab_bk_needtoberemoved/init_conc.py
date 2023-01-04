@@ -17,7 +17,7 @@
 
 import numpy as np
 import scipy.constants as si
-import write_dydt_rec
+from Funcs import write_dydt_rec
 
 
 def init_conc(num_comp, Comp0, init_conc, TEMP, PInit,

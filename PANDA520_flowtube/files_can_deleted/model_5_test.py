@@ -1,8 +1,6 @@
 import numpy as np
-from matplotlib import pyplot as plt
 
-from meanconc_cal import meanconc_cal_sim as meanconc_cal_sim
-from odesolve3 import odesolve as odesolve
+from Funcs.meanconc_cal import meanconc_cal_sim as meanconc_cal_sim
 from odesolve3_test import odesolve as odesolve_test
 
 

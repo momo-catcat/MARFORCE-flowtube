@@ -1,9 +1,5 @@
 def plot(c,L1,L2,R1,R2,species):       
     import numpy as np
-    import os 
-    import pickle
-    import sch_interr
-    import eqn_interr
     import matplotlib.pyplot as plt
     # sort chemistry   
     

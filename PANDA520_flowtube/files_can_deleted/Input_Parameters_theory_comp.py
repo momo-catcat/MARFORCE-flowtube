@@ -12,7 +12,7 @@ import os
 import numpy as np
 import pandas as pd
 
-from Vapour_calc import H2O_conc as H2O_conc
+from Funcs.Vapour_calc import H2O_conc as H2O_conc
 from cmd_calib_theory_comp import cmd_calib_theory_comp
 
 

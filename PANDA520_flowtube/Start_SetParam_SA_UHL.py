@@ -1,7 +1,7 @@
 # this file is used for SA calibration that we had for AMT paper
 
 import numpy as np
-from Calcu_by_flow_SA import calculate_concs
+from Funcs.Calcu_by_flow_SA import calculate_concs
 
 '''''''''
 set parameters
@@ -131,12 +131,12 @@ def find_setup_paras(date):
     return setup_paras
 
 
-#date = ['SA_cali_2021-10-281','SA_cali_2021-10-282','SA_cali_2021-11-18','SA_cali_2021-11-182','SA_cali_2022-01-04','SA_cali_2022-02-07']
+date = ['SA_cali_2021-10-281','SA_cali_2021-10-282','SA_cali_2021-11-18','SA_cali_2021-11-182','SA_cali_2022-01-04','SA_cali_2022-02-07']
 #date =['water-effect-SA-2021-10-28','water-effect-SA-H2Oflow2-constant-2021-10-28','water-effect-SA-2021-11-18','water-effect-SA-H2Oflow2-constant-2021-11-18']
 #setup_paras = find_setup_paras(date[4])
 
-date = 'SA_kinetic_limit_simulation'
-setup_paras = find_setup_paras(date)
+#date = 'SA_kinetic_limit_simulation'
+setup_paras = find_setup_paras(date[0])
 
 #%%
 paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
@@ -205,7 +205,7 @@ num_stage = 1
 # %%
 ##--------/* Run flowtube model */--------
 
-from Run_flowtube_simplified import Run_flowtube
+from Funcs.Run_flowtube_simplified import Run_flowtube
 
 ### to run the flowtube, you need input the const
 Run_flowtube(paras, export_file_folder, const_comp_conc, Init_comp_conc, num_stage)

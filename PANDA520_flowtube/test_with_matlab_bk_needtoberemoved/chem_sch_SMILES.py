@@ -3,7 +3,7 @@
 # the supplied chemical scheme is interrogated to extract the unique component names
 # and their SMILES strings, which requires reference to the supplied xml file
 
-import sch_interr
+from Funcs import sch_interr
 import xml_interr
 import re
 

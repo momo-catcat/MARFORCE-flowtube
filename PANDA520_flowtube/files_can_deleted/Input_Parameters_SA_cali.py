@@ -14,7 +14,7 @@ import os
 import numpy as np
 import pandas as pd
 import csv
-from cmd_calib5 import cmd_calib5
+from Funcs.cmd_calib5 import cmd_calib5
 from exp_setup import inputs_setup
 from Calcu_by_flow import const_comp_conc_cal, const_comp_conc_cal_H2O, const_comp_conc_cal_OH
 from diffusion_const_added import add_diff_const as add_diff_const

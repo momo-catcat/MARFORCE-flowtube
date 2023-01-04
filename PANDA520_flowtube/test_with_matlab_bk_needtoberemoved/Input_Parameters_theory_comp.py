@@ -9,8 +9,8 @@ del name
 #%% import functions 
 import numpy as np
 import pandas as pd
-from Vapour_calc import H2O_conc as H2O_conc
-from cmd_calib_theory_comp import cmd_calib_theory_comp
+from Funcs.Vapour_calc import H2O_conc as H2O_conc
+from files_can_deleted.cmd_calib_theory_comp import cmd_calib_theory_comp
 import os
 
 

@@ -1,21 +1,21 @@
 def cmd_calib_theory_comp(const_comp_conc, params, Init_comp_conc):
     #%% import packages
     import numpy as np
-    import RO2_conc
-    import rate_coeffs
-    import sch_interr
-    import eqn_interr
-    import eqn_pars
-    import init_conc
-    import RO2_indices  
-    import write_rate_file
-    import cal_const_comp_conc
-    from judg_spe_reac_rates import jude_species as jude_species
+    from Funcs import RO2_conc
+    from Funcs import rate_coeffs
+    from Funcs import sch_interr
+    from Funcs import eqn_interr
+    from Funcs import eqn_pars
+    from Funcs import init_conc
+    from Funcs import RO2_indices
+    from Funcs import write_rate_file
+    from Funcs import cal_const_comp_conc
+    from Funcs.judg_spe_reac_rates import jude_species as jude_species
     import matplotlib.pyplot as plt
     from scipy import interpolate
-    from odesolve_theory_comp import odesolve as odesolve
-    from get_diff_and_u import get_diff_and_u
-    from get_formula import get_formula
+    from files_can_deleted.odesolve_theory_comp import odesolve as odesolve
+    from Funcs.get_diff_and_u import get_diff_and_u
+    from Funcs.get_formula import get_formula
     import pandas as pd
         
     #% get the inputs 
@@ -49,7 +49,7 @@ def cmd_calib_theory_comp(const_comp_conc, params, Init_comp_conc):
     total_list_eqn = f_open_eqn.readlines()
     f_open_eqn.close() # close file
 
-    eqn_list, num_eqn, rrc, rrc_name, RO2_names, eqn_list_on=sch_interr.sch_interr(total_list_eqn, chm_sch_mrk)
+    eqn_list, num_eqn, rrc, rrc_name, RO2_names, eqn_list_on= sch_interr.sch_interr(total_list_eqn, chm_sch_mrk)
     
     [rindx, rstoi, pindx, pstoi, reac_coef, 
  			nreac, nprod, y_arr, y_rind, uni_y_rind, y_pind, 
@@ -66,8 +66,8 @@ def cmd_calib_theory_comp(const_comp_conc, params, Init_comp_conc):
     		HOMRO2_indx, comp_list, 
     		 eqn_num, comp_namelist, 
     		erf, err_mess, con_C_indx] = eqn_pars.extr_mech(sch_name, chm_sch_mrk,
-                    con_infl_nam,  const_comp,
-            		drh_str, erh_str)                                                                   
+                                                            con_infl_nam, const_comp,
+                                                            drh_str, erh_str)
                                                                                   
     RO2_indi = RO2_indices.RO2_indices(comp_namelist, RO2_names)
                                                              
@@ -100,7 +100,7 @@ def cmd_calib_theory_comp(const_comp_conc, params, Init_comp_conc):
     temp_const[0,:] = const_comp_conc
     temp_const[1,:] = const_comp_conc
     const_comp_conc = temp_const
-    const_comp_gird = cal_const_comp_conc.cal_const_comp_conc(Rgrid, Zgrid, const_comp_conc, L1,L2, const_comp)
+    const_comp_gird = cal_const_comp_conc.cal_const_comp_conc(Rgrid, Zgrid, const_comp_conc, L1, L2, const_comp)
           
     c = np.zeros([Rgrid, Zgrid, comp_num])
     for i in Init_comp:
@@ -113,15 +113,15 @@ def cmd_calib_theory_comp(const_comp_conc, params, Init_comp_conc):
     C0 = c[0,0,:] 
 
     [y,  y_mw, num_comp, M, y_indx_plot, dydt_vst, 
-    comp_namelist,  erf, err_mess]=init_conc.init_conc(comp_num, comp_namelist, C0, T, \
-                                p,  comp_namelist, rindx, pindx, \
-                                        num_eqn[0], nreac, nprod, comp_namelist, \
-                                            RO2_indx, HOMRO2_indx, rstoi, pstoi)                                                                                                  
+    comp_namelist,  erf, err_mess]= init_conc.init_conc(comp_num, comp_namelist, C0, T, \
+                                                        p, comp_namelist, rindx, pindx, \
+                                                        num_eqn[0], nreac, nprod, comp_namelist, \
+                                                        RO2_indx, HOMRO2_indx, rstoi, pstoi)
     # y = c[0,0,:]
 
-    RO2conc = RO2_conc.RO2_conc(RO2_indi,y)    
+    RO2conc = RO2_conc.RO2_conc(RO2_indi, y)
     op = jude_species(y,comp_namelist)
-    rate_values, erf, err_mess = rate_coeffs.evaluate_rates(RO2conc, T, 0, M, M*0.7809, op[0],op[1],op[2],op[3],op[4], p)
+    rate_values, erf, err_mess = rate_coeffs.evaluate_rates(RO2conc, T, 0, M, M * 0.7809, op[0], op[1], op[2], op[3], op[4], p)
 
     #%% plot
     for j in range(numLoop):
