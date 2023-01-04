@@ -103,6 +103,17 @@ def find_setup_paras(date):
                    SO2ratio=np.array(1000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppm
                    file_name='SA_cali_16Sep22_APi9_Br_calibrator1.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
                    )
+    elif date == 'SA_cali_2022-09-18':
+        setup_paras = dict(sampleflow=np.array(21.8, dtype=np.float64),  # inlet sample flow of CIMS, lpm
+                   R1=np.array(0.5, dtype=np.float64),  # R for the 1st tube
+                   L1=np.array(17, dtype=np.float64),  # length for the 1st tube
+                   R2=np.array(1.2, dtype=np.float64),  # R for the 2nd tube
+                   L2=np.array(60, dtype=np.float64),  # length for the 2nd tube
+                   Itx=3.8e10,  # add it product at the Qx, if you don't have it then you need to calculate it
+                   Qx=7.6,  # Qx the it product was calculated
+                   SO2ratio=np.array(1000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppm
+                   file_name='SA_cali_18Sep22_APi9_Br_UFA_calibrator.csv' # the file you store all the flow data including N2, O2, SO2 in the folder input files
+                   )
     elif date == 'SA_cali_2022-11-04_Br':
         setup_paras = dict(sampleflow=np.array(21.8, dtype=np.float64),  # inlet sample flow of CIMS, lpm
                    R1=np.array(0.78, dtype=np.float64),  # R for the 1st tube
@@ -149,7 +160,7 @@ def find_setup_paras(date):
 # date = ['SA_cali_2021-10-281','SA_cali_2021-10-282','SA_cali_2021-11-18','SA_cali_2021-11-182','SA_cali_2022-01-04','SA_cali_2022-02-07']
 #date =['water-effect-SA-2021-10-28','water-effect-SA-H2Oflow2-constant-2021-10-28','water-effect-SA-2021-11-18','water-effect-SA-H2Oflow2-constant-2021-11-18']
 #setup_paras = find_setup_paras(date[4])
-date = ['SA_cali_2022-09-16']
+date = ['SA_cali_2022-09-18']
 
 #date = 'SA_kinetic_limit_simulation'
 setup_paras = find_setup_paras(date[0])
@@ -162,7 +173,7 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
             #  Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
             #  Itx=8.28e10,  # add it product at the Qx, if you don't have it then you need to calculate it
             #  Qx=20,  # Qx the it product was calculated
-             outflowLocation='before',  # outflow tube located 'before' or 'after' injecting air, water, and so2
+             outflowLocation='after',  # outflow tube located 'before' or 'after' injecting air, water, and so2
              fullOrSimpleModel='full',  # 'simple': Gormley & Kennedy approximation, 'full': flow model (much slower)
              #sampleflow=np.array(10.6, dtype=np.float64),  # inlet sample flow of CIMS, lpm
             #  SO2ratio=np.array(1000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppm
