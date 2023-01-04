@@ -11,7 +11,7 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              T=np.array(298, dtype=np.float64),  # Temperature, K
              R1=np.array(0.78, dtype=np.float64),  # ID for the 1st tube
              L1=np.array(26, dtype=np.float64),  # length for the 1st tube
-             Itx=5.42e10,  # add it product at the Qx, if you don't have it then you need to calculate it
+             Itx=4.84e10,  # add it product at the Qx, if you don't have it then you need to calculate it
              Qx=20,  # Qx where the it product was calculated
              outflowLocation='before',  # outflow tube located 'before' or 'after' injecting air, water, and so2
              fullOrSimpleModel='full',  # 'simple': Gormley & Kennedy approximation, 'full': flow model (much slower)
@@ -32,8 +32,8 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              Init_comp=['OH', 'HO2'],
              # Species you think they should have initial concentration in the first frid of tube
              key_spe_for_plot='H2SO4',  # key species as criterion to stop the loop
-             plot_spec=['OH', 'HSO3', 'HO2', 'SO3', 'H2SO4'],  # species that you want to plot
-             file_name='H2O_5.csv',
+             plot_spec=['OH', 'HSO3', 'HO2', 'SO3', 'H2SO4','H2O'],  # species that you want to plot
+             file_name='SA_cali_2021-09-10.csv',
              # the file you store all the flow data including N2, O2, SO2 in the folder input files
              )
 

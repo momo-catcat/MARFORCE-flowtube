@@ -236,7 +236,7 @@ def find_setup_paras(date):
 # date = ['SA_cali_2021-10-281','SA_cali_2021-10-282','SA_cali_2021-11-18','SA_cali_2021-11-182','SA_cali_2022-01-04','SA_cali_2022-02-07']
 #date =['water-effect-SA-2021-10-28','water-effect-SA-H2Oflow2-constant-2021-10-28','water-effect-SA-2021-11-18','water-effect-SA-H2Oflow2-constant-2021-11-18']
 #setup_paras = find_setup_paras(date[4])
-date = ['SA_cali_2022-09-16']
+date = ['SA_cali_2021-09-10']
 
 #date = 'SA_kinetic_limit_simulation'
 setup_paras = find_setup_paras(date[0])
