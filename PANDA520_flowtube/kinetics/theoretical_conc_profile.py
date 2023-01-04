@@ -40,7 +40,7 @@ R = 0.0078
 conc_prof = conc_profile_Alonso(R, np.linspace(0, R, 100), 97, 1830, 2, 10  / 60 / 1000)
 ## import theoretical value
 import pandas as pd
-prof_conc_theory = pd.read_csv('../Export_files/Theoretical_model.csv')
+prof_conc_theory = pd.read_csv('../Export_files_old/Theoretical_model.csv')
 
 plt.plot(np.linspace(0, R, 100), conc_prof, label = 'Theory')
 plt.plot(prof_conc_theory.R/100, prof_conc_theory.SA  / 1e8, label = 'Model')

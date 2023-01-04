@@ -19,14 +19,14 @@ def calculate_concs(paras):
     if 'input_file_folder' in paras:
         input_file_folder = paras['input_file_folder']
     else:
-        input_file_folder = dirpath + '/../input_files/'
+        input_file_folder = dirpath + '/../input_files_old/'
     ## define the mechanism folder
     input_mechanism_folder = dirpath + '/../input_mechanism/'
     ## Add the folder where the final results will be exported
     if 'output_file_folder' in paras:
         export_file_folder = paras['output_file_folder']
     else:
-        export_file_folder = dirpath + '/../Export_files/'
+        export_file_folder = dirpath + '/../Export_files_old/'
     file_name = paras['file_name']
     data = pd.read_csv(input_file_folder + file_name)
     inputs: Index = data.columns.tolist()

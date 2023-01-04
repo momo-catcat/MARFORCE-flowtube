@@ -33,7 +33,7 @@ def meanconc_cal(R2, Rgrid, plot_spec, comp_namelist, c, model_mode):
         if model_mode == 'kinetic':
             if i == 'H2SO4':
                 prof_conc = pd.DataFrame({'R': rVec, 'SA': cVec1})
-                prof_conc.to_csv('./Export_files/Theoretical_model.csv')
+                prof_conc.to_csv('./Export_files_old/Theoretical_model.csv')
         ####!!!!!!!!!!!!!!!!!!Temporary code
 
     return meanConc

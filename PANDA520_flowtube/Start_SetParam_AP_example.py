@@ -12,7 +12,7 @@ dirpath = os.path.dirname(__file__) #get the current path of this file
 folder_flowtube = dirpath + '/'
 sys.path.append(folder_flowtube)
 ## Input file folder
-input_file_folder = dirpath + '/input_files/'
+input_file_folder = dirpath + '/input_files_old/'
 ## Add the folder where the final results will be exported
 export_file_folder= dirpath + '/export_files/'
 
