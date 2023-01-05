@@ -22,3 +22,4 @@ test\
 files_can_deleted/
 Export_files_old/
 input_files_old/
+.DS_store
