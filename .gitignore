@@ -5,3 +5,4 @@
 #ignore cache directory
 PANDA520_flowtube/__pycache__
 .spyproject
+.DS_store
