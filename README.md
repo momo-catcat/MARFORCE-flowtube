@@ -29,7 +29,7 @@ The [article](NEED TO BE ADDED later) published in AMT explains the mechianisms 
 
 ## 2. Installation<a name="installtion"></a>
 1. Download the MARFORCE repository from https://github.com/momo-catcat/PANDA520-flowtube.
-2. Create a environment containing Python and relevant libraries (). Anaconda is recommanded to manage and install different libraries. 
+2. Create a environment containing Python and relevant libraries (). Anaconda is recommended to manage and install different libraries. 
 
 ## 3. Running<a name="running"></a>
 1. After downloading the model package, go to *PANDA520-flowtube/PANDA520_flowtube/*
