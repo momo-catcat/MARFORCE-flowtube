@@ -3,6 +3,61 @@ This is a project to develop a flow tube chemistry module that include 2D space 
 
 Shall we include the instruction for SA calibration experiments
 
+# Table of contents
+**[1. Documentation](#1-documentation)**
+
+**[2. Installation](#2-installation)**
+
+**[3. Running](#3-running)**
+
+**[4. Inputs](#4-Inputs)**
+
+* [4.1. Chemical Scheme file](#41-Chemical-Scheme-file)
+* [4.2. SA set parameters](#42-SA-set-parameters)
+* [4.3. HOI set parameters](#43-HOI-set-parameters)
+
+**[5. Outputs](#5-outputs)**
+**[6. Acknowledgements](#6-Acknowledgements)**
+
+----
+
+## 1. Documentation </a>
+The README file you are now viewing serves as the MARFORCE (Marine Atmospheric paRticle FORmation and ChEmistry) manual, including how to run the model with correct inputs. 
+
+The [article](NEED TO BE ADDED later) published in AMT explains the mechianisms of the flowtube model with corresponding schematics and simulation results. 
+
+## 2. Installation <a name="installtion"></a>
+1. Download the MARFORCE repository from https://github.com/momo-catcat/PANDA520-flowtube.
+2. Create a environment containing Python and relevant libraries (). Anaconda is recommanded to manage and install different libraries. 
+
+## 3. Running <a name="running"></a>
+1. After downloading the model package, go to *PANDA520-flowtube/PANDA520_flowtube/*
+2. For model inputs, you should have: a .txt chemical reaction scheme file under folder *input_mechanism/* (e.g., 'SO2_SA.txt' given for SA calibration), a .csv file containing information of flows and possible temperature or concentrations under folder *Input_files/* (e.g., 'SA_cali_2021-09-10.csv') or any input folder set by yourself, a .py file to set the experimental information under the current folder (Start_SetParam_SA_example.py given as an example file for SA calibration). -- See next section **[4. Inputs](#4-Inputs)** for details. 
+3. Once all the three files mentioned above set properly according to experiments, activate the environment containing all the packages, then run the .py file (e.g., Start_SetParam_SA_example.py) to get the model starting.
+4. Finally, the model will show surface plots of all the steps for each experiment stage. The output files (one .csv and one.txt) will be saved under the folder *Export_files/* if no other folder is set for output. 
+
+## 4. Inputs <a name="inputs"></a>
+As mentioned above, there are three input files. This section will introduce how to set the files based on different mechanisms. 
+
+### 4.1. Chemical Scheme file <a name="41-Chemical-Scheme-file"></a>
+The chemical scheme file includes the reactions and their rate coefficients in the gas- and aqueous-phases.
+
+Two example chemical scheme files are given under *PANDA520-flowtube/PANDA520_flowtube/input_mechanism*, named 'SO2_SA.txt' and 'HOI_cali_chem.txt' for SA and HOI calibration system. The chemical mechanistic information was taken from the Master Chemical Mechanism, MCM v3.3.1., via [website](http://mcm.york.ac.uk/). 
+
+Markers are required to recognise different sections of the chemical scheme. The markers are for the MCM KPP format.
+
+The expression for the rate coefficient can use Fortran type scientific notation or python type; acceptable math functions: EXP, exp, dsqrt, dlog, LOG, dabs, LOG10, numpy.exp, numpy.sqrt, numpy.log, numpy.abs, numpy.log10; rate coefficients may be functions of TEMP, RH, M, N2, O2 where TEMP is temperature (K), RH is relative humidity (0-1), M, N2 and O2 are the concentrations of third body, nitrogen and oxygen, respectively (# molecules/cc (air)). (Adopted from http://github.com/simonom/PyCHAM)
+
+### 4.2. SA set parameters <a name="42-SA-set-parameters"></a>
+
+### 4.3. HOI set parameters <a name="43-HOI-set-parameters"></a>
+
+## 5. Outputs <a name="5-outputs"></a>
+
+## 6. Acknowledgements <a name="6-Acknowledgements"></a>
+
+
+
 ## Set parameters (e.g., Start_SetParam_SA_example.py)
 
 `sampleflow` : inlet flow of CIMs, unit lpm \
@@ -104,3 +159,4 @@ Shall we include the instruction for SA calibration experiments
 ### **Main parameters in the function**
 `meanconc_s` : output table with headers containing steady state concentrations of species in `paras['plot_spec']` at different stages \
 `c` : concentrations of species in `paras['plot_spec']` at all steps of all stages.
+
