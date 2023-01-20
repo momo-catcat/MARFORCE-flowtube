@@ -13,8 +13,8 @@ Shall we include the instruction for SA calibration experiments
 **[4. Inputs](#4-Inputs)**
 
 * [4.1. Chemical Scheme file](#41-Chemical-Scheme-file)
-* [4.2. SA set parameters](#42-SA-set-parameters)
-* [4.3. HOI set parameters](#43-HOI-set-parameters)
+* [4.2. SA calibration](#42-SA-calibration)
+* [4.3. HOI calibration](#43-HOI-calibration)
 
 **[5. Outputs](#5-outputs)**
 
@@ -50,6 +50,61 @@ Markers are required to recognise different sections of the chemical scheme. The
 The expression for the rate coefficient can use Fortran type scientific notation or python type; acceptable math functions: EXP, exp, dsqrt, dlog, LOG, dabs, LOG10, numpy.exp, numpy.sqrt, numpy.log, numpy.abs, numpy.log10; rate coefficients may be functions of TEMP, RH, M, N2, O2 where TEMP is temperature (K), RH is relative humidity (0-1), M, N2 and O2 are the concentrations of third body, nitrogen and oxygen, respectively (# molecules/cc (air)). (Adopted from http://github.com/simonom/PyCHAM)
 
 ### 4.2. SA calibration<a name="42-SA-set-parameters"></a>
+The chemical scheme file for sulfuric acid (SA) calibration is already given in the file named 'SO2_SA.txt', under *PANDA520-flowtube/PANDA520_flowtube/input_mechanism*. 
+
+**Notice:** the model will automatically determine the type of `flag_tube` ('4', '3', '2', '1' refer to the setup of the experiment) according to the input inforamtion stating below. See the [article](NEED TO BE ADDED later) for schematics of different setups 
+| Type of the experiment | Description of the flowtube|
+|-------------|-------------|
+|flag_tube=4 | Two tubes with different inner diameters and have Y piece, run the second tube with two flows simultaneously |
+|flag_tube=3 | Same as '4', but run the second tube with one flow after converting the mean concentrations |
+|flag_tube=2 | Two tubes with different inner diameters |
+|flag_tube=1 | One tube |
+
+#### **Inputs for flag_tube=1**
+----
+
+**Flow variables .csv file:** an example is provided under folder *PANDA520-flowtube/PANDA520_flowtube/Input_files/*, called 'SA_cali_2021-09-10.csv'. It must include flow rate information but there are a few optional input variables. The headers show the variable name and the rest rows mean the number of the experiment stages. The model does not check whether the UV light is on or not, **thus just input all the stages with lights on or add your own codes while calculating the gas concentrations**.
+
+| Input variables of the .csv file | Description |
+|-------------|-------------|
+| N2flow | Input N2 flow at different stages (sccm)|
+| O2flow | Input synthetic air flow at different stages (sccm) |
+| SO2flow | Input SO2 flow at different stages (sccm)|
+| H2Oflow | Input H2O flow at different stages (sccm)|
+| Q | Total flow in the tube at different stages (sccm) |
+| T *(optional)* | Temperature at different stages if recorded (K) |
+| H2O_concentration *(optional)*| H2O concentration by measurement if recorded (cm-3). If the measured H2O concentrations is more accurate than calculated ones by flows, the measured ones should be used for running the flowtube model. |
+
+
+**Experimental information .py file:** an example is provided under folder *PANDA520-flowtube/PANDA520_flowtube/*, called 'Start_SetParam_SA_example.py'. A class 'dict' object is used for storing information.
+| Input variables of the .py file | Description|
+|-------------|-------------|
+| p | Pressure under which the experiment is conducted (Pa) |
+| T | Temperature under which the experiment is conducted (K) |
+| R1 |Inner radius for the first tube (cm), in this case flag_tube=1, thus the first tube is the only tube. |
+| L1 | Length for the first tube (cm) |
+| Itx | It product value for the specific UV lamp used in the experiment|
+| Qx | The flow rate at which Itx is determined (lpm) |
+| outflowLocation | Outflow (exhaust) tube located 'before' or 'after' injecting synthetic air, water vapor and SO2 |
+| fullOrSimpleModel | 'simple' means Gormley & Kennedy approximation, while 'full' means flow model (much slower) |
+| sampleflow |Inlet flow (lpm) of CIMs (chemical ionization mass spectrometer); it should be the same as total flow in the tube (Q). |
+| SO2ratio | SO2 ratio of the gas bottle (ppm) |
+| O2ratio | O2 ratio in synthetic air |
+| Zgrid | Number of grids in direction of tube length  |
+| Rgrid | Number of grids in direction of radius |
+| dt | Differential time interval (usually 1e-4, but try small number if the values are too large out of range and showing 'Nan' during calculation) |
+| model_mode | Use 'normal' if you don't know what this is for. 'kinetic' mode refers to running the model without chemistry module to test the kinetic core. |
+| Diff_setname | Diffusion for the species that you want to define by yourself, otherwise it will be calculated automatically based on the elements it contains |
+| Diff_set | Add the value according to the Diff_setname |
+| sch_name | Chemical scheme file name stored in the *PANDA520-flowtube/PANDA520_flowtube/input_mechanism/* folder|
+| const_comp | Species you think they should have constant concentrations in the whole tube (for SA calibration, const_comp=['SO2','O2','H2O']) |
+| Init_comp | Species you think they should have initial concentration in the first grid of tube (for SA calibration, Init_comp=['OH','HO2'])  |
+| key_spe_for_plot | Key species as criterion to stop the loop (for SA calibration, key_spe_for_plot='H2SO4') |
+| plot_spec | Species that you want to plot |
+| file_name | The name of the flow variables .csv file. |
+| input_file_folder *(optional)* | The folder where the flow variables .csv file locates; default folder is *PANDA520-flowtube/PANDA520_flowtube/Input_files/* if this parameter is missing  |
+| export_file_folder *(optional)* | The folder where the .csv and .txt files containing export infomration (such as H2SO4 concentration) locate; default folder is *PANDA520-flowtube/PANDA520_flowtube/Export_files* if this paramter is missing |
+
 
 ### 4.3. HOI calibration<a name="43-HOI-set-parameters"></a>
 
