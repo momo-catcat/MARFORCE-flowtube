@@ -50,9 +50,9 @@ Markers are required to recognise different sections of the chemical scheme. The
 The expression for the rate coefficient can use Fortran type scientific notation or python type; acceptable math functions: EXP, exp, dsqrt, dlog, LOG, dabs, LOG10, numpy.exp, numpy.sqrt, numpy.log, numpy.abs, numpy.log10; rate coefficients may be functions of TEMP, RH, M, N2, O2 where TEMP is temperature (K), RH is relative humidity (0-1), M, N2 and O2 are the concentrations of third body, nitrogen and oxygen, respectively (# molecules/cc (air)). (Adopted from http://github.com/simonom/PyCHAM)
 
 ### 4.2. SA calibration<a name="42-SA-set-parameters"></a>
-The chemical scheme file for sulfuric acid (SA) calibration is already given in the file named 'SO2_SA.txt', under *PANDA520-flowtube/PANDA520_flowtube/input_mechanism*. 
+The chemical scheme file for sulfuric acid (SA) calibration is already given in the file named 'SO2_SA.txt', under *PANDA520-flowtube/PANDA520_flowtube/input_mechanism/*. 
 
-**Notice:** the model will automatically determine the type of `flag_tube` ('4', '3', '2', '1' refer to the setup of the experiment) according to the input inforamtion stating below. See the [article](NEED TO BE ADDED later) for schematics of different setups 
+**Notice:** if you use the given function file 'Calcu_by_flow_SA.py' under *PANDA520-flowtube/PANDA520_flowtube/Funcs/* for concentration calculation, the type of `flag_tube` will be determined automatically ('4', '3', '2', '1' refer to the setup of the experiment) according to the input inforamtion stating below. See the [article](NEED TO BE ADDED later) for schematics of different setups 
 | Type of the experiment | Description of the flowtube|
 |-------------|-------------|
 |flag_tube=4 | Two tubes with different inner diameters and have Y piece, run the second tube with two flows simultaneously |
@@ -60,8 +60,7 @@ The chemical scheme file for sulfuric acid (SA) calibration is already given in 
 |flag_tube=2 | Two tubes with different inner diameters |
 |flag_tube=1 | One tube |
 
-#### **Inputs for flag_tube=1**
-----
+#### **4.2.1 Inputs for flag_tube=1**
 
 **Flow variables .csv file:** an example is provided under folder *PANDA520-flowtube/PANDA520_flowtube/Input_files/*, called 'SA_cali_2021-09-10.csv'. It must include flow rate information but there are a few optional input variables. The headers show the variable name and the rest rows mean the number of the experiment stages. The model does not check whether the UV light is on or not, **thus just input all the stages with lights on or add your own codes while calculating the gas concentrations**.
 
@@ -77,7 +76,7 @@ The chemical scheme file for sulfuric acid (SA) calibration is already given in 
 
 
 **Experimental information .py file:** an example is provided under folder *PANDA520-flowtube/PANDA520_flowtube/*, called 'Start_SetParam_SA_example.py'. A class 'dict' object is used for storing information.
-| Input variables of the .py file | Description|
+| Input variables in the 'dict' object (paras) of the .py file | Description|
 |-------------|-------------|
 | p | Pressure under which the experiment is conducted (Pa) |
 | T | Temperature under which the experiment is conducted (K) |
@@ -104,6 +103,17 @@ The chemical scheme file for sulfuric acid (SA) calibration is already given in 
 | file_name | The name of the flow variables .csv file. |
 | input_file_folder *(optional)* | The folder where the flow variables .csv file locates; default folder is *PANDA520-flowtube/PANDA520_flowtube/Input_files/* if this parameter is missing  |
 | export_file_folder *(optional)* | The folder where the .csv and .txt files containing export infomration (such as H2SO4 concentration) locate; default folder is *PANDA520-flowtube/PANDA520_flowtube/Export_files* if this paramter is missing |
+| flag_tube *(optional)* | The type of experiment setup, it will determined automatically if 'Calcu_by_flow_SA.py' is used for concentration calculation|
+
+For the other input variables of the .py file, **you don't need to change if** you use the example file 'Start_SetParam_SA_example.py' with the 'Calcu_by_flow_SA.py' as the function to calculate gas concentrations. **You could also make your own script for calculating concentrations based on flows, and in this case you also have to determine the flag_tube by yourself.**
+| Other input variables of the .py file | Description|
+|-------------|-------------|
+| Init_comp_conc | Initial concentrations for species that you already set in the paras (in the case of SA calibration, 'OHconc' (concentration of OH radical calculated from Itx, Qx, H2O concentration and etc.)  is used for both 'OH' and 'HO2') |
+| const_comp_conc | Constant concentrations for species you already set |
+| num_stage | Default is num_stage= paras['OHconc'], meaning the number of stages based on OHconc since we want to calculate the stages with light on, but **this can also be set by user as a integer number N (in this case, it means the first N stages are calculated)** |
+
+
+#### **4.2.2 Inputs for flag_tube=2**
 
 
 ### 4.3. HOI calibration<a name="43-HOI-set-parameters"></a>
