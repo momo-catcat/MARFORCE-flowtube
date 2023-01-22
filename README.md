@@ -14,6 +14,10 @@ Shall we include the instruction for SA calibration experiments
 
 * [4.1. Chemical Scheme file](#41-Chemical-Scheme-file)
 * [4.2. SA calibration](#42-SA-calibration)
+    + [4.2.1. flag_tube=1](#421-Inputs-for-flag_tube=1)
+    + [4.2.2. flag_tube=2](#422-Inputs-for-flag_tube=2)
+    + [4.2.3. flag_tube=3](#423-Inputs-for-flag_tube=3)
+    + [4.2.4. flag_tube=4](#424-Inputs-for-flag_tube=4)
 * [4.3. HOI calibration](#43-HOI-calibration)
 
 **[5. Outputs](#5-outputs)**
@@ -60,11 +64,11 @@ The chemical scheme file for sulfuric acid (SA) calibration is already given in 
 |flag_tube=2 | Two tubes with different inner diameters |
 |flag_tube=1 | One tube |
 
-#### **4.2.1 Inputs for flag_tube=1**
+#### **4.2.1. Inputs for flag_tube=1**<a name="421-Inputs-for-flag_tube=1"></a>
 
 **Flow variables .csv file:** an example is provided under folder *PANDA520-flowtube/PANDA520_flowtube/Input_files/*, called 'SA_cali_2021-09-10.csv'. It must include flow rate information but there are a few optional input variables. The headers show the variable name and the rest rows mean the number of the experiment stages. The model does not check whether the UV light is on or not, **thus just input all the stages with lights on or add your own codes while calculating the gas concentrations**.
 
-| Input variables of the .csv file | Description |
+| Input variables of the .csv file for flag_tube=1 | Description |
 |-------------|-------------|
 | N2flow | Input N2 flow at different stages (sccm)|
 | O2flow | Input synthetic air flow at different stages (sccm) |
@@ -72,11 +76,11 @@ The chemical scheme file for sulfuric acid (SA) calibration is already given in 
 | H2Oflow | Input H2O flow at different stages (sccm)|
 | Q | Total flow in the tube at different stages (sccm) |
 | T *(optional)* | Temperature at different stages if recorded (K) |
-| H2O_concentration *(optional)*| H2O concentration by measurement if recorded (cm-3). If the measured H2O concentrations is more accurate than calculated ones by flows, the measured ones should be used for running the flowtube model. |
+| H2Oconc *(optional)*| H2O concentration by measurement if recorded (cm-3). If the measured H2O concentrations is more accurate than calculated ones by flows, the measured ones should be used for running the flowtube model. |
 
 
 **Experimental information .py file:** an example is provided under folder *PANDA520-flowtube/PANDA520_flowtube/*, called 'Start_SetParam_SA_example.py'. A class 'dict' object is used for storing information.
-| Input variables in the 'dict' object (paras) of the .py file | Description|
+| Input variables in the 'dict' object (paras) of the .py file for flag_tube=1 | Description|
 |-------------|-------------|
 | p | Pressure under which the experiment is conducted (Pa) |
 | T | Temperature under which the experiment is conducted (K) |
@@ -105,7 +109,7 @@ The chemical scheme file for sulfuric acid (SA) calibration is already given in 
 | export_file_folder *(optional)* | The folder where the .csv and .txt files containing export infomration (such as H2SO4 concentration) locate; default folder is *PANDA520-flowtube/PANDA520_flowtube/Export_files* if this paramter is missing |
 | flag_tube *(optional)* | The type of experiment setup, it will determined automatically if 'Calcu_by_flow_SA.py' is used for concentration calculation|
 
-For the other input variables of the .py file, **you don't need to change if** you use the example file 'Start_SetParam_SA_example.py' with the 'Calcu_by_flow_SA.py' as the function to calculate gas concentrations. **You could also make your own script for calculating concentrations based on flows, and in this case you also have to determine the flag_tube by yourself.**
+For the other input variables of the .py file stated below, **you don't need to change if** you use the example file 'Start_SetParam_SA_example.py' with the 'Calcu_by_flow_SA.py' as the function to calculate gas concentrations. **You could also make your own script for calculating concentrations based on flows, and in this case you also have to determine the flag_tube by yourself. We RECOMMEND you to use the example function file 'Calcu_by_flow_SA.py'**  
 | Other input variables of the .py file | Description|
 |-------------|-------------|
 | Init_comp_conc | Initial concentrations for species that you already set in the paras (in the case of SA calibration, 'OHconc' (concentration of OH radical calculated from Itx, Qx, H2O concentration and etc.)  is used for both 'OH' and 'HO2') |
@@ -113,8 +117,41 @@ For the other input variables of the .py file, **you don't need to change if** y
 | num_stage | Default is num_stage= paras['OHconc'], meaning the number of stages based on OHconc since we want to calculate the stages with light on, but **this can also be set by user as a integer number N (in this case, it means the first N stages are calculated)** |
 
 
-#### **4.2.2 Inputs for flag_tube=2**
+#### **4.2.2. Inputs for flag_tube=2**<a name="422-Inputs-for-flag_tube=2"></a>
+**Flow variables .csv file** is set exactly the same as the the situation of **flag_tube=1**, see details above. \
+For  **experimental information .py file**, all the variables are the same except here R2 and L2 are additionally needed.
+| Additional input variables in the 'dict' object (paras) of the .py file for flag_tube=2 | Description|
+|-------------|-------------|
+| R2 | Inner diameter for the second tube (cm) if there is any, it could also be set to 0 for flag_tube = 1 |
+| L2 | Length for the second tube (cm) |
 
+#### **4.2.3. Inputs for flag_tube=3**<a name="423-Inputs-for-flag_tube=3"></a>
+**Flow variables .csv file:** since a Y piece is added into the setup, variables for flows coming from Y piece is needed to input.
+
+| Input variables of the .csv file for flag_tube=3 | Description |
+|-------------|-------------|
+| N2flow1 | Input N2 flow for the first tube at different stages (sccm)|
+| N2flow2 | Input N2 flow for the Y piece at different stages (sccm)|
+| O2flow1 | Input synthetic air flow for the first tube at different stages (sccm) |
+| O2flow2 | Input synthetic air flow for the Y piece at different stages (sccm) |
+| SO2flow | Input SO2 flow for the first tube at different stages (sccm)|
+| H2Oflow1 | Input H2O flow for the first tube at different stages (sccm)|
+| H2Oflow2 | Input H2O flow for the Y piece at different stages (sccm)|
+| Q1 | Total flow in the first tube at different stages (sccm) |
+| Q2 | Total flow in the second tube (NOT Y piece!!!) at different stages (sccm) |
+| T *(optional)* | Temperature at different stages if recorded (K) |
+| H2Oconc1 *(optional)*| H2O concentration by measurement for the first tube if recorded (cm-3). If the measured H2O concentrations is more accurate than calculated ones by flows, the measured ones should be used for running the flowtube model. |
+| H2Oconc2 *(optional)*| H2O concentration by measurement for the Y piece if recorded (cm-3).|
+
+**Experimental information .py file:** variables are the same as those for flag_tube=2 if 'Calcu_by_flow_SA.py' is used for calculating concentrations, otherwise you should make your own script for calculating the concentrations in both the first and second tubes. 
+
+
+#### **4.2.4. Inputs for flag_tube=4**<a name="424-Inputs-for-flag_tube=4"></a>
+Every input variables are the same as those for flag_tube=3, except that for **Experimental information .py file**, you have to set flag_tube=4 by yourself while using the example script 'Calcu_by_flow_SA.py'. 
+
+| Additional input variables in the 'dict' object (paras) of the .py file for flag_tube=4 | Description|
+|-------------|-------------|
+| flag_tube | In this case ('4'), this variable is required to write by yourself, but if you want to make your own script, this is not required. |
 
 ### 4.3. HOI calibration<a name="43-HOI-set-parameters"></a>
 
