@@ -14,10 +14,10 @@ Shall we include the instruction for SA calibration experiments
 
 * [4.1. Chemical Scheme file](#41-Chemical-Scheme-file)
 * [4.2. SA calibration](#42-SA-calibration)
-    + [4.2.1. flag_tube=1](#421-Inputs-for-flag_tube=1)
-    + [4.2.2. flag_tube=2](#422-Inputs-for-flag_tube=2)
-    + [4.2.3. flag_tube=3](#423-Inputs-for-flag_tube=3)
-    + [4.2.4. flag_tube=4](#424-Inputs-for-flag_tube=4)
+    + [4.2.1. flag_tube=1](#421-Inputs-for-flag_tube1)
+    + [4.2.2. flag_tube=2](#422-Inputs-for-flag_tube2)
+    + [4.2.3. flag_tube=3](#423-Inputs-for-flag_tube3)
+    + [4.2.4. flag_tube=4](#424-Inputs-for-flag_tube4)
 * [4.3. HOI calibration](#43-HOI-calibration)
 
 **[5. Outputs](#5-outputs)**
@@ -64,7 +64,7 @@ The chemical scheme file for sulfuric acid (SA) calibration is already given in 
 |flag_tube=2 | Two tubes with different inner diameters |
 |flag_tube=1 | One tube |
 
-#### **4.2.1. Inputs for flag_tube=1**<a name="421-Inputs-for-flag_tube=1"></a>
+#### **4.2.1. Inputs for flag_tube=1**<a name="421-Inputs-for-flag_tube1"></a>
 
 **Flow variables .csv file:** an example is provided under folder *PANDA520-flowtube/PANDA520_flowtube/Input_files/*, called 'SA_cali_2021-09-10.csv'. It must include flow rate information but there are a few optional input variables. The headers show the variable name and the rest rows mean the number of the experiment stages. The model does not check whether the UV light is on or not, **thus just input all the stages with lights on or add your own codes while calculating the gas concentrations**.
 
@@ -117,7 +117,7 @@ For the other input variables of the .py file stated below, **you don't need to 
 | num_stage | Default is num_stage= paras['OHconc'], meaning the number of stages based on OHconc since we want to calculate the stages with light on, but **this can also be set by user as a integer number N (in this case, it means the first N stages are calculated)** |
 
 
-#### **4.2.2. Inputs for flag_tube=2**<a name="422-Inputs-for-flag_tube=2"></a>
+#### **4.2.2. Inputs for flag_tube=2**<a name="422-Inputs-for-flag_tube2"></a>
 **Flow variables .csv file** is set exactly the same as the the situation of **flag_tube=1**, see details above. \
 For  **experimental information .py file**, all the variables are the same except here R2 and L2 are additionally needed.
 | Additional input variables in the 'dict' object (paras) of the .py file for flag_tube=2 | Description|
@@ -125,7 +125,7 @@ For  **experimental information .py file**, all the variables are the same excep
 | R2 | Inner diameter for the second tube (cm) if there is any, it could also be set to 0 for flag_tube = 1 |
 | L2 | Length for the second tube (cm) |
 
-#### **4.2.3. Inputs for flag_tube=3**<a name="423-Inputs-for-flag_tube=3"></a>
+#### **4.2.3. Inputs for flag_tube=3**<a name="423-Inputs-for-flag_tube3"></a>
 **Flow variables .csv file:** since a Y piece is added into the setup, variables for flows coming from Y piece is needed to input.
 
 | Input variables of the .csv file for flag_tube=3 | Description |
@@ -146,7 +146,7 @@ For  **experimental information .py file**, all the variables are the same excep
 **Experimental information .py file:** variables are the same as those for flag_tube=2 if 'Calcu_by_flow_SA.py' is used for calculating concentrations, otherwise you should make your own script for calculating the concentrations in both the first and second tubes. 
 
 
-#### **4.2.4. Inputs for flag_tube=4**<a name="424-Inputs-for-flag_tube=4"></a>
+#### **4.2.4. Inputs for flag_tube=4**<a name="424-Inputs-for-flag_tube4"></a>
 Every input variables are the same as those for flag_tube=3, except that for **Experimental information .py file**, you have to set flag_tube=4 by yourself while using the example script 'Calcu_by_flow_SA.py'. 
 
 | Additional input variables in the 'dict' object (paras) of the .py file for flag_tube=4 | Description|
