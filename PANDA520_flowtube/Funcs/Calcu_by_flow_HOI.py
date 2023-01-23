@@ -23,8 +23,8 @@ def calculate_concs(paras):
     ## define the mechanism folder
     input_mechanism_folder = dirpath + '/../input_mechanism/'
     ## Add the folder where the final results will be exported
-    if 'output_file_folder' in paras:
-        export_file_folder = paras['output_file_folder']
+    if 'export_file_folder' in paras:
+        export_file_folder = paras['export_file_folder']
     else:
         export_file_folder = dirpath + '/../Export_files/'
     file_name = paras['file_name']
