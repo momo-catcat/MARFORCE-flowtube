@@ -1,7 +1,7 @@
 # MARFORCE-Flowtube
 This is a project to develop a flow tube chemistry module that include 2D space and chemistry processes
 
-Shall we include the instruction for SA calibration experiments
+<!-- Shall we include the instruction for SA calibration experiments -->
 
 # Table of contents
 **[1. Documentation](#1-documentation)**
@@ -19,6 +19,10 @@ Shall we include the instruction for SA calibration experiments
     + [4.2.3. flag_tube=3](#423-Inputs-for-flag_tube3)
     + [4.2.4. flag_tube=4](#424-Inputs-for-flag_tube4)
 * [4.3. HOI calibration](#43-HOI-calibration)
+    + [4.3.1. flag_tube=1](#431-Inputs-for-flag_tube1)
+    + [4.3.2. flag_tube=2](#432-Inputs-for-flag_tube2)
+    + [4.3.3. flag_tube=3](#433-Inputs-for-flag_tube3)
+    + [4.3.4. flag_tube=4](#434-Inputs-for-flag_tube4)
 
 **[5. Outputs](#5-outputs)**
 
@@ -33,13 +37,13 @@ The [article](NEED TO BE ADDED later) published in AMT explains the mechianisms 
 
 ## 2. Installation<a name="installtion"></a>
 1. Download the MARFORCE repository from https://github.com/momo-catcat/PANDA520-flowtube.
-2. Create a environment containing Python and relevant libraries (). Anaconda is recommended to manage and install different libraries. 
+2. Create a environment containing Python and relevant libraries (numpy, pandas, os-sys, re, scipy, math, matplotlib, importlib, csv, datetime, molmass.). Anaconda is recommended to manage and install different libraries. 
 
 ## 3. Running<a name="running"></a>
 1. After downloading the model package, go to *PANDA520-flowtube/PANDA520_flowtube/*
 2. For model inputs, you should have: a .txt chemical reaction scheme file under folder *input_mechanism/* (e.g., 'SO2_SA.txt' given for SA calibration), a .csv file containing information of flows and possible temperature or concentrations under folder *Input_files/* (e.g., 'SA_cali_2021-09-10.csv') or any input folder set by yourself, a .py file to set the experimental information under the current folder (Start_SetParam_SA_example.py given as an example file for SA calibration). -- See next section **[4. Inputs](#4-Inputs)** for details. 
 3. Once all the three files mentioned above set properly according to experiments, activate the environment containing all the packages, then run the .py file (e.g., Start_SetParam_SA_example.py) to get the model starting.
-4. Finally, the model will show surface plots of all the steps for each experiment stage. The output files (one .csv and one.txt) will be saved under the folder *Export_files/* if no other folder is set for output. 
+4. Finally, the model will show surface plots of all the steps for each experiment stage. The output files (one .csv and one .txt) will be saved under the folder *Export_files/* if no other folder is set for output. 
 
 ## 4. Inputs<a name="inputs"></a>
 As mentioned above, there are three input files. This section will introduce how to set the files based on different mechanisms. 
@@ -76,7 +80,7 @@ The chemical scheme file for sulfuric acid (SA) calibration is already given in 
 | H2Oflow | Input H2O flow at different stages (sccm)|
 | Q | Total flow in the tube at different stages (sccm) |
 | T *(optional)* | Temperature at different stages if recorded (K) |
-| H2Oconc *(optional)*| H2O concentration by measurement if recorded (cm-3). If the measured H2O concentrations is more accurate than calculated ones by flows, the measured ones should be used for running the flowtube model. |
+| H2Oconc *(optional)*| H2O concentration by measurement if recorded (cm-3). If the measured H2O concentrations are more accurate than calculated ones by flows, the measured ones should be used for running the flowtube model. |
 
 
 **Experimental information .py file:** an example is provided under folder *PANDA520-flowtube/PANDA520_flowtube/*, called 'Start_SetParam_SA_example.py'. A class 'dict' object is used for storing information.
@@ -138,10 +142,10 @@ For  **experimental information .py file**, all the variables are the same excep
 | H2Oflow1 | Input H2O flow for the first tube at different stages (sccm)|
 | H2Oflow2 | Input H2O flow for the Y piece at different stages (sccm)|
 | Q1 | Total flow in the first tube at different stages (sccm) |
-| Q2 | Total flow in the second tube (NOT Y piece!!!) at different stages (sccm) |
+| Q2 | Total flow in the second tube **(NOT Y piece!!!)** at different stages (sccm) |
 | T *(optional)* | Temperature at different stages if recorded (K) |
-| H2Oconc1 *(optional)*| H2O concentration by measurement for the first tube if recorded (cm-3). If the measured H2O concentrations is more accurate than calculated ones by flows, the measured ones should be used for running the flowtube model. |
-| H2Oconc2 *(optional)*| H2O concentration by measurement for the Y piece if recorded (cm-3).|
+| H2Oconc1 *(optional)*| H2O concentration by measurement for the first tube if recorded (cm-3). If the measured H2O concentrations are more accurate than calculated ones by flows, the measured ones should be used for running the flowtube model. **Notice that CIMs just could just measure the H2O concentration for the second tube, but H2Oconc1 can be calculated by scaling with flows**. |
+| H2Oconc2 *(optional)*| H2O concentration by measurement for the second tube **(NOT Y piece!!!)**  if recorded (cm-3).|
 
 **Experimental information .py file:** variables are the same as those for flag_tube=2 if 'Calcu_by_flow_SA.py' is used for calculating concentrations, otherwise you should make your own script for calculating the concentrations in both the first and second tubes. 
 
@@ -155,111 +159,60 @@ Every input variables are the same as those for flag_tube=3, except that for **E
 
 ### 4.3. HOI calibration<a name="43-HOI-set-parameters"></a>
 
+#### **4.3.1. Inputs for flag_tube=1**<a name="431-Inputs-for-flag_tube1"></a>
+**Flow variables .csv file:** input format is the same to SA calibration but just with different flows. 
+
+| Input variables of the .csv file | Description |
+|-------------|-------------|
+| N2flow | Input N2 flow at different stages (sccm)|
+| O2flow | Input synthetic air flow at different stages (sccm) |
+| I2flow | Input I2 flow at different stages (sccm)|
+| I2conc | I2 concentration (after calibration) measured by CIMs at different stages (cm-3)|
+| Q | Total flow in the tube at different stages (sccm) |
+| T *(optional)* | Temperature at different stages if recorded (K) |
+| H2O_concentration *(optional)*| H2O concentration by measurement if recorded (cm-3). If the measured H2O concentrations are more accurate than calculated ones by flows, the measured ones should be used for running the flowtube model. |
+
+**Experimental information .py file:** all the variable names are exactly the same as those for SA calibration with flag_tube=1, and an example is provided under folder *PANDA520-flowtube/PANDA520_flowtube/*, called 'Start_SetParam_HOI_example.py'. **Notice that variables need to be changed to HOI calibration system, such as 'sche_name' (='HOI_cali_chem.txt') and 'Key_spe_for_plot' (='HOI'), all details see the example file.**
+
+Similar to SA calibration, **you don't need to change other input variables if** you use the example file 'Start_SetParam_HOI_example.py' with the 'Calcu_by_flow_HOI.py' as the function to calculate gas concentrations. 
+
+#### **4.3.2. Inputs for flag_tube=2**<a name="432-Inputs-for-flag_tube2"></a>
+**Flow variables .csv file** is set exactly the same as the the situation of HOI calibration with flag_tube=1, see details above. \
+**Experimental information .py file**: all the variables are the same except here R2 and L2 are additionally needed. (Description of R2 and L2 is showed in the **[4.2.2. Inputs for flag_tube=2](#422-Inputs-for-flag_tube2)**)
+
+#### **4.3.3. Inputs for flag_tube=3**<a name="433-Inputs-for-flag_tube3"></a>
+**Flow variables .csv file:** since a Y piece is added into the setup, variables for flows coming from Y piece is needed to input.
+| Input variables of the .csv file for flag_tube=3 | Description |
+|-------------|-------------|
+| N2flow1 | Input N2 flow for the first tube at different stages (sccm)|
+| N2flow2 | Input N2 flow for the Y piece at different stages (sccm)|
+| O2flow1 | Input synthetic air flow for the first tube at different stages (sccm) |
+| O2flow2 | Input synthetic air flow for the Y piece at different stages (sccm) |
+| I2flow | Input I2 flow for the first tube at different stages (sccm)|
+| I2conc1 | I2 concentration (after calibration) measured by CIMs for the first tube at different stages (cm-3), **notice that CIMs just could just measure the I2 concentration for the second tube, but I2conc1 can be calculated by scaling with flows**.|
+| I2conc2 | I2 concentration (after calibration) measured by CIMs for the second tube **(NOT Y piece!!!)** at different stages (cm-3)|
+| H2Oflow1 | Input H2O flow for the first tube at different stages (sccm)|
+| H2Oflow2 | Input H2O flow for the Y piece at different stages (sccm)|
+| Q1 | Total flow in the first tube at different stages (sccm) |
+| Q2 | Total flow in the second tube **(NOT Y piece!!!)** at different stages (sccm) |
+| T *(optional)* | Temperature at different stages if recorded (K) |
+| H2Oconc1 *(optional)*| H2O concentration by measurement for the first tube if recorded (cm-3). If the measured H2O concentrations are more accurate than calculated ones by flows, the measured ones should be used for running the flowtube model. **Notice that CIMs just could just measure the I2 concentration for the second tube, but I2conc1 can be calculated by scaling with flows**.|
+| H2Oconc2 *(optional)*| H2O concentration by measurement for the second tube **(NOT Y piece!!!)** if recorded (cm-3).|
+
+**Experimental information .py file:** variables are the same as those for flag_tube=2 if 'Calcu_by_flow_HOI.py' is used for calculating concentrations, otherwise you should make your own script for calculating the concentrations in both the first and second tubes.
+
+#### **4.3.4. Inputs for flag_tube=4**<a name="434-Inputs-for-flag_tube4"></a>
+Every input variables are the same as those for HOI calibration with flag_tube=3, except that for **Experimental information .py file**, you have to set flag_tube=4 by yourself while using the example script 'Calcu_by_flow_HOI.py'. 
+
+
 ## 5. Outputs<a name="5-outputs"></a>
+As mentioned in the **[3. Running](#3-running)**, during the running of the model, surface plots of all the steps for each experiment stage will be showed. After the model is run successfully, two output files (one ends with '_output.csv' and one '_output.txt') with the same name of the input flow variables .csv file will be saved under the folder *PANDA520-flowtube/PANDA520_flowtube/Export_files/* if no other folder is set for output. 
+
+The output .csv file contains a table with headers including steady state concentrations of species in `paras['plot_spec']` at different stages.
+
+The output .txt file contains concentrations of species in `paras['plot_spec']` at all steps of all stages.
 
 ## 6. Acknowledgements<a name="6-Acknowledgements"></a>
+We thank the ACCC Flagship funded by the Academy of Finland grant number 337549, Academy professorship funded by the Academy of Finland (grant no. 302958), Academy of Finland projects no. 346370, 325656, 316114, 314798, 325647, 341349 and 349659. European Research Council (ERC) project ATM-GTP Contract No. 742206. The Arena for the gap analysis of the existing Arctic Science Co-Operations (AASCO) funded by Prince Albert Foundation Contract No 2859. M.K. thanks the Jane and Aatos Erkko Foundation for providing funding. M.K. and X.-C.H thank the Jenny and Antti Wihuri Foundation for providing funding for this research. 
 
-
-
-## Set parameters (e.g., Start_SetParam_SA_example.py)
-
-`sampleflow` : inlet flow of CIMs, unit lpm \
-`R1` : inner diameter for the first tube, unit cm \
-`L1` : length for the first tube, unit cm \
-`R2` : inner diameter for the second tube if there is any, = 0 for `flag_tube = 1` (this will be introduced in detail at **Calculation of concentrations by flows**), unit cm \
-`L2` : length for the second tube, unit cm \
-`Itx` : It product at `Qx` flow rate \
-`SO2ratio` : SO2 ratio of the gas bottle, unit ppm \
-`outflowLocation` : outflow (exhaust) tube located 'before' or 'after' injecting synthetic air, water vapor and SO2 \
-`input_file_folder` : the folder where the csv file containing input information (such as flow rates of H2O, SO2 and etc.) locates; default folder is */../Input_files/* if this parameter is missing \
-`export_file_folder` : the folder where the csv and txt files containing export infomration (such as H2SO4 concentration) locate; default folder is */../Export_files* if this paramter is missing \
-`file_name` : the file you store all the data at different stage including flow rates of N2, O2, SO2, H2O and total flow Q and temperature T if recorded in the folder input files \
-`p` : pressure, unit Pa \
-`T` : temperature, unit K \
-`fullOrSimpleModel` : 'simple' means Gormley & Kennedy approximation, while 'full' means flow model (much slower) \
-`O2ratio` : O2 ratio in synthetic air \
-`Zgrid` : number of grids in direction of tube length \
-`Rgrid` : number of grids in direction of radius \
-`dt` : differential time interval (usually 1e-4, but try small number if the values are too large out of range and showing 'Nan' during calculation) \
-`model_mode` : use 'normal' if you don't know what this is for. 'kinetic' mode refers to running the model without chemistry module to test the kinetic core. \
-`Diff_setname` :  diffusion for the species that you want to define by yourself, otherwise it will be calculated automatically based on the elements it contains \
-`Diff_set` : add the value according to the `Diff_setname` \
-`sch_name` : chemical scheme file name store in the input_mechanism folder ("SO2_SA.txt" for SA calibration and "HOI_cali_chem.txt" for HOI calibration) \
-`const_comp` : species you think they should have constant concentrations in the whole tube (for SA calibration, `const_comp=['SO2','O2','H2O']`) \
-`Init_comp` : species you think they should have initial concentration in the first grid of tube (for SA calibration, `Init_comp=['OH','HO2']`) \
-`key_spe_for_plot` : key species as criterion to stop the loop (for SA calibration, `key_spe_for_plot='H2SO4'`) \
-`plot_spec` : species that you want to plot
-`flag_tube` : usually this is determined in the concentration calculation function (**def *calculate_concs***), but `flag_tube=4` needs to be set manually here if needed. \
-`Init_comp_conc` : set the initial concentrations for species that you already set in the paras (in the case of SA calibration, `OHconc` from next section is used for both 'OH' and 'HO2') \
-`const_comp_conc` : set the constant concentrations for species you already set, but also the specific calculation is from next section. \
-`num_stage` : default is `num_stage= paras['OHconc']`, meaning the number of stages refer to OHconc since we want to check the stage without light on, but this can also be set by user as a integer number N (in this case, it means the first N stages are calculated)
-
-
-## Calculation of concentrations by flows (e.g., Calcu_by_flow_SA.py)
-
-### **Function *calculate_concs(paras)***
-
-### **Input parameters:** 
-`paras` : the class 'dict' object from **Set parameters** files (e.g., Start_SetParam_SA_example.py)
-
-### **Output parameters:** 
-`O2conc` : np.transpose([`O2conc1`,`O2conc2`]) \
-`SO2conc` : np.transpose([`SO2conc1`,`SO2conc2`]) \
-`H2Oconc` : np.transpose([`H2Oconc1`,`H2Oconc2`]) \
-`paras` : updated class 'dict' object \
-`export_file_folder` : the real export folder after conditional statement
-
-### **Main parameters in the function:** 
-**Notice:** the function will automatically determine the type of `flag_tube` ('4', '3', '2', '1' refer to the setup of the experiment)\
-`flag_tube=4` : two tubes with different inner diameters and have Y piece, run the second tube with two flows simultaneously \
-`flag_tube=3` : same as '4', but run the second tube with one flow after converting the mean concentrations \
-`flag_tube=2` : two tubes with different inner diameters \
-`flag_tube=1` : one tube
-
-####  **flag_tube=1 & 2**
-**Note that all the following flows and Q are needed in the input file but H2Oconc and T is optional.(See example input file under folder named Input_files)** \
-`N2flow` : input N2 flow at different stages, unit sccm \
-`O2flow` : input synthetic air flow at different stages, unit sccm \
-`SO2flow` : input SO2 flow at different stages, unit sccm \
-`H2Oflow` : input H2O flow at different stages, unit sccm \
-`Q` : total flow in the tube at different stages, unit sccm (should be the same as sampleflow) \
-`T` : temperature at different stages if recorded, unit K \
-`H2O_concentration` : H2O concentration by measurement if recorded ('H2Oconc' at input file)
-
-#### **flag_tube=3 & 4**
-**Note that all the following flows and Q are needed in the input file but H2Oconc and T is optional.(See example input file under folder named Input_files)** \
-`N2flow1`, `N2flow2` : input N2 flows for the first tube and Y piece at different stages, unit sccm \
-`O2flow1`, `O2flow2` : input synthetic air flows for the first tube and Y piece at different stages, unit sccm \
-`SO2flow` : input SO2 flow for first tube at different stages, unit sccm \
-`H2Oflow1`, `H2Oflow2` : input H2O flows for the first tube and Y piece at different stages, unit sccm \
-`Q1`, `Q2` : total flow in the first tube and the second tube (not Y piece!!!) at different stages, unit sccm (`Q2` should be the same as sampleflow) \
-`T` : temperature at different stages if recorded, unit K \
-`H2O_conc1`, `H2O_conc2` : H2O concentration for the first tube and Y piece by measurement if recorded ('H2Oconc1' and 'H2Oconc2' at input file)
-
-#### **flag_tube=1 & 2 & 3 & 4**
-`totalFlow1`, `totalFlow2` : total flow of calculating concentrations of gases in the first tube and the second tube at different stages, unit sccm \
-`O2conc1`, `O2conc2` : calculated concentrations of O2 in the first tube and the second tube at different stages, unit cm-3 \
-`SO2conc1`, `SO2conc2` : calculated concentrations of SO2 in the first tube and the second tube at different stages, unit cm-3 \
-`H2Oconc1`, `H2Oconc2` : calculated concentrations of H2O in the first tube and the second tube at different stages, unit cm-3 \
-`csH2O` : absorption cross section of water vapor (default = 7.22e-20), unit cm2 \
-`qyH2O` : quantum yield (default = 1) \
-`H2Oconc_free` : (only for `flag_tube=4`) H2O concentration from Y piece in the second tube, unit cm-3 \
-`O2conc_free` : (only for `flag_tube=4`) O2 concentration from Y piece in the second tube, unit cm-3 \
-`OHconc` : OH concentration by photolysis of H2O in the first tube at different stages, unit cm-3
-
-## Run model (Run_flowtube.py)
-
-### **Function *Run_flowtube(paras, export_file_folder, const_comp_conc, Init_comp_conc, num_stage)***
-### **Input parameters:**
-`paras` : the class 'dict' object from **Set parameters** files (e.g., Start_SetParam_SA_example.py) \
-`export_file_folder` : the folder where the csv and txt files containing export infomration locate \
-`const_comp_conc` : the constant concentrations for species from **Set parameters files** (e.g., Start_SetParam_SA_example.py) \
-`Init_comp_conc` : the initial concentrations for species from **Set parameters files** (e.g., Start_SetParam_SA_example.py) \
-`num_stage` : also from **Set parameters files** (e.g., Start_SetParam_SA_example.py), default is `num_stage= paras['OHconc']` but can be set by user as a integer number
-
-
-
-### **Main parameters in the function**
-`meanconc_s` : output table with headers containing steady state concentrations of species in `paras['plot_spec']` at different stages \
-`c` : concentrations of species in `paras['plot_spec']` at all steps of all stages.
 
