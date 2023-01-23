@@ -68,12 +68,13 @@ def calculate_concs(paras):
         N2flow2 = data['N2flow2']
         I2conc1 = data['I2conc1']
         I2conc2 = data['I2conc2']
+        I2flow = data['I2flow']
         Q1 = data['Q1']
         Q2 = data['Q2']
         #idx = H2Oflow1 < 1000
         if all(Q2 != sampflow*1e3):
             print('WARNING: Q2 is not equal to sample flow')
-        sumflow = O2flow1 +  H2Oflow1 + N2flow1
+        sumflow = O2flow1 + I2flow + H2Oflow1 + N2flow1
         It = Itx * Qx / Q1 *1e3
         flag_tube = '3'
 #%%
