@@ -55,7 +55,7 @@ Two example chemical scheme files are given under *PANDA520-flowtube/PANDA520_fl
 
 Markers are required to recognise different sections of the chemical scheme. The markers are for the MCM KPP format.
 
-The expression for the rate coefficient can use Fortran type scientific notation or python type; acceptable math functions: EXP, exp, dsqrt, dlog, LOG, dabs, LOG10, numpy.exp, numpy.sqrt, numpy.log, numpy.abs, numpy.log10; rate coefficients may be functions of TEMP, RH, M, N2, O2 where TEMP is temperature (K), RH is relative humidity (0-1), M, N2 and O2 are the concentrations of third body, nitrogen and oxygen, respectively (# molecules/cc (air)). (Adopted from http://github.com/simonom/PyCHAM)
+The expression for the rate coefficient can use Fortran type scientific notation or python type; acceptable math functions: EXP, exp, dsqrt, dlog, LOG, dabs, LOG10, numpy.exp, numpy.sqrt, numpy.log, numpy.abs, numpy.log10; rate coefficients may be functions of TEMP, RH, M, N2, O2 where TEMP is temperature (K), RH is relative humidity (0-1), M, N2 and O2 are the concentrations of third body, nitrogen and oxygen, respectively (# molecules/cc (air)). (Adapted from http://github.com/simonom/PyCHAM)
 
 ### 4.2. SA calibration<a name="42-SA-set-parameters"></a>
 The chemical scheme file for sulfuric acid (SA) calibration is already given in the file named 'SO2_SA.txt', under *PANDA520-flowtube/PANDA520_flowtube/input_mechanism/*. 
