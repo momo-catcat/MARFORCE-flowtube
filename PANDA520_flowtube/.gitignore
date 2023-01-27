@@ -19,6 +19,10 @@ SA_calibrator_Miska_test_bk_needtoberemoved/
 *.xml
 .pyc
 test\
+/Start_SetParam_AP_example.py
+/Start_SetParam_General.py
+/Start_SetParam_HOI_example.py
+/Start_SetParam_SA_example.py
 files_can_deleted/
 Export_files_old/
 input_files_old/
