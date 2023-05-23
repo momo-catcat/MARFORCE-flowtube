@@ -5,11 +5,12 @@ import sys
 from pandas import Index
 from Funcs.Vapour_calc import H2O_conc
 
-#%%
+
+
 def calculate_concs(paras):
-    # %%
+
     dirpath = os.path.dirname(__file__)  # get the current path of this file
-    # dirpath = '/Users/jiali/Documents/work/AMT-MION2-Paper/PANDA520-flowtube/PANDA520_flowtube' # for test
+    # dirpath = '/Users/jiali/Documents/work/AMT-MION2-Paper/MARFORCE-flowtube/PANDA520_flowtube' # for test
     folder_flowtube = dirpath + '/'
     sys.path.append(folder_flowtube)
     ## Input file folder
@@ -36,7 +37,7 @@ def calculate_concs(paras):
     Itx = paras['Itx']
     Qx = paras['Qx']
 
-    # %%
+
     flag_tube12 = ['H2Oflow',
                    'N2flow']  # flag_tube '1' and '2' should include these two columns otherwise, flag_tube3 = ['H2Oflow1','H2Oflow2','N2flow1','N2flow2']
     # check all the flows
@@ -73,9 +74,9 @@ def calculate_concs(paras):
         sumflow = O2flow1 + SO2flow + H2Oflow1 + N2flow1
         It = Itx * Qx / (Q1/1000)
         flag_tube = '3'
-#%%
+    
     # check if we have the H2O concentration
-    if all(x in inputs for x in ['H2Oconc']):
+    if all(x in inputs for x in ['H2Oconc']) & (data['H2Oconc'].empty):
         H2O_concentration = data['H2Oconc']
     elif all(x in inputs for x in ['H2Oconc1', 'H2Oconc2']):
         H2Oconc_1 = data['H2Oconc1']
@@ -127,7 +128,7 @@ def calculate_concs(paras):
 
     O2conc = np.transpose([O2conc1, O2conc2])
     SO2conc = np.transpose([SO2conc1, SO2conc2])
-    #%%
+    
     if 'H2Oconc_1' in locals():
         H2Oconc = np.transpose([H2Oconc_1, H2Oconc_2])
 
@@ -163,12 +164,6 @@ def calculate_concs(paras):
     paras['flag_tube'] = flag_tube
 
     print('flag_tube =', paras['flag_tube'])
-    #if 'N2flow' in locals():
-    #    paras['N2flow'] = N2flow
-    #else:
-    #    paras['N2flow1'] = N2flow1
-    #    paras['N2flow2'] = N2flow2
-    #print('Q1',paras['Q1'])
-    #print('Q2',paras['Q2'])
-    # %%
+
+    
     return O2conc, SO2conc, H2Oconc, paras, export_file_folder

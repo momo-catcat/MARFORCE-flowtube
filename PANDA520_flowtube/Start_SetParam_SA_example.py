@@ -15,12 +15,12 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              Qx=20,  # Qx where the it product was calculated
              outflowLocation='before',  # outflow tube located 'before' or 'after' injecting air, water, and so2
              fullOrSimpleModel='full',  # 'simple': Gormley & Kennedy approximation, 'full': flow model (much slower)
-             sampleflow=np.array(10.6, dtype=np.float64),  # inlet sample flow of CIMS, lpm
+             sampleflow=np.array(10.54, dtype=np.float64),  # inlet sample flow of CIMS, lpm
              SO2ratio=np.array(5000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppb
              O2ratio=np.array(0.209, dtype=np.float64),  # O2 ratio in synthetic air
              Zgrid=40,  # number of grids in direction of tube length, usually we use 80
              Rgrid=80,  # number of grids in direction of radius, usually we use 40
-             dt=np.array(1e-4, dtype=np.float64),  # Differential time interval
+             dt=np.array(1e-5, dtype=np.float64),  # Differential time interval
              model_mode='normal',
              # use 'normal' if you don't know what this is for. 'kinetic' mode refers to running the model without chemistry module to test the kinetic core.
              Diff_setname=['OH', 'HO2', 'SO3', 'H2SO4'],
@@ -37,7 +37,7 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              # the file you store all the flow data including N2, O2, SO2 in the folder input files
              )
 
-
+# %%
 '''''''''
 Calculate the input concentrations based on the parameters
 This case only have one tube (no convert) and H2O concentration are unknown 
@@ -51,6 +51,7 @@ O2conc, SO2conc, H2Oconc, paras, export_file_folder = calculate_concs(paras)
 prepare the input concentration
 '''''''''
 
+# %%
 if paras['model_mode'] == 'kinetic':  # This mode runs the code in kinetic mode in which chemistry does not exist
     # define the H2SO4 concentration as 1e8 for convenience. !!!! This needs improvement
     OHconc = paras['OHconc'] * 0 + 1e8
@@ -68,7 +69,7 @@ const_comp_conc = np.transpose([SO2conc, O2conc, H2Oconc])
 num_stage = paras['OHconc']
 
 
-# %%
+#%%
 ##--------/* Run flowtube model */--------
 
 from Funcs.Run_flowtube import Run_flowtube
