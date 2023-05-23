@@ -15,8 +15,10 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              Qx=20,  # Qx where the it product was calculated
              outflowLocation='before',  # outflow tube located 'before' or 'after' injecting air, water, and so2
              fullOrSimpleModel='full',  # 'simple': Gormley & Kennedy approximation, 'full': flow model (much slower)
-             sampleflow=np.array(10.54, dtype=np.float64),  # inlet sample flow of CIMS, lpm
-             SO2ratio=np.array(5000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppb
+
+             sampleflow=np.array(10.6, dtype=np.float64),  # inlet sample flow of CIMS, lpm
+             SO2ratio=np.array(5000, dtype=np.float64) * 1e-6,  # SO2 ratio of the gas bottle, in ppm
+
              O2ratio=np.array(0.209, dtype=np.float64),  # O2 ratio in synthetic air
              Zgrid=40,  # number of grids in direction of tube length, usually we use 80
              Rgrid=80,  # number of grids in direction of radius, usually we use 40
