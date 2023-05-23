@@ -170,7 +170,7 @@ Every input variables are the same as those for flag_tube=3, except that for **E
 | I2conc | I2 concentration (after calibration) measured by CIMs at different stages (cm-3)|
 | Q | Total flow in the tube at different stages (sccm) |
 | T *(optional)* | Temperature at different stages if recorded (K) |
-| H2O_concentration *(optional)*| H2O concentration by measurement if recorded (cm-3). If the measured H2O concentrations are more accurate than calculated ones by flows, the measured ones should be used for running the flowtube model. |
+| H2O_concentration *(optional)*| If the H2O concentrations are measured and recorded (cm-3), and if the measured values are more accurate than the calculated ones by flows, it is recommended to use the measured values when running the flowtube model. If you do not have the measured H2O concentration, there is no need to add an empty column|
 
 **Experimental information .py file:** all the variable names are exactly the same as those for SA calibration with flag_tube=1, and an example is provided under folder *PANDA520-flowtube/PANDA520_flowtube/*, called 'Start_SetParam_HOI_example.py'. **Notice that variables need to be changed to HOI calibration system, such as 'sche_name' (='HOI_cali_chem.txt') and 'Key_spe_for_plot' (='HOI'), all details see the example file.**
 
