@@ -80,10 +80,12 @@ def calculate_concs(paras):
 #%%
     # check if we have the H2O concentration
     if all(x in inputs for x in ['H2Oconc']):
-        H2O_concentration = data['H2Oconc']
+        if (len(data['H2Oconc'])!=0):
+            H2O_concentration = data['H2Oconc']
     elif all(x in inputs for x in ['H2Oconc1', 'H2Oconc2']):
-        H2Oconc_1 = data['H2Oconc1']
-        H2Oconc_2 = data['H2Oconc2']
+        if (len(data['H2Oconc1'])!=0) & (len(data['H2Oconc2'])!=0):
+            H2Oconc_1 = data['H2Oconc1']
+            H2Oconc_2 = data['H2Oconc2']
 
     if all(x in inputs for x in ['T']):
         T = data['T']

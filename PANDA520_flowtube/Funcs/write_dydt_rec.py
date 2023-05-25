@@ -22,7 +22,7 @@ import datetime
 
 def write_dydt_rec():  # define function
 
-    f = open('dydt_rec.py', mode='w')
+    f = open('Funcs/dydt_rec.py', mode='w')
     f.write('\'\'\'module for calculating and recording change tendency (# molecules/cm3/s) of components\'\'\'\n')
     f.write('# changes due to gas-phase photochemistry and partitioning are included; \n')
     f.write('# generated in init_conc and treats loss from gas-phase as negative\n')
