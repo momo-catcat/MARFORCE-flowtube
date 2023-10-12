@@ -1,5 +1,9 @@
 # MARFORCE-Flowtube
-This is a project to develop a flow tube chemistry module that include 2D space and chemistry processes
+This is a project to develop a 2D flow reactor convection-diffusion-reaction processes solver.
+
+The MARFORCE-Flowtube model is published together with our manuscript in [Atmospheric Measurement Techniques](https://amt.copernicus.org/articles/16/4461/2023/) and you are encouraged to cite our manuscript for MARFORCE-Flowtube.
+
+Feedbacks are more than welcome.
 
 <!-- Shall we include the instruction for SA calibration experiments -->
 
