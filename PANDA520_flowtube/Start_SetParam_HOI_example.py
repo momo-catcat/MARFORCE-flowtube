@@ -33,6 +33,7 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              key_spe_for_plot='HOI',  # key species as criterion to stop the loop
              plot_spec=['OH', 'HOI', 'HO2', 'I', 'I2'],  # species that you want to plot
              file_name='HOI_cali_T1_13Sep21.csv',
+             final_output_method = 'mean',  # 'mean' for mean concentration, 'weighted' for final concentration
              # the file you store all the flow data including N2, O2, SO2 in the folder input files
              )
 

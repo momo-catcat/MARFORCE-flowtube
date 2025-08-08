@@ -115,6 +115,6 @@ def cmd_calib5(const_comp_conc, params, Init_comp_conc, Q1, Q2):
                     timesteps, Diff_vals, Rtot, Q1, dydt_vst, rindx, nreac, rstoi, rate_values, const_comp, u,
                     plot_spec, formula, c, dr, dx, params['model_mode'])
     # % calculate the meanconc for each species
-    meanConc = meanconc_cal(R2, Rgrid, plot_spec, comp_namelist, c, params['model_mode'])
+    meanConc = meanconc_cal(R2, Rgrid, plot_spec, comp_namelist, c, params['model_mode'],params['final_output_method'])
 
     return meanConc, c
