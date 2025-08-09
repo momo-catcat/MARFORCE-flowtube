@@ -35,8 +35,10 @@ paras = dict(p=np.array(101000, dtype=np.float64),  # Pressure, Pa
              # Species you think they should have initial concentration in the first frid of tube
              key_spe_for_plot='H2SO4',  # key species as criterion to stop the loop
              plot_spec=['OH', 'HSO3', 'HO2', 'SO3', 'H2SO4','H2O'],  # species that you want to plot
-             file_name='SA_cali_2021-09-10.csv',
+             file_name='SA_cali_2021-09-10_test_newme.csv',
              # the file you store all the flow data including N2, O2, SO2 in the folder input files
+             final_output_method = 'weighted',  # 'mean' for mean calculated concentration, 'weighted' for weighted calculated concentration
+
              )
 
 # %%

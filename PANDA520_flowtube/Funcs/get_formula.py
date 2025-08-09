@@ -20,6 +20,6 @@ def get_formula(plot_spec):
                 add_str = add_str + s[j]
                 s = s.replace(s[j], add_str)
                 j=j+1
-        s = '$\mathregular{' + s + '}$'
+        s = '$\\mathregular{' + s + '}$'
         formula.append(s)
     return formula
