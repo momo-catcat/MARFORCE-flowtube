@@ -14,11 +14,11 @@ The Matlab-based and our Python-based calibration models differ in their default
 
 To understand the difference between these approaches for calculating final concentrations, consider the inlet tube divided into a fixed number of concentric cells. The Matlab-based model sums each cell’s sulphuric acid concentration, weighted by its area and local flow rate. In contrast, our Python-based model multiplies each cell’s concentration by its area and computes the average across all cells.
 
-Our model defaults to calculating the average concentration because the flow at the tube’s end is turbulent, not laminar. Only 0.8 standard liters per minute is sampled into the instrument, with the remainder directed to the exhaust. However, the model retains the option to calculate the mass flow rate based on user preference. The difference between these two output calculation methods is typically 10–25%.
+Our model defaults to calculating the average concentration because the flow at the tube’s end is turbulent, not laminar. Only 0.8 standard liters per minute is sampled into the instrument, with the remainder directed to the exhaust (typically between 10 - 20 standard liters per minute, depending on the chemical ionization inlet systems). However, the model retains the option to calculate the mass flow rate based on user preference. The difference between these two output calculation methods is typically 10–25%.
 
 Additionally, our Python-based model is more convenient and flexible, adapting to various experimental conditions, such as differences in the inner diameter between the sample tube and the calibration setup tube. Designed for sulphuric acid, it can also be adapted to other chemical systems using input file formats from the Master Chemical Mechanism (MCM).
 
-## **Users can choose either model based on their preferences, as our Python-based models support both output methods.**
+### **Users can choose either model based on their preferences, as our Python-based models support both output methods.**
 
 <!-- Shall we include the instruction for SA calibration experiments -->
 
