@@ -5,7 +5,7 @@ The MARFORCE-Flowtube model is published together with our manuscript in [Atmosp
 
 Feedbacks are more than welcome.
 
-While our Python-based model is much more flexible, a Matlab-based sulphuric acid calibration model is available at https://github.com/ceciliarighi/ACTRIS_CiGas_condensable_vapors, with usage instructions and model details provided in the repository.
+While our Python-based model is much more flexible, a Matlab-based model (for sulphuric acid calibration only) is available at https://github.com/ceciliarighi/ACTRIS_CiGas_condensable_vapors, with usage instructions and model details provided in the repository.
 
 The Matlab-based and our Python-based calibration models differ in their default outputs:
 
