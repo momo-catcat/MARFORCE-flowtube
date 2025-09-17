@@ -18,7 +18,7 @@ Our model defaults to calculating the average concentration because the flow at 
 
 Additionally, our Python-based model is more convenient and flexible, adapting to various experimental conditions, such as differences in the inner diameter between the sample tube and the calibration setup tube. Designed for sulphuric acid, it can also be adapted to other chemical systems using input file formats from the Master Chemical Mechanism (MCM).
 
-**Users can choose either model based on their preferences, as our Python-based models support both output methods.**
+*Users can choose either model based on their preferences, as our Python-based models support both output methods.**
 
 <!-- Shall we include the instruction for SA calibration experiments -->
 
