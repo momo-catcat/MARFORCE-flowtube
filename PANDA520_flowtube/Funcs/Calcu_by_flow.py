@@ -208,7 +208,10 @@ def calculate_concentrations(modelparams):
     transposed_dict.pop('H2O', None)
     # print('transposed_dict =', transposed_dict)
     for group, transposed in transposed_dict.items():
-        if group in modelparams.const_comp:
+        if group in modelparams.const_comp and flag_tube in ['1', '2']:
+            # single flow: measured concentration is the same in both tubes, already (stages, 2)
+            setattr(modelparams, group + 'conc', np.asarray(transposed))
+        elif group in modelparams.const_comp:
             transposed = np.asarray(transposed).flatten()
             transposed2 = transposed / sample_flow * (modelparams.Q1/1e3)
             combined = np.column_stack([transposed, transposed2])

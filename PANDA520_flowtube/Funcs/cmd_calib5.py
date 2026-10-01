@@ -236,6 +236,11 @@ def cmd_calib5( const_comp_conc, modelparams,Init_comp_conc, Q1, Q2, c_prev=None
                 print(f'  [stage init] loaded previous stage → '
                       f'c[:, {_zl}:{_zl + _zs}, :] + c_2nd', flush=True)
 
+    # A loaded field carries the previous stage's inlet values: re-apply this stage's inlet
+    if 'flowtube' in modelparams.model_mode and modelparams.Init_set == 'on':
+        for i in modelparams.comp0:
+            c[:, 0, modelparams.comp_namelist.index(i)] = Init_comp_conc[modelparams.comp0.index(i)]
+
     ########################################################################################### run the model
     tube_messages = {
         1: 'one diameter tube',

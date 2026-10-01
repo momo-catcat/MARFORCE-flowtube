@@ -1,23 +1,31 @@
-KMT06 = 1 + (1.40D-21*EXP(2200/TEMP)*H2O);
-w1a = 4.687D-10-1.3855D-5*EXP(-0.75*p/1.62265)+5.51868D-10*EXP(-0.75*p/199.328);
-w2a = -0.00331-0.00514*EXP(-0.75*p/325.68711)-0.00444*EXP(-0.75*p/40.81609);
-w1b = 1.1659D-9-7.79644D-10*EXP(-0.75*p/22.09281)+1.03779D-9*EXP(-0.75*p/568.15381);
-w2b = -0.00813-0.00382*EXP(-0.75*p/45.57591)-0.00643*EXP(-0.75*p/417.95061);
-#EQUATIONS
-
-{1.} IO + IO = I + I : 0.11 * 5.4D-11 * EXP(180 / TEMP) ; #Bloss et al 2001 for temperatures range 250 K to 320 K
-{2.} IO + IO = OIO + I : 0.38 * 5.4D-11 * EXP(180 / TEMP) ; #Bloss et al 2001 for temperatures range 250 K to 320 K
-{3.} IO + IO = I2O2 : 0.45 * 5.4D-11 * EXP(180 / TEMP) ; #Bloss et al 2001 for temperatures range 250 K to 320 K
-{4.} I2 + OH = HOI + I : 2.1D-10 ;  # Gilles et al., 1999 temperature over the range 240-350 K
-{5.} IO + OIO = I2O3 : w1a * EXP(w2a * TEMP) ;  # Saiz-Lopez 2014
-{6.} OIO + OIO = I2O4 : w1b * EXP(w2b * TEMP) ;  # Saiz-Lopez 2014
-{7.} IO + OH = HO2 + I : 1.0D-10 ; # Bosch et al. 2003
-{8.} HI + OH = H2O + I : 1.6D-11 * EXP(440 / TEMP) ; #IUPAC temperature over range 240-360K
-{9.} HOI + OH = H2O + IO : 2.0D-13 ; #Chameides and Davis 1980
-{10.} I + HO2 = HI + O2 : 1.47D-11 * EXP(- 1090 / TEMP) ; #Jenkin et al., 1990 for temperature 283-353
-{11.} IO + HO2 = HOI + O2 : 1.4D-11 * EXP(540 / TEMP) ;  # IUPAC for temperature 270 - 380K
-{12.} OH + OH = H2O2 : 2 * 6.9D-31 * (TEMP / 300) ** -0.8 * p / 1.3806488D-23 / TEMP / 1D6 ;
-{13.} OH + OH  = H2O  : 6.2D-14 * (TEMP / 298) ** 2.6 * EXP(945 / TEMP) ;
-{14.} OH + HO2 = H2O + O2  : 4.8D-11 * EXP(250 / TEMP) ;
-{15.} HO2 + HO2 = H2O2  : 2.20D-13 * KMT06 * EXP(600 / TEMP) + 1.90D-33 * M * KMT06 * EXP(980 / TEMP) ;
-
+***************************************************************************** ;
+* HOI calibration mechanism: I2 + OH -> HOI + I, with iodine and HOx side   ;
+* reactions. Format: generic rate coefficients (NAME = expression ;),       ;
+* then reactions as  % rate coefficient : reactants = products ; # reference ;
+***************************************************************************** ;
+*;
+* Generic Rate Coefficients ;
+*;
+KMT06 = 1 + (1.40D-21*EXP(2200/TEMP)*H2O) ;
+w1a = 4.687D-10-1.3855D-5*EXP(-0.75*p/1.62265)+5.51868D-10*EXP(-0.75*p/199.328) ;
+w2a = -0.00331-0.00514*EXP(-0.75*p/325.68711)-0.00444*EXP(-0.75*p/40.81609) ;
+w1b = 1.1659D-9-7.79644D-10*EXP(-0.75*p/22.09281)+1.03779D-9*EXP(-0.75*p/568.15381) ;
+w2b = -0.00813-0.00382*EXP(-0.75*p/45.57591)-0.00643*EXP(-0.75*p/417.95061) ;
+*;
+* Reaction definitions. ;
+*;
+% 0.11 * 5.4D-11 * EXP(180 / TEMP) : IO + IO = I + I ; # Bloss et al. 2001, 250-320 K
+% 0.38 * 5.4D-11 * EXP(180 / TEMP) : IO + IO = OIO + I ; # Bloss et al. 2001, 250-320 K
+% 0.45 * 5.4D-11 * EXP(180 / TEMP) : IO + IO = I2O2 ; # Bloss et al. 2001, 250-320 K
+% 2.1D-10 : I2 + OH = HOI + I ; # Gilles et al. 1999, 240-350 K
+% w1a * EXP(w2a * TEMP) : IO + OIO = I2O3 ; # Saiz-Lopez et al. 2014
+% w1b * EXP(w2b * TEMP) : OIO + OIO = I2O4 ; # Saiz-Lopez et al. 2014
+% 1.0D-10 : IO + OH = HO2 + I ; # Bosch et al. 2003
+% 1.6D-11 * EXP(440 / TEMP) : HI + OH = H2O + I ; # IUPAC, 240-360 K
+% 2.0D-13 : HOI + OH = H2O + IO ; # Chameides and Davis 1980
+% 1.47D-11 * EXP(-1090 / TEMP) : I + HO2 = HI + O2 ; # Jenkin et al. 1990, 283-353 K
+% 1.4D-11 * EXP(540 / TEMP) : IO + HO2 = HOI + O2 ; # IUPAC, 270-380 K
+% 2 * 6.9D-31 * (TEMP / 300) ** -0.8 * p / 1.3806488D-23 / TEMP / 1D6 : OH + OH = H2O2 ;
+% 6.2D-14 * (TEMP / 298) ** 2.6 * EXP(945 / TEMP) : OH + OH = H2O ;
+% 4.8D-11 * EXP(250 / TEMP) : OH + HO2 = H2O + O2 ;
+% 2.20D-13 * KMT06 * EXP(600 / TEMP) + 1.90D-33 * M * KMT06 * EXP(980 / TEMP) : HO2 + HO2 = H2O2 ;

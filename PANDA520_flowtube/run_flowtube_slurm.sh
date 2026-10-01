@@ -4,7 +4,7 @@
 #
 # Usage (from PANDA520_flowtube/):
 #   mkdir -p logs
-#   sbatch run_flowtube_slurm.sh Start_SetParam_Isoprene.py
+#   sbatch run_flowtube_slurm.sh Start_SetParam_Isoprene_continuousOH.py
 #
 #SBATCH --account=project_XXXXXXX      # EDIT: your project/account
 #SBATCH --job-name=flowtube
@@ -36,7 +36,7 @@ export MPLBACKEND=Agg   # no display on compute nodes
 # ── Run ──
 cd "$SLURM_SUBMIT_DIR"
 export PYTHONPATH="$(pwd):$PYTHONPATH"
-SCRIPT=${1:-Start_SetParam_Isoprene.py}
+SCRIPT=${1:-Start_SetParam_Isoprene_continuousOH.py}
 echo "Running: $SCRIPT"
 echo "Job ID: $SLURM_JOB_ID   CPUs: $SLURM_CPUS_PER_TASK"
 echo "Start: $(date)"
