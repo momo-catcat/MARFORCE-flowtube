@@ -1,238 +1,418 @@
 # MARFORCE-Flowtube
-This is a project to develop a 2D flow reactor convection-diffusion-reaction processes solver.
 
-The MARFORCE-Flowtube model is published together with our manuscript in [Atmospheric Measurement Techniques](https://amt.copernicus.org/articles/16/4461/2023/) and you are encouraged to cite our manuscript for MARFORCE-Flowtube.
+MARFORCE-Flowtube simulates **laminar flow tubes with chemistry**: gas flows through a tube with a parabolic velocity profile, species diffuse radially and axially, are lost to the wall and react with each other. The model is mainly used to
 
-Feedbacks are more than welcome.
+- **calibrate chemical-ionisation mass spectrometers (CIMS)** for H2SO4 (SA), HOI and other species: OH is produced by H2O photolysis with a UV lamp, reacts with an excess reactant (SO2, I2, …) and the model predicts the concentration of the product that reaches the instrument;
+- simulate **flow-reactor oxidation experiments** (e.g. isoprene chemistry with the Wennberg mechanism), with a continuously illuminated OH-production section and photolysis reactions;
+- run the same chemistry as a **0-D box model** for comparison.
 
-While our Python-based model is much more flexible, a Matlab-based model (for sulphuric acid calibration only) is available at https://github.com/ceciliarighi/ACTRIS_CiGas_condensable_vapors, with usage instructions and model details provided in the repository.
+The model was published with our manuscript in [Atmospheric Measurement Techniques](https://amt.copernicus.org/articles/16/4461/2023/) — please cite it if you use MARFORCE-Flowtube. Parts of the chemistry parser are adapted from [PyCHAM](https://github.com/simonom/PyCHAM) (Simon O'Meara, GPL-3.0). A Matlab-based model for sulphuric acid calibration only is available at https://github.com/ceciliarighi/ACTRIS_CiGas_condensable_vapors (see [section 7](#7-outlet-concentration-mean-or-flow-weighted) for how its output differs).
 
-The Matlab-based and our Python-based calibration models differ in their default outputs:
+Feedback is very welcome — please open an issue.
 
-**•	The Matlab-based model calculates the mass flow rate of sulphuric acid exiting the inlet tube.**
+---
 
-**•	Our Python-based model computes the average sulphuric acid concentration in the final segment of the tube.**
+## Contents
 
-To understand the difference between these approaches for calculating final concentrations, consider the inlet tube divided into a fixed number of concentric cells. The Matlab-based model sums each cell’s sulphuric acid concentration, weighted by its area and local flow rate. In contrast, our Python-based model multiplies each cell’s concentration by its area and computes the average across all cells to retain mass balance.
+1. [Repository layout](#1-repository-layout)
+2. [Installation](#2-installation)
+3. [Examples — start here](#3-examples--start-here)
+4. [How the model works](#4-how-the-model-works)
+5. [Setting up your own simulation](#5-setting-up-your-own-simulation)
+6. [Outputs](#6-outputs)
+7. [Outlet concentration: mean or flow-weighted](#7-outlet-concentration-mean-or-flow-weighted)
+8. [Long runs, restarts and HPC](#8-long-runs-restarts-and-hpc)
+9. [Troubleshooting](#9-troubleshooting)
+10. [Citation, acknowledgements and license](#10-citation-acknowledgements-and-license)
 
-Our model defaults to calculating the average concentration because the flow at the tube’s end is turbulent, not laminar. Only 0.8 standard liters per minute is sampled into the Tofwerk time-of-flight mass spectrometer instrument, with the remainder directed to the exhaust (typically between 10 - 20 standard liters per minute, depending on the chemical ionization inlet systems). As a result, assuming a perfectly laminar system, as done in the models, may introduce errors in quantifying sulphuric acid. To address this, our Python-based model prioritizes constraining the mass balance of sulfuric acid concentration before it enters the mass spectrometer, under the assumption of a more homogeneous mixture resulting from the turbulent flow present there. However, the model retains the option to calculate the mass flow rate based on user preference. The two output calculation methods typically differ by 10–25%, representing a insignificant source of uncertainty in sulfuric acid quantification experiments.
+---
 
-### **Again, users can choose either calculation method based on their preferences, as our Python-based models support both methods.**
+## 1. Repository layout
 
-Additionally, our Python-based model is more convenient and flexible, adapting to various experimental conditions, such as differences in the inner diameter between the sample tube and the calibration setup tube. Designed for sulphuric acid, it can also be adapted to other chemical systems using input file formats from the Master Chemical Mechanism (MCM), including but not limited to quantifying reactions of iodine, isoprene, monoterpene oxidation in flow reactors. Interested users are welcome to contact us with inquiries about these functions.
+```
+MARFORCE-flowtube/
+├── README.md                    # this manual
+├── LICENSE                      # GNU GPL v3
+├── environment.yml              # conda environment (recommended)
+├── requirements.txt             # pip packages (Open Babel via conda)
+└── PANDA520_flowtube/           # run everything from this folder
+    ├── Start_SetParam_SA_calibration_direct.py   # Example 1a: SA calibration, point OH, direct chemistry
+    ├── Start_SetParam_SA_calibration_ODE.py      # Example 1b: same, ODE-solver chemistry
+    ├── Start_SetParam_HOI_calibration.py         # Example 2:  HOI calibration, point OH, two tube sections
+    ├── Start_SetParam_Isoprene_box.py            # Example 3:  isoprene chemistry, box model
+    ├── Start_SetParam_Isoprene_continuousOH.py   # Example 4:  isoprene, continuous OH + SUN photolysis
+    ├── Start_SetParam_kinetic_test.py            # Example 5:  transport only (no chemistry) vs Gormley-Kennedy
+    ├── run_flowtube_slurm.sh                     # SLURM job template
+    ├── Input_files/          # input CSVs: one row = one experiment stage
+    ├── input_mechanism/      # chemical mechanisms (SA, HOI, Isoprene/Wennberg, Isoprene/MCM)
+    ├── photofiles/           # MCM v3.2 absorption cross-sections / quantum yields, lamp spectrum
+    ├── Funcs/                # model source code (see section 4.3)
+    ├── kinetics/             # diffusion coefficients and helper kinetics
+    └── Export_files/         # results (one sub-folder per input CSV)
+```
 
-<!-- Shall we include the instruction for SA calibration experiments -->
+## 2. Installation
 
-# Table of contents
-**[1. Documentation](#1-documentation)**
+1. **Get the code**
 
-**[2. Installation](#2-installation)**
+   ```bash
+   git clone https://github.com/momo-catcat/MARFORCE-flowtube.git
+   cd MARFORCE-flowtube
+   ```
 
-**[3. Running](#3-running)**
+2. **Create the Python environment** (conda is recommended because Open Babel is easiest to install from conda-forge):
 
-**[4. Inputs](#4-Inputs)**
+   ```bash
+   conda env create -f environment.yml
+   conda activate marforce
+   ```
 
-* [4.1. Chemical Scheme file](#41-Chemical-Scheme-file)
-* [4.2. SA calibration](#42-SA-calibration)
-    + [4.2.1. flag_tube=1](#421-Inputs-for-flag_tube1)
-    + [4.2.2. flag_tube=2](#422-Inputs-for-flag_tube2)
-    + [4.2.3. flag_tube=3](#423-Inputs-for-flag_tube3)
-    + [4.2.4. flag_tube=4](#424-Inputs-for-flag_tube4)
-* [4.3. HOI calibration](#43-HOI-calibration)
-    + [4.3.1. flag_tube=1](#431-Inputs-for-flag_tube1)
-    + [4.3.2. flag_tube=2](#432-Inputs-for-flag_tube2)
-    + [4.3.3. flag_tube=3](#433-Inputs-for-flag_tube3)
-    + [4.3.4. flag_tube=4](#434-Inputs-for-flag_tube4)
+   or, with an existing Python 3.9–3.10:
 
-**[5. Outputs](#5-outputs)**
+   ```bash
+   conda install -c conda-forge openbabel=3.1.1
+   pip install -r requirements.txt
+   ```
 
-**[6. Acknowledgements](#6-Acknowledgements)**
+   | Package | Version tested | Used for |
+   |---|---|---|
+   | numpy | 2.0.2 | arrays |
+   | scipy | 1.13.1 | sparse Jacobians, interpolation, constants |
+   | pandas | 2.2.3 | input CSVs, result tables |
+   | numba | 0.60.0 | compiled, parallel transport and chemistry kernels |
+   | numbalsoda | 0.3.4 | LSODA stiff ODE solver called from Numba (`flowtube2`, `box`) |
+   | matplotlib | 3.9.4 | concentration plots |
+   | molmass | 2024.10.25 | molar masses / diffusion coefficients from formulas |
+   | xmltodict | 0.14.2 | reading `chemical_species_custom.xml` |
+   | openbabel | 3.1.1 | SMILES → molecular properties |
 
-----
+3. **Check the installation**
 
-## 1. Documentation<a name="1-documentation"></a>
-The README file you are now viewing serves as the MARFORCE (Marine Atmospheric paRticle FORmation and ChEmistry) manual, including how to run the model with correct inputs. 
+   ```bash
+   python -c "import numpy, scipy, pandas, numba, numbalsoda, matplotlib, molmass, xmltodict; from openbabel import pybel; print('OK')"
+   ```
 
-The [article](NEED TO BE ADDED later) published in AMT explains the mechianisms of the flowtube model with corresponding schematics and simulation results. 
+## 3. Examples — start here
 
-## 2. Installation<a name="installtion"></a>
-1. Download the MARFORCE repository from https://github.com/momo-catcat/PANDA520-flowtube.
-2. To avoid conflicts, it would be beneficial to create a new environment specifically for this model. This environment should include Python and relevant libraries such as numpy, pandas, os, sys, re, scipy, math, matplotlib, importlib, csv, datetime, and **molmass**. We recommend using Anaconda to manage and install these different libraries. 
+Run every script from inside `PANDA520_flowtube/`:
 
-## 3. Running<a name="running"></a>
-1. After downloading the model package, go to *PANDA520-flowtube/PANDA520_flowtube/*
-2. For model inputs, you should have: a .txt chemical reaction scheme file under folder *input_mechanism/* (e.g., 'SO2_SA.txt' given for SA calibration), a .csv file containing information of flows and possible temperature or concentrations under folder *Input_files/* (e.g., 'SA_cali_2021-09-10.csv') or any input folder set by yourself, a .py file to set the experimental information under the current folder (Start_SetParam_SA_example.py given as an example file for SA calibration). -- See next section **[4. Inputs](#4-Inputs)** for details. 
-3. Once all the three files mentioned above set properly according to experiments, activate the environment containing all the packages, then run the .py file (e.g., Start_SetParam_SA_example.py) to get the model starting.
-4. Finally, the model will show surface plots of all the steps for each experiment stage. The output files (one .csv and one .txt) will be saved under the folder *Export_files/* if no other folder is set for output. 
+```bash
+cd PANDA520_flowtube
+python Start_SetParam_SA_calibration_direct.py
+```
 
-## 4. Inputs<a name="inputs"></a>
-As mentioned above, there are three input files. This section will introduce how to set the files based on different mechanisms. 
+Each flow-tube example simulates **two experiment stages** (two rows of its input CSV). Plots are updated while the model runs; set `export MPLBACKEND=Agg` on a machine without a display. Results are written to `Export_files/<input CSV name>/` ([section 6](#6-outputs)).
 
-### 4.1. Chemical Scheme file<a name="41-Chemical-Scheme-file"></a>
-The chemical scheme file includes the reactions and their rate coefficients in the gas- and aqueous-phases.
+| # | Script | Set-up | OH source | Solver | Grid (R × Z) | Run time* |
+|---|---|---|---|---|---|---|
+| 1a | `Start_SetParam_SA_calibration_direct.py` | SA calibration, one 3/4" tube (R = 0.78 cm, 26 cm) | point | `flowtube1` (direct) | 80 × 40 | ~1 min |
+| 1b | `Start_SetParam_SA_calibration_ODE.py` | same as 1a | point | `flowtube2` (ODE) | 80 × 40 | ~0.7 min |
+| 2 | `Start_SetParam_HOI_calibration.py` | HOI calibration, 0.78 cm (41 cm) + 1.04 cm (58.5 cm) sections | point | `flowtube1` | 80 × (20 + 20) | ~3 min |
+| 3 | `Start_SetParam_Isoprene_box.py` | isoprene oxidation, chamber-like box | held constant | `box` | – | ~0.5 min |
+| 4 | `Start_SetParam_Isoprene_continuousOH.py` | isoprene oxidation, lamp section + two tubes with Y-piece, SUN photolysis, 100 ppb CO | continuous | `flowtube2` | 14 × (6 + 10 + 10) | ~4 min |
+| 5 | `Start_SetParam_kinetic_test.py` | transport test: H2SO4 through a 1 m tube without chemistry, compared with Gormley–Kennedy | – | `kinetic` | 80 × 40 | ~0.5 min |
 
-Two example chemical scheme files are given under *PANDA520-flowtube/PANDA520_flowtube/input_mechanism*, named 'SO2_SA.txt' and 'HOI_cali_chem.txt' for SA and HOI calibration system. The chemical mechanistic information was taken from the Master Chemical Mechanism, MCM v3.3.1., via [website](http://mcm.york.ac.uk/). 
+\*Laptop with 10 CPU cores.
 
-Markers are required to recognise different sections of the chemical scheme. The markers are for the MCM KPP format.
+**Results of the examples** (outlet concentrations, molecules cm⁻³, `final_output_method = 'mean'`):
 
-The expression for the rate coefficient can use Fortran type scientific notation or python type; acceptable math functions: EXP, exp, dsqrt, dlog, LOG, dabs, LOG10, numpy.exp, numpy.sqrt, numpy.log, numpy.abs, numpy.log10; rate coefficients may be functions of TEMP, RH, M, N2, O2 where TEMP is temperature (K), RH is relative humidity (0-1), M, N2 and O2 are the concentrations of third body, nitrogen and oxygen, respectively (# molecules/cc (air)). (Adapted from http://github.com/simonom/PyCHAM)
+| Example | Stage 1 | Stage 2 |
+|---|---|---|
+| 1a SA, direct | H2SO4 = 6.74×10⁷, OH = 2.58×10⁶ | H2SO4 = 3.23×10⁷, OH = 1.26×10⁶ |
+| 1b SA, ODE | H2SO4 = 6.73×10⁷ | H2SO4 = 3.23×10⁷ |
+| 2 HOI | HOI = 6.76×10⁶ | HOI = 8.57×10⁶ |
+| 3 Isoprene box | IDHDP = 2.80×10⁹ | – (box mode runs one stage) |
+| 4 Isoprene continuous OH | IDHDP = 2.33×10⁶, OH = 5.19×10⁸ | IDHDP = 1.28×10⁶, OH = 4.07×10⁸ |
+| 5 Transport test (`'weighted'`) | H2SO4 penetration 0.657 (Gormley–Kennedy 0.645, +1.9 %) at 22.5 slpm | 0.458 (0.449, +2.0 %) at 10 slpm |
 
-### 4.2. SA calibration<a name="42-SA-set-parameters"></a>
-The chemical scheme file for sulfuric acid (SA) calibration is already given in the file named 'SO2_SA.txt', under *PANDA520-flowtube/PANDA520_flowtube/input_mechanism/*. 
+### 3.1 Which SA calibration example should I use? (1a vs 1b)
 
-**Notice:** if you use the given function file 'Calcu_by_flow_SA.py' under *PANDA520-flowtube/PANDA520_flowtube/Funcs/* for concentration calculation, the type of `flag_tube` will be determined automatically ('4', '3', '2', '1' refer to the setup of the experiment) according to the input inforamtion stating below. See the [article](NEED TO BE ADDED later) for schematics of different setups 
-| Type of the experiment | Description of the flowtube|
-|-------------|-------------|
-|flag_tube=4 | Two tubes with different inner diameters and have Y piece, run the second tube with two flows simultaneously |
-|flag_tube=3 | Same as '4', but run the second tube with one flow after converting the mean concentrations |
-|flag_tube=2 | Two tubes with different inner diameters |
-|flag_tube=1 | One tube |
+Both examples simulate the identical calibration; they differ only in how the chemistry is integrated ([section 4.2](#42-numerical-method)):
 
-#### **4.2.1. Inputs for flag_tube=1**<a name="421-Inputs-for-flag_tube1"></a>
+| | **1a — direct (`flowtube1`)** | **1b — ODE solver (`flowtube2`)** |
+|---|---|---|
+| Chemistry | computed explicitly inside every transport time step (the original MARFORCE method) | stiff ODE solver (LSODA), parallel over grid cells, alternating with transport every 1 ms |
+| Time step | limited by the fastest reaction (HSO3 + O2 → `dt = 1e-4` s) | limited by transport stability only (`dt = 2.5e-4` s) |
+| H2SO4 stage 1 / stage 2 | 6.74×10⁷ / 3.23×10⁷ | 6.73×10⁷ / 3.23×10⁷ |
+| Run time (R80 × Z40, 2 stages) | 1.1 min | 0.7 min |
+| Best for | small mechanisms; simplest and closest to the published model | large or stiff mechanisms (many species, fast reactions), many grid cells |
 
-**Flow variables .csv file:** an example is provided under folder *PANDA520-flowtube/PANDA520_flowtube/Input_files/*, called 'SA_cali_2021-09-10.csv'. It must include flow rate information but there are a few optional input variables. The headers show the variable name and the rest rows mean the number of the experiment stages. The model does not check whether the UV light is on or not, **thus just input all the stages with lights on or add your own codes while calculating the gas concentrations**.
+The two methods agree within **0.2 %**, and the result reproduces the original MARFORCE code exactly (H2SO4 = 6.735×10⁷ cm⁻³ for the same input). The ODE result does not depend on the 1-ms alternation interval (0.5, 1 and 2 ms give 6.74, 6.73 and 6.73×10⁷). **Use 1a** for standard SA/HOI calibrations; **use 1b** when the mechanism is too stiff for small explicit time steps.
 
-| Input variables of the .csv file for flag_tube=1 | Description |
-|-------------|-------------|
-| N2flow | Input N2 flow at different stages (sccm)|
-| O2flow | Input synthetic air flow at different stages (sccm) |
-| SO2flow | Input SO2 flow at different stages (sccm)|
-| H2Oflow | Input H2O flow at different stages (sccm)|
-| Q | Total flow in the tube at different stages (sccm) |
-| T *(optional)* | Temperature at different stages if recorded (K) |
-| H2Oconc *(optional)*| H2O concentration by measurement if recorded (cm-3). If the measured H2O concentrations are more accurate than calculated ones by flows, the measured ones should be used for running the flowtube model. |
+**Grid resolution** (Example 1a, H2SO4 stage 2): R20 → 3.46×10⁷, R40 → 3.31×10⁷, R80 → 3.23×10⁷. A coarse grid over-estimates H2SO4 by up to ~7 %; use R ≥ 80 (the original resolution) for calibration factors.
 
+### 3.2 Checking the transport core (Example 5)
 
-**Experimental information .py file:** an example is provided under folder *PANDA520-flowtube/PANDA520_flowtube/*, called 'Start_SetParam_SA_example.py'. A class 'dict' object is used for storing information.
-| Input variables in the 'dict' object (paras) of the .py file for flag_tube=1 | Description|
-|-------------|-------------|
-| p | Pressure under which the experiment is conducted (Pa) |
-| T | Temperature under which the experiment is conducted (K) |
-| R1 |Inner radius for the first tube (cm), in this case flag_tube=1, thus the first tube is the only tube. |
-| L1 | Length for the first tube (cm) |
-| Itx | It product value for the specific UV lamp used in the experiment|
-| Qx | The flow rate at which Itx is determined (lpm) |
-| outflowLocation | Outflow (exhaust) tube located 'before' or 'after' injecting synthetic air, water vapor and SO2 |
-| fullOrSimpleModel | 'simple' means Gormley & Kennedy approximation, while 'full' means flow model (much slower) |
-| sampleflow |Inlet flow (lpm) of CIMs (chemical ionization mass spectrometer); it should be the same as total flow in the tube (Q). |
-| SO2ratio | SO2 ratio of the gas bottle (ppm) |
-| O2ratio | O2 ratio in synthetic air |
-| Zgrid | Number of grids in direction of tube length  |
-| Rgrid | Number of grids in direction of radius |
-| dt | Differential time interval (usually 1e-4, but try small number if the values are too large out of range and showing 'Nan' during calculation) |
-| model_mode | Use 'normal' if you don't know what this is for. 'kinetic' mode refers to running the model without chemistry module to test the kinetic core. |
-| Diff_setname | Diffusion for the species that you want to define by yourself, otherwise it will be calculated automatically based on the elements it contains |
-| Diff_set | Add the value according to the Diff_setname |
-| sch_name | Chemical scheme file name stored in the *PANDA520-flowtube/PANDA520_flowtube/input_mechanism/* folder|
-| const_comp | Species you think they should have constant concentrations in the whole tube (for SA calibration, const_comp=['SO2','O2','H2O']) |
-| Init_comp | Species you think they should have initial concentration in the first grid of tube (for SA calibration, Init_comp=['OH','HO2'])  |
-| key_spe_for_plot | Key species as criterion to stop the loop (for SA calibration, key_spe_for_plot='H2SO4') |
-| plot_spec | Species that you want to plot |
-| file_name | The name of the flow variables .csv file. |
-| input_file_folder *(optional)* | The folder where the flow variables .csv file locates; default folder is *PANDA520-flowtube/PANDA520_flowtube/Input_files/* if this parameter is missing  |
-| export_file_folder *(optional)* | The folder where the .csv and .txt files containing export infomration (such as H2SO4 concentration) locate; default folder is *PANDA520-flowtube/PANDA520_flowtube/Export_files* if this paramter is missing |
-| flag_tube *(optional)* | The type of experiment setup, it will determined automatically if 'Calcu_by_flow_SA.py' is used for concentration calculation|
+`model_mode = 'kinetic'` switches the chemistry off: species are only carried by the laminar flow, diffuse and are lost to the wall. Example 5 puts 10⁸ cm⁻³ H2SO4 at the inlet of a 1 m tube and compares the flow-weighted fraction that leaves the tube with the analytical Gormley & Kennedy (1949) penetration `P(μ)`, `μ = πDL/Q` (the formula of the original Matlab calibrator). The model agrees within 2 % at both flows; refining the axial grid changes this by < 0.3 %, the remaining difference comes from the approximations of the analytical formula (no axial diffusion). Use this mode to check grid and `dt` of a new set-up before adding chemistry: copy Example 5, change geometry, flows and `Diff_set`, and compare.
 
-For the other input variables of the .py file stated below, **you don't need to change if** you use the example file 'Start_SetParam_SA_example.py' with the 'Calcu_by_flow_SA.py' as the function to calculate gas concentrations. **You could also make your own script for calculating concentrations based on flows, and in this case you also have to determine the flag_tube by yourself. We RECOMMEND you to use the example function file 'Calcu_by_flow_SA.py'**  
-| Other input variables of the .py file | Description|
-|-------------|-------------|
-| Init_comp_conc | Initial concentrations for species that you already set in the paras (in the case of SA calibration, 'OHconc' (concentration of OH radical calculated from Itx, Qx, H2O concentration and etc.)  is used for both 'OH' and 'HO2') |
-| const_comp_conc | Constant concentrations for species you already set |
-| num_stage | Default is num_stage= paras['OHconc'], meaning the number of stages based on OHconc since we want to calculate the stages with light on, but **this can also be set by user as a integer number N (in this case, it means the first N stages are calculated)** |
+## 4. How the model works
 
+### 4.1 Physics
 
-#### **4.2.2. Inputs for flag_tube=2**<a name="422-Inputs-for-flag_tube2"></a>
-**Flow variables .csv file** is set exactly the same as the the situation of **flag_tube=1**, see details above. \
-For  **experimental information .py file**, all the variables are the same except here R2 and L2 are additionally needed.
-| Additional input variables in the 'dict' object (paras) of the .py file for flag_tube=2 | Description|
-|-------------|-------------|
-| R2 | Inner diameter for the second tube (cm) if there is any, it could also be set to 0 for flag_tube = 1 |
-| L2 | Length for the second tube (cm) |
+For every species the model solves the axisymmetric convection–diffusion–reaction equation
 
-#### **4.2.3. Inputs for flag_tube=3**<a name="423-Inputs-for-flag_tube3"></a>
-**Flow variables .csv file:** since a Y piece is added into the setup, variables for flows coming from Y piece is needed to input.
+```
+∂c/∂t = D (∂²c/∂r² + (1/r) ∂c/∂r + ∂²c/∂z²)  −  u(r) ∂c/∂z  +  P(c) − L(c)
+```
 
-| Input variables of the .csv file for flag_tube=3 | Description |
-|-------------|-------------|
-| N2flow1 | Input N2 flow for the first tube at different stages (sccm)|
-| N2flow2 | Input N2 flow for the Y piece at different stages (sccm)|
-| O2flow1 | Input synthetic air flow for the first tube at different stages (sccm) |
-| O2flow2 | Input synthetic air flow for the Y piece at different stages (sccm) |
-| SO2flow | Input SO2 flow for the first tube at different stages (sccm)|
-| H2Oflow1 | Input H2O flow for the first tube at different stages (sccm)|
-| H2Oflow2 | Input H2O flow for the Y piece at different stages (sccm)|
-| Q1 | Total flow in the first tube at different stages (sccm) |
-| Q2 | Total flow in the second tube **(NOT Y piece!!!)** at different stages (sccm) |
-| T *(optional)* | Temperature at different stages if recorded (K) |
-| H2Oconc1 *(optional)*| H2O concentration by measurement for the first tube if recorded (cm-3). If the measured H2O concentrations are more accurate than calculated ones by flows, the measured ones should be used for running the flowtube model. **Notice that CIMs just could just measure the H2O concentration for the second tube, but H2Oconc1 can be calculated by scaling with flows**. |
-| H2Oconc2 *(optional)*| H2O concentration by measurement for the second tube **(NOT Y piece!!!)**  if recorded (cm-3).|
+- **Laminar flow:** `u(r) = 2Q/(πR²) · (1 − r²/R²)` (Poiseuille profile; `Q` volume flow, `R` tube radius).
+- **Diffusion:** `D` from `Diff_set` in the start script, otherwise estimated from the molecular formula with Fuller's method (`kinetics/diff_coef.py`).
+- **Chemistry:** `P − L` from the chemical mechanism (rate coefficients may depend on T, p, M, O2, H2O, photolysis scaling `SUN`, lamp term `itProd`).
+- **Boundary conditions:** at the **wall** the concentration of every reactive species is 0 (the wall is a perfect sink — diffusion-limited wall loss); **constant species** (`const_comp`) are held fixed everywhere; at the **inlet** the `Init_comp` species are fixed (when `Init_set = 'on'`), all other reactive species enter with zero concentration; the **outlet** is open.
+- **OH source:**
+  - *point* — OH and HO2 are created in a short lamp region at the inlet: `[OH]₀ = [HO2]₀ = It · σ(H2O) · [H2O]`, with `It = Itx · Qx / Q` (lamp It product scaled to the actual flow) and σ(H2O, 185 nm) = 7.22×10⁻²⁰ cm²;
+  - *continuous* — OH is produced along an illuminated section of length `Ll` by the mechanism reaction `H2O = OH + H` with first-order rate `Itx` (s⁻¹).
+- **Several tubes:** a 2nd tube (radius `R2`, length `L2`) is simulated after the 1st when its radius or its flow differs (Y-piece). The outlet profile of tube 1 is mapped ring by ring onto the inlet of tube 2 and diluted by `Q1/Q2`.
 
-**Experimental information .py file:** variables are the same as those for flag_tube=2 if 'Calcu_by_flow_SA.py' is used for calculating concentrations, otherwise you should make your own script for calculating the concentrations in both the first and second tubes. 
+The model integrates in time until the concentrations no longer change, i.e. it computes the **steady state** of the tube. The **outlet concentration** is then averaged over the cross-section ([section 7](#7-outlet-concentration-mean-or-flow-weighted)).
 
+### 4.2 Numerical method
 
-#### **4.2.4. Inputs for flag_tube=4**<a name="424-Inputs-for-flag_tube4"></a>
-Every input variables are the same as those for flag_tube=3, except that for **Experimental information .py file**, you have to set flag_tube=4 by yourself while using the example script 'Calcu_by_flow_SA.py'. 
+- **Grid:** `Rgrid` points across the full diameter × `Zgrid` points along the tube (finite differences). The solution is symmetric about the axis.
+- **Iterations:** the model repeatedly advances the solution by `timesteps` steps of length `dt` (one *iteration* = `dt × timesteps` seconds). After each iteration it compares `key_spe_for_plot` at the outlet with the previous iteration; the run has converged when the relative change is below `inter_acc` (and at least `fix_timstep` iterations were done).
+- **Stages:** every row of the input CSV is a separate steady-state calculation (e.g. different H2O flows).
+- **Solvers (`model_mode`):**
 
-| Additional input variables in the 'dict' object (paras) of the .py file for flag_tube=4 | Description|
-|-------------|-------------|
-| flag_tube | In this case ('4'), this variable is required to write by yourself, but if you want to make your own script, this is not required. |
+  | `model_mode` | How chemistry and transport are combined | Time-step limit |
+  |---|---|---|
+  | `'flowtube1'` | **direct**: diffusion, advection and chemistry are advanced together with explicit Euler steps | `dt` < lifetime of the fastest-reacting species and the transport stability limit |
+  | `'flowtube2'` | **operator splitting**: every iteration first integrates the chemistry in every grid cell for `dt × timesteps` with a stiff ODE solver (LSODA, Numba-parallel), then transports for `timesteps` steps of `dt` | transport stability only; `dt × timesteps` must be short compared with the residence time |
+  | `'box'` | 0-D: chemistry (stiff solver), dilution and wall loss only, until steady state | none |
+  | `'kinetic'` | transport only: the chemistry step is skipped, species set at the inlet are only advected, diffused and lost to the wall (Example 5) | transport stability |
 
-### 4.3. HOI calibration<a name="43-HOI-set-parameters"></a>
+- **Transport stability (explicit scheme):** roughly `dt < dr²/(4D)` (dr = 2R/(Rgrid−1)) and `dt < dx/u_max`. Finer grids need smaller `dt`; an unstable `dt` produces `NaN` and the run stops with a message.
 
-#### **4.3.1. Inputs for flag_tube=1**<a name="431-Inputs-for-flag_tube1"></a>
-**Flow variables .csv file:** input format is the same to SA calibration but just with different flows. 
+### 4.3 Program flow and code map
 
-| Input variables of the .csv file | Description |
-|-------------|-------------|
-| N2flow | Input N2 flow at different stages (sccm)|
-| O2flow | Input synthetic air flow at different stages (sccm) |
-| I2flow | Input I2 flow at different stages (sccm)|
-| I2conc | I2 concentration (after calibration) measured by CIMs at different stages (cm-3)|
-| Q | Total flow in the tube at different stages (sccm) |
-| T *(optional)* | Temperature at different stages if recorded (K) |
-| H2O_concentration *(optional)*| If the H2O concentrations are measured and recorded (cm-3), and if the measured values are more accurate than the calculated ones by flows, it is recommended to use the measured values when running the flowtube model. If you do not have the measured H2O concentration, there is no need to add an empty column|
+```
+Start_SetParam_*.py            all parameters (SimulationParams)
+ └─ calculate_concentrations   Funcs/Calcu_by_flow.py   input CSV → concentrations of every stage,
+ │                                                       [OH]0, tube configuration, file paths
+ └─ Run_flowtube               Funcs/Run_flowtube.py    loop over stages, write result files
+     └─ cmd_calib5             Funcs/cmd_calib5.py      one stage:
+         ├─ eqn_pars.extr_mech   parse the mechanism, write Funcs/rate_coeffs.py, ode_solv.py, ... (auto-generated)
+         ├─ grid_para            grid (Funcs/grid_parameters.py), diffusion coefficients (get_diff_and_u.py)
+         ├─ model_onetube / model_twotubes / model_box      iterate to steady state
+         │     ├─ ode_solv_batch / ode_solv_numba_batch      chemistry with LSODA (flowtube2, box)
+         │     ├─ odesolve3.odesolve                         transport (+ chemistry in flowtube1)
+         │     └─ set_boundlay_for_ode, cal_const_comp_conc  boundary conditions, constant species
+         └─ meanconc_cal          outlet concentration ('mean' or 'weighted')
+```
 
-**Experimental information .py file:** all the variable names are exactly the same as those for SA calibration with flag_tube=1, and an example is provided under folder *PANDA520-flowtube/PANDA520_flowtube/*, called 'Start_SetParam_HOI_example.py'. **Notice that variables need to be changed to HOI calibration system, such as 'sche_name' (='HOI_cali_chem.txt') and 'Key_spe_for_plot' (='HOI'), all details see the example file.**
+| File | Purpose |
+|---|---|
+| `Funcs/Calcu_by_flow.py` | Flows, bottle mixing ratios and H2O saturation → concentrations; point-source [OH]₀; tube type |
+| `Funcs/Run_flowtube.py` | Runs all stages and writes the result tables |
+| `Funcs/cmd_calib5.py` | Sets up and runs one stage; chooses one-tube / two-tube / box model; restart files |
+| `Funcs/eqn_pars.py`, `eqn_interr.py`, `sch_interr.py`, `xml_interr.py` | Mechanism parser (adapted from PyCHAM) |
+| `Funcs/write_*.py` | Write the auto-generated `rate_coeffs.py`, `ode_solv.py`, `dydt_rec.py`, `hyst_eq.py` (do not edit those by hand) |
+| `Funcs/model_onetube.py`, `model_twotubes.py`, `model_box.py` | Iteration loops, convergence, checkpoints |
+| `Funcs/odesolve3.py` | Finite-difference transport (and explicit chemistry for `flowtube1`) |
+| `Funcs/ode_solv_batch.py`, `ode_solv_numba_batch.py`, `ode_worker.py` | Parallel stiff chemistry solver |
+| `Funcs/meanconc_cal.py` | Outlet concentration (mean / flow-weighted) |
+| `Funcs/Wennberg_rec_funcs.py`, `itprod.py`, `kclust.py` | Rate-coefficient helper functions usable in mechanisms |
+| `Funcs/read_output_profile_file.py` | Read the saved 2-D concentration fields ([section 6](#6-outputs)) |
+| `kinetics/diff_coef.py` | Diffusion coefficients (Fuller's method) |
 
-Similar to SA calibration, **you don't need to change other input variables if** you use the example file 'Start_SetParam_HOI_example.py' with the 'Calcu_by_flow_HOI.py' as the function to calculate gas concentrations. 
+## 5. Setting up your own simulation
 
-#### **4.3.2. Inputs for flag_tube=2**<a name="432-Inputs-for-flag_tube2"></a>
-**Flow variables .csv file** is set exactly the same as the the situation of HOI calibration with flag_tube=1, see details above. \
-**Experimental information .py file**: all the variables are the same except here R2 and L2 are additionally needed. (Description of R2 and L2 is showed in the **[4.2.2. Inputs for flag_tube=2](#422-Inputs-for-flag_tube2)**)
+1. **Copy the closest example** and give it a new name, e.g. `cp Start_SetParam_SA_calibration_direct.py Start_SetParam_mycal.py`.
+2. **Write the input CSV** for your experiment in `Input_files/` ([5.1](#51-input-csv-and-tube-configurations)) and set `file_name` to it.
+3. **Set the geometry and the OH source** ([5.2](#52-oh-source-point-or-continuous)): radii, lengths, `Itx`, `Qx`.
+4. **Choose the mechanism** ([5.3](#53-chemical-mechanism)) and the species treatment: `const_comp`, `Init_comp`, `key_spe_for_plot`.
+5. **Choose grid, `dt` and convergence** ([5.6](#56-choosing-grid-time-step-and-convergence)). Start coarse, then refine until the result stops changing.
+6. **Run** `python Start_SetParam_mycal.py` from `PANDA520_flowtube/` and read the results in `Export_files/<CSV name>/`.
 
-#### **4.3.3. Inputs for flag_tube=3**<a name="433-Inputs-for-flag_tube3"></a>
-**Flow variables .csv file:** since a Y piece is added into the setup, variables for flows coming from Y piece is needed to input.
-| Input variables of the .csv file for flag_tube=3 | Description |
-|-------------|-------------|
-| N2flow1 | Input N2 flow for the first tube at different stages (sccm)|
-| N2flow2 | Input N2 flow for the Y piece at different stages (sccm)|
-| O2flow1 | Input synthetic air flow for the first tube at different stages (sccm) |
-| O2flow2 | Input synthetic air flow for the Y piece at different stages (sccm) |
-| I2flow | Input I2 flow for the first tube at different stages (sccm)|
-| I2conc1 | I2 concentration (after calibration) measured by CIMs for the first tube at different stages (cm-3), **notice that CIMs just could just measure the I2 concentration for the second tube, but I2conc1 can be calculated by scaling with flows**.|
-| I2conc2 | I2 concentration (after calibration) measured by CIMs for the second tube **(NOT Y piece!!!)** at different stages (cm-3)|
-| H2Oflow1 | Input H2O flow for the first tube at different stages (sccm)|
-| H2Oflow2 | Input H2O flow for the Y piece at different stages (sccm)|
-| Q1 | Total flow in the first tube at different stages (sccm) |
-| Q2 | Total flow in the second tube **(NOT Y piece!!!)** at different stages (sccm) |
-| T *(optional)* | Temperature at different stages if recorded (K) |
-| H2Oconc1 *(optional)*| H2O concentration by measurement for the first tube if recorded (cm-3). If the measured H2O concentrations are more accurate than calculated ones by flows, the measured ones should be used for running the flowtube model. **Notice that CIMs just could just measure the I2 concentration for the second tube, but I2conc1 can be calculated by scaling with flows**.|
-| H2Oconc2 *(optional)*| H2O concentration by measurement for the second tube **(NOT Y piece!!!)** if recorded (cm-3).|
+### 5.1 Input CSV and tube configurations
 
-**Experimental information .py file:** variables are the same as those for flag_tube=2 if 'Calcu_by_flow_HOI.py' is used for calculating concentrations, otherwise you should make your own script for calculating the concentrations in both the first and second tubes.
+One row = one **experiment stage**; only include the stages you want to run. Columns are recognised by their names:
 
-#### **4.3.4. Inputs for flag_tube=4**<a name="434-Inputs-for-flag_tube4"></a>
-Every input variables are the same as those for HOI calibration with flag_tube=3, except that for **Experimental information .py file**, you have to set flag_tube=4 by yourself while using the example script 'Calcu_by_flow_HOI.py'. 
+| Column | Meaning |
+|---|---|
+| `<X>flow` | Flow of gas X in **sccm**. A trailing `1`/`2` means tube 1 / flow added at the Y-piece (e.g. `H2Oflow1`, `N2flow2`) |
+| `<X>conc` | Measured or prescribed concentration of X (molecules cm⁻³), e.g. `I2conc`, `ISOP1OH2OOHconc`, `H2Oconc`. Available as `modelparams.<X>conc` for `const_comp` / `Init_comp` |
+| `Q` or `Q1`, `Q2` | Total flow (sccm) in the tube / in tube 1 and tube 2. `Q2` is the total flow in tube 2, not the Y-piece flow |
+| `T` *(optional)* | Temperature per stage (K) |
+| `time` *(optional)* | Run time per stage (s); raises the minimum number of iterations |
+| others | ignored (e.g. `UVC`, timestamps) |
 
+How concentrations are calculated from flows (`Calcu_by_flow.py`):
 
-## 5. Outputs<a name="5-outputs"></a>
-As mentioned in the **[3. Running](#3-running)**, during the running of the model, surface plots of all the steps for each experiment stage will be showed. After the model is run successfully, two output files (one ends with '_output.csv' and one '_output.txt') with the same name of the input flow variables .csv file will be saved under the folder *PANDA520-flowtube/PANDA520_flowtube/Export_files/* if no other folder is set for output. 
+- gas from a bottle: `[X] = Xflow × Xratio / Q × p/(k_B T)`, with `<X>ratio` the mole fraction in the bottle given in the start script (e.g. `SO2ratio = 5e-3`);
+- O2: `O2flow × O2ratio / Q × p/(k_B T)` (O2flow is synthetic air);
+- H2O: `H2Oflow / Q × p_sat(T)/(k_B T)` (saturated humidifier). If an `H2Oconc` column is given it is used instead **when the H2O flow is ≥ 1000 sccm**, also for [OH]₀;
+- `outflowLocation = 'before'` uses `Q` for the dilution, `'after'` uses the sum of the injected flows.
 
-The output .csv file contains a table with headers including steady state concentrations of species in `paras['plot_spec']` at different stages.
+**Tube configurations** (all work with point and continuous OH sources):
 
-The output .txt file contains concentrations of species in `paras['plot_spec']` at all steps of all stages.
+| Configuration | What to give | Model used |
+|---|---|---|
+| One tube | single-flow CSV (`H2Oflow`, `N2flow`, `Q`); `R1`, `L1`; no `L2` | one tube |
+| Two sections with **different diameter**, same flow — e.g. 3/4" (R = 0.78 cm) followed by 1" (R = 1.2 cm) | single-flow CSV; `R1`, `L1`, `R2`, `L2` | two tubes (Example 2) |
+| Two tubes with a **Y-piece** adding flow | two-flow CSV (`H2Oflow1`, `N2flow1`, `Q1`, `Q2`, `…flow2`); `R1`, `L1`, `R2`, `L2` | two tubes with dilution `Q1/Q2` (Example 4) |
 
-## 6. Acknowledgements<a name="6-Acknowledgements"></a>
-We thank the ACCC Flagship funded by the Academy of Finland grant number 337549, Academy professorship funded by the Academy of Finland (grant no. 302958), Academy of Finland projects no. 346370, 325656, 316114, 314798, 325647, 341349 and 349659. European Research Council (ERC) project ATM-GTP Contract No. 742206. The Arena for the gap analysis of the existing Arctic Science Co-Operations (AASCO) funded by Prince Albert Foundation Contract No 2859. M.K. thanks the Jane and Aatos Erkko Foundation for providing funding. M.K. and X.-C.H thank the Jenny and Antti Wihuri Foundation for providing funding for this research. 
+Keep `Rgrid2 = Rgrid1`. For a one-tube set-up the axial grid is `Zgrid1 + Zgrid2` points over `L1`; for two tubes tube 1 has `Zgrid1` and tube 2 `Zgrid2` points. Note that in fully developed laminar flow the diffusional wall loss depends on `D·L/Q` and not on the radius, so changing only the diameter mainly matters through the longer residence time in a wider tube (more reaction time).
 
+### 5.2 OH source: point or continuous
 
+The model decides from `Rl`: **`Rl > 0` → continuous source, otherwise point source.**
+
+| | **Point source** (Examples 1, 2) | **Continuous source** (Example 4) |
+|---|---|---|
+| Physical picture | OH/HO2 formed in a short lamp region at the inlet, then react downstream (classic calibration) | OH produced along an illuminated section while the chemistry proceeds |
+| Geometry | `R1`, `L1` (+ `R2`, `L2`); **no `Rl`, `Ll`** | `Rl`, `Ll`, `Rgridl`, `Zgridl` + `R1`, `L1`, `R2`, `L2` |
+| `Itx` | lamp *It* product at `Qx` (photons cm⁻², e.g. `4.84e10`) | first-order rate coefficient of `H2O = OH + H` (s⁻¹, e.g. `1.9e-10`) |
+| Mechanism | – | must contain `% itProd(modelparams) : H2O = OH + H ;` |
+| `Init_comp`, `Init_set` | `['OH', 'HO2']`, `'on'` | OH not in `Init_comp`; `'on'` only for other inlet species (e.g. `['ISOP1OH2OOH']`) |
+| `model_mode` | `'flowtube1'` (or `'flowtube2'` with `dt × timesteps` ≈ 1 ms, Example 1b) | `'flowtube2'` |
+
+### 5.3 Chemical mechanism
+
+Put the mechanism in its own folder under `input_mechanism/` and set `folder_mechaism` and `sch_name`.
+
+| Format | `flag_mech` | `tsv_file` |
+|---|---|---|
+| MCM export (`.fac`, from the [MCM website](https://mcm.york.ac.uk/MCM)) | `'1'` | the MCM species export `mcm_export_species.tsv`; `chemical_species_custom.xml` is generated automatically |
+| Other mechanisms (`.eqn`, `.txt`) | `'0'` | a species table (e.g. `SMILE_formula.csv`); provide `chemical_species_custom.xml` (species → SMILES) in the same folder |
+
+File format (see `input_mechanism/HOI/HOI_cali_chem.txt` for a short, complete example):
+
+```
+* lines starting with * are comments ;
+KMT06 = 1 + (1.40D-21*EXP(2200/TEMP)*H2O) ;          <- generic rate coefficient (name < 10 characters)
+% 2.1D-10 : I2 + OH = HOI + I ; # reference           <- reaction:  % rate coefficient : reactants = products ;
+```
+
+Rate expressions may use Fortran or Python notation, `EXP/exp, LOG, LOG10, dsqrt, dabs, numpy.*`, the variables `TEMP` (K), `p` (Pa), `M`, `N2`, `O2`, `H2O` (molecules cm⁻³), the helper functions `TROE, TUN, ALK, NIT, EPO, ISO1, ISO2, KCO` (Wennberg), `kDimer/kTrimer` (H2SO4 clustering), `itProd(modelparams)` (continuous OH source), `SUN` ([5.5](#55-photolysis-scaling-sun)) and MCM photolysis rates `J(n)`. Do not leave blank lines in the mechanism file.
+
+### 5.4 Parameter reference
+
+All parameters are set in the `SimulationParams(...)` call of the start script (numbers are converted to `float32`, grid sizes to `int`). Every example script documents its parameters line by line.
+
+| Group | Parameter | Description |
+|---|---|---|
+| Conditions | `p`, `TEMP` | Pressure (Pa), temperature (K) |
+| Geometry | `R1`, `L1`, `R2`, `L2` | Inner **radius** (cm) and length (cm) of tube 1 / tube 2 |
+| | `Rl`, `Ll` | Radius and length of the illuminated section (continuous source only) |
+| OH source | `Itx`, `Qx` | Lamp parameter and the flow (slpm) at which it was determined ([5.2](#52-oh-source-point-or-continuous)) |
+| | `sun_a` | Value of `SUN` in the mechanism; default 0 |
+| Flows | `sampleflow` | CIMS inlet flow (slpm) |
+| | `outflowLocation` | `'before'`/`'after'` the gas injection |
+| | `O2ratio`, `<X>ratio` | O2 fraction of synthetic air; mole fraction of X in its gas bottle |
+| Grid | `Rgrid1`, `Zgrid1`, `Rgrid2`, `Zgrid2` | Radial (across the diameter) / axial points of tube 1 / tube 2 |
+| | `Rgridl`, `Zgridl` | Grid of the illuminated section |
+| Numerics | `model_mode` | `'flowtube1'`, `'flowtube2'`, `'box'`, `'kinetic'` ([4.2](#42-numerical-method)) |
+| | `dt`, `timesteps` | Time step (s) and steps per iteration |
+| | `inter_acc`, `fix_timstep` | Convergence threshold and minimum number of iterations. In box mode the threshold is `inter_acc × timesteps / 10⁴` |
+| | `num_plot` | Print/plot every *n* iterations |
+| | `Diff_setname`, `Diff_set` | User diffusion coefficients (cm² s⁻¹) |
+| | `use_restart` | Restart files ([section 8](#8-long-runs-restarts-and-hpc)); default on for continuous, off for point sources |
+| Chemistry | `folder_mechaism`, `sch_name`, `tsv_file`, `flag_mech` | Mechanism ([5.3](#53-chemical-mechanism)) |
+| | `const_comp` | Species held constant everywhere; each needs a concentration (`<X>conc` column, `<X>ratio` + `<X>flow`, or set in the script) |
+| | `Init_comp`, `Init_set` | Species fixed at the inlet when `Init_set = 'on'` |
+| | `key_spe_for_plot` | Species for the convergence test |
+| | `plot_spec` | Species to plot |
+| Output | `file_name` | Input CSV in `Input_files/`; also the output folder name |
+| | `final_output_method` | `'mean'` (default) or `'weighted'` ([section 7](#7-outlet-concentration-mean-or-flow-weighted)) |
+| | `input_file_folder`, `export_file_folder`, `input_mechanism_folder` | Optional folder overrides |
+| Box model | `dil_fac_now` | Dilution rate (s⁻¹) (or `chamber_volume` [L] + `total_flow` [slpm]) |
+| | `wall_loss_set`, `wall_loss_custom` | Wall loss: 0 = off, 1 = estimated, x = x s⁻¹; per-species values (s⁻¹) |
+| Internal | `tot_time`, `save_step`, `pars_skip` | Keep the example values (`pars_skip = 0` parses the mechanism) |
+
+Concentrations can be added or changed after `calculate_concentrations(modelparams)`; Example 4 adds a constant CO background this way.
+
+### 5.5 Photolysis scaling (SUN)
+
+Reactions written as `SUN*k` in the mechanism, e.g. `% SUN*5e-5: H2O2 = OH + OH;`, use `SUN = sun_a` from the start script. Leave `sun_a` out or set it to 0 to switch them off (Example 3); Example 4 uses `sun_a = 2e5`.
+
+### 5.6 Choosing grid, time step and convergence
+
+1. **Grid:** start coarse (R 20–40) to set up the case, then refine until the result changes by less than your uncertainty. For calibration factors use R ≥ 80 (Example 1a: R20 is 7 % and R40 2.5 % above R80).
+2. **`dt`:**
+   - `flowtube1`: below the lifetime of the fastest-reacting species (SA: HSO3, ~2×10⁻⁴ s → `dt = 1e-4`) **and** below the transport limit of the grid (HOI on R80: `dt = 1e-4`).
+   - `flowtube2`: transport limit only. Keep `dt × timesteps` short compared with the residence time for a point source (Example 1b: 1 ms).
+   - Check: halving `dt` must not change the result. `NaN` means `dt` is too large.
+3. **Convergence:** `inter_acc` is the relative change of `key_spe_for_plot` between iterations. Use 1e-4 or smaller for calibrations; one iteration (`dt × timesteps`) should be at least about one residence time for `flowtube1`.
+
+Slow, high-resolution runs of the continuous-source case (publication settings: `Rgrid = 60`, `Zgrid1 = Zgrid2 = 30`, `Zgridl = 10`, `dt = 5e-5`, `timesteps = 10000`, `inter_acc = 1e-5`) take hours to days — use a cluster ([section 8](#8-long-runs-restarts-and-hpc)). On the coarse grid of Example 4 OH and HO2 agree with that fine grid within ~5 %, oxidation products within ~10–40 %.
+
+## 6. Outputs
+
+Results go to `Export_files/<file_name without .csv>/`; file names encode the settings (grid, convergence, `dt`, `timesteps`, `Itx`, mode):
+
+| File | Content |
+|---|---|
+| `*_allstage_final_results.csv` | **Main result:** outlet concentration (molecules cm⁻³) of every species (columns) for every stage (rows) |
+| `*_Stage_<j>_delta_keyspecforplot.csv` | Convergence history: time, relative change and outlet concentration of all species per iteration |
+| `*_Stage_<j>_endtube_profile_output.txt` | Full 2-D concentration field (all grid cells, all species) at convergence (last tube) |
+| `*_Stage_<j>_1st_tube_profile_output.txt` | Same for tube 1 (two-tube set-ups) |
+| `*_params.csv` | All parameters of the run |
+| `warmstart_*`, `*checkpoint*` | Restart files (continuous source only, [section 8](#8-long-runs-restarts-and-hpc)) |
+
+Reading the results in Python (run from `PANDA520_flowtube/`):
+
+```python
+import glob, pandas as pd
+from types import SimpleNamespace
+from Funcs.read_output_profile_file import read_output_profile
+
+folder = 'Export_files/SA_calibration/'
+res = pd.read_csv(glob.glob(folder + '*allstage_final_results.csv')[0], index_col=0)
+print(res[['OH', 'H2SO4']])                       # outlet concentrations per stage
+
+# 2-D field of stage 0: array [radial index, axial index, species]
+prm = pd.read_csv(glob.glob(folder + '*params.csv')[0]).set_index('Parameter')['Value']
+grid = SimpleNamespace(Rgrid=int(prm['Rgrid']), Zgrid=int(prm['Zgrid']), comp_num=len(res.columns))
+c = read_output_profile(glob.glob(folder + '*Stage_0_endtube_profile_output.txt')[0], grid)
+h2so4_outlet_profile = c[:, -1, list(res.columns).index('H2SO4')]
+```
+
+## 7. Outlet concentration: mean or flow-weighted
+
+The outlet profile is not uniform (low at the wall, high in the centre), so it has to be reduced to one number. `final_output_method` selects how:
+
+- **`'mean'` (default)** — area-weighted average over the outlet cross-section. Each ring's concentration is weighted by its area.
+- **`'weighted'`** — flow-weighted average: each ring is weighted by its area **and** its local velocity, i.e. the amount of the species leaving the tube per unit time divided by the flow. This is what the Matlab-based calibration model computes.
+
+Our model defaults to the average concentration because the flow at the end of the tube is not laminar: only ~0.8 slpm is sampled into the mass spectrometer and the rest (typically 10–20 slpm, depending on the inlet system) goes to the exhaust, so the gas is mixed before it is sampled. The models assume perfectly laminar flow to the end, which may introduce errors in the quantification; the area average constrains the mass balance of the species before it enters the instrument. **Users can choose either method — both are supported.** For Example 1a (stage 1) the two methods give H2SO4 = 6.74×10⁷ (`'mean'`) and 8.43×10⁷ cm⁻³ (`'weighted'`, +25 %) — both identical to the original MARFORCE code; the methods typically differ by 10–25 %.
+
+## 8. Long runs, restarts and HPC
+
+**Restart files** are written only for a **continuous OH source**, whose fine-grid runs can take hours to days:
+
+- *checkpoints* (`*checkpoint*.npz`) every 30 min and when the job is stopped by SLURM — start the same script again and the run continues;
+- *warm start* (`warmstart_stage<j>_*`) — the converged field of a stage, used as the starting point when the run is repeated;
+- *stage carry-over* — stage N+1 starts from the converged field of stage N.
+
+Point-source calibrations are short and always start from a clean tube, so their results never depend on earlier runs. Override with `use_restart = True/False`. Restart files are named by stage and grid only, **not by the input values** — delete them after changing the input CSV or concentrations.
+
+**HPC:** `run_flowtube_slurm.sh` is a SLURM template (edit account and environment lines):
+
+```bash
+cd PANDA520_flowtube
+mkdir -p logs
+sbatch run_flowtube_slurm.sh Start_SetParam_Isoprene_continuousOH.py
+```
+
+Set `NUMBA_NUM_THREADS` to the number of CPUs (done in the template) and keep `OMP/MKL/OPENBLAS_NUM_THREADS=1`. For parameter scans make one start script per case (different `file_name`) and submit a job array. Give every simultaneous job its own copy of the code, because the auto-generated `Funcs/*.py` files are rewritten at the start of each run.
+
+## 9. Troubleshooting
+
+| Problem | Solution |
+|---|---|
+| `NaN detected — aborting this run` | `dt` too large for the grid or the chemistry: halve `dt` ([5.6](#56-choosing-grid-time-step-and-convergence)) |
+| Point source gives (almost) no product | `Init_comp = ['OH', 'HO2']`, `Init_set = 'on'`, no `Rl`; with `flowtube2` keep `dt × timesteps` ≈ 1 ms |
+| Result changes when re-running a continuous-source case | old restart files: delete `warmstart_*` / `*checkpoint*` in the output folder |
+| `ModuleNotFoundError: Funcs` | run from inside `PANDA520_flowtube/` |
+| Open Babel import error | `conda install -c conda-forge openbabel=3.1.1` |
+| Species not found / `KeyError` | names in `const_comp`, `Init_comp`, `plot_spec`, `key_spe_for_plot`, `Diff_setname` must match the mechanism; `const_comp`/`Init_comp` species need a concentration |
+| `IndexError` while reading the mechanism | blank line or old `{1.} A = B : k ;` format in the mechanism file — use `% k : A = B ;` |
+| Multiprocessing errors on macOS/Windows | keep the `if __name__ == "__main__":` block with `multiprocessing.set_start_method("spawn")` |
+
+## 10. Citation, acknowledgements and license
+
+Please cite the [AMT article](https://amt.copernicus.org/articles/16/4461/2023/) when using MARFORCE-Flowtube.
+
+We thank the ACCC Flagship funded by the Academy of Finland grant number 337549, Academy professorship funded by the Academy of Finland (grant no. 302958), Academy of Finland projects no. 346370, 325656, 316114, 314798, 325647, 341349 and 349659. European Research Council (ERC) project ATM-GTP Contract No. 742206. The Arena for the gap analysis of the existing Arctic Science Co-Operations (AASCO) funded by Prince Albert Foundation Contract No 2859. M.K. thanks the Jane and Aatos Erkko Foundation for providing funding. M.K. and X.-C.H thank the Jenny and Antti Wihuri Foundation for providing funding for this research.
+
+MARFORCE-Flowtube is free software released under the [GNU General Public License v3.0](LICENSE). It includes code adapted from [PyCHAM](https://github.com/simonom/PyCHAM) (© 2018–2024 Simon O'Meara, GPL-3.0); those files keep their original copyright headers. It is distributed WITHOUT ANY WARRANTY.

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mechanism xmlns="https://mcm.york.ac.uk/MCM">
+<species_defs>
+<species species_number="s1" species_name="CO">
+<smiles>[C-]#[O+]</smiles>
+</species>
+<species species_number="s2" species_name="H2">
+<smiles>[HH]</smiles>
+</species>
+<species species_number="s3" species_name="H2O2">
+<smiles>OO</smiles>
+</species>
+<species species_number="s4" species_name="HNO3">
+<smiles>[N+](=O)(O)[O-]</smiles>
+</species>
+<species species_number="s5" species_name="HO2">
+<smiles>O[O]</smiles>
+</species>
+<species species_number="s6" species_name="HO2NO2">
+<smiles>[N+](=O)([O-])OO</smiles>
+</species>
+<species species_number="s7" species_name="HONO">
+<smiles>N(=O)O</smiles>
+</species>
+<species species_number="s8" species_name="HSO3">
+<smiles>OS(=O)[O]</smiles>
+</species>
+<species species_number="s9" species_name="N2O5">
+<smiles>[N+](=O)([O-])O[N+](=O)[O-]</smiles>
+</species>
+<species species_number="s10" species_name="NO">
+<smiles>[N]=O</smiles>
+</species>
+<species species_number="s11" species_name="NO2">
+<smiles>N(=O)[O]</smiles>
+</species>
+<species species_number="s12" species_name="NO3">
+<smiles>[N+](=O)([O-])[O]</smiles>
+</species>
+<species species_number="s13" species_name="O">
+<smiles>[O]</smiles>
+</species>
+<species species_number="s14" species_name="O1D">
+<smiles>[O]</smiles>
+</species>
+<species species_number="s15" species_name="O3">
+<smiles>[O-][O+]=O</smiles>
+</species>
+<species species_number="s16" species_name="OH">
+<smiles>[OH]</smiles>
+</species>
+<species species_number="s17" species_name="SO2">
+<smiles>O=S=O</smiles>
+</species>
+<species species_number="s18" species_name="SO3">
+<smiles>O=S(=O)=O</smiles>
+</species>
+</species_defs>
+</mechanism>

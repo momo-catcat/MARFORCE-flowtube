@@ -1,0 +1,12 @@
+# Python packages for MARFORCE-Flowtube (pip install -r requirements.txt), Python 3.9-3.10.
+# Open Babel is not reliably installable with pip: install it first with
+#   conda install -c conda-forge openbabel=3.1.1
+# or load your cluster's openbabel module. The conda route (environment.yml) is recommended.
+numpy==2.0.2          # arrays
+scipy==1.13.1         # sparse matrices, interpolation, constants
+pandas==2.2.3         # input CSVs and result tables
+numba==0.60.0         # compiled, parallel transport and chemistry kernels
+numbalsoda==0.3.4     # LSODA stiff ODE solver callable from Numba
+matplotlib==3.9.4     # concentration plots
+molmass==2024.10.25   # molar masses / diffusion coefficients from formulas
+xmltodict==0.14.2     # reading chemical_species_custom.xml

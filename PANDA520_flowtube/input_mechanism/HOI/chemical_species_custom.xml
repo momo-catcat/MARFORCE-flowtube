@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<mechanism>
+<species_defs>
+<species species_number="s1" species_name="OH">
+<smiles>[OH]</smiles>
+</species>
+<species species_number="s2" species_name="HO2">
+<smiles>[O]O</smiles>
+</species>
+<species species_number="s3" species_name="H2O">
+<smiles>O</smiles>
+</species>
+<species species_number="s4" species_name="H2O2">
+<smiles>OO</smiles>
+</species>
+<species species_number="s5" species_name="O2">
+<smiles>O=O</smiles>
+</species>
+<species species_number="s6" species_name="I">
+<smiles>[I]</smiles>
+</species>
+<species species_number="s7" species_name="I2">
+<smiles>[I][I]</smiles>
+</species>
+<species species_number="s8" species_name="IO">
+<smiles>[O][I]</smiles>
+</species>
+<species species_number="s9" species_name="OIO">
+<smiles>O=[I]O</smiles>
+</species>
+<species species_number="s10" species_name="HOI">
+<smiles>O[I]</smiles>
+</species>
+<species species_number="s11" species_name="HI">
+<smiles>[H][I]</smiles>
+</species>
+<species species_number="s12" species_name="I2O2">
+<smiles>[I]OO[I]</smiles>
+</species>
+<species species_number="s13" species_name="I2O3">
+<smiles>[I]OOO[I]</smiles>
+</species>
+<species species_number="s14" species_name="I2O4">
+<smiles>[I]OOOO[I]</smiles>
+</species>
+</species_defs>
+</mechanism>
