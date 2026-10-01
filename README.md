@@ -41,6 +41,7 @@ MARFORCE-flowtube/
     ├── Start_SetParam_HOI_calibration.py         # Example 2:  HOI calibration, point OH, two tube sections
     ├── Start_SetParam_Isoprene_box.py            # Example 3:  isoprene chemistry, box model
     ├── Start_SetParam_Isoprene_continuousOH.py   # Example 4:  isoprene, continuous OH + SUN photolysis
+    ├── Start_SetParam_kinetic_test.py            # Example 5:  transport only (no chemistry) vs Gormley-Kennedy
     ├── run_flowtube_slurm.sh                     # SLURM job template
     ├── Input_files/          # input CSVs: one row = one experiment stage
     ├── input_mechanism/      # chemical mechanisms (SA, HOI, Isoprene/Wennberg, Isoprene/MCM)
@@ -109,6 +110,7 @@ Each flow-tube example simulates **two experiment stages** (two rows of its inpu
 | 2 | `Start_SetParam_HOI_calibration.py` | HOI calibration, 0.78 cm (41 cm) + 1.04 cm (58.5 cm) sections | point | `flowtube1` | 80 × (20 + 20) | ~3 min |
 | 3 | `Start_SetParam_Isoprene_box.py` | isoprene oxidation, chamber-like box | held constant | `box` | – | ~0.5 min |
 | 4 | `Start_SetParam_Isoprene_continuousOH.py` | isoprene oxidation, lamp section + two tubes with Y-piece, SUN photolysis, 100 ppb CO | continuous | `flowtube2` | 14 × (6 + 10 + 10) | ~4 min |
+| 5 | `Start_SetParam_kinetic_test.py` | transport test: H2SO4 through a 1 m tube without chemistry, compared with Gormley–Kennedy | – | `kinetic` | 80 × 40 | ~0.5 min |
 
 \*Laptop with 10 CPU cores.
 
@@ -121,6 +123,7 @@ Each flow-tube example simulates **two experiment stages** (two rows of its inpu
 | 2 HOI | HOI = 6.76×10⁶ | HOI = 8.57×10⁶ |
 | 3 Isoprene box | IDHDP = 2.80×10⁹ | – (box mode runs one stage) |
 | 4 Isoprene continuous OH | IDHDP = 2.33×10⁶, OH = 5.19×10⁸ | IDHDP = 1.28×10⁶, OH = 4.07×10⁸ |
+| 5 Transport test (`'weighted'`) | H2SO4 penetration 0.657 (Gormley–Kennedy 0.645, +1.9 %) at 22.5 slpm | 0.458 (0.449, +2.0 %) at 10 slpm |
 
 ### 3.1 Which SA calibration example should I use? (1a vs 1b)
 
@@ -137,6 +140,10 @@ Both examples simulate the identical calibration; they differ only in how the ch
 The two methods agree within **0.2 %**, and the result reproduces the original MARFORCE code exactly (H2SO4 = 6.735×10⁷ cm⁻³ for the same input). The ODE result does not depend on the 1-ms alternation interval (0.5, 1 and 2 ms give 6.74, 6.73 and 6.73×10⁷). **Use 1a** for standard SA/HOI calibrations; **use 1b** when the mechanism is too stiff for small explicit time steps.
 
 **Grid resolution** (Example 1a, H2SO4 stage 2): R20 → 3.46×10⁷, R40 → 3.31×10⁷, R80 → 3.23×10⁷. A coarse grid over-estimates H2SO4 by up to ~7 %; use R ≥ 80 (the original resolution) for calibration factors.
+
+### 3.2 Checking the transport core (Example 5)
+
+`model_mode = 'kinetic'` switches the chemistry off: species are only carried by the laminar flow, diffuse and are lost to the wall. Example 5 puts 10⁸ cm⁻³ H2SO4 at the inlet of a 1 m tube and compares the flow-weighted fraction that leaves the tube with the analytical Gormley & Kennedy (1949) penetration `P(μ)`, `μ = πDL/Q` (the formula of the original Matlab calibrator). The model agrees within 2 % at both flows; refining the axial grid changes this by < 0.3 %, the remaining difference comes from the approximations of the analytical formula (no axial diffusion). Use this mode to check grid and `dt` of a new set-up before adding chemistry: copy Example 5, change geometry, flows and `Diff_set`, and compare.
 
 ## 4. How the model works
 
@@ -171,7 +178,7 @@ The model integrates in time until the concentrations no longer change, i.e. it 
   | `'flowtube1'` | **direct**: diffusion, advection and chemistry are advanced together with explicit Euler steps | `dt` < lifetime of the fastest-reacting species and the transport stability limit |
   | `'flowtube2'` | **operator splitting**: every iteration first integrates the chemistry in every grid cell for `dt × timesteps` with a stiff ODE solver (LSODA, Numba-parallel), then transports for `timesteps` steps of `dt` | transport stability only; `dt × timesteps` must be short compared with the residence time |
   | `'box'` | 0-D: chemistry (stiff solver), dilution and wall loss only, until steady state | none |
-  | `'kinetic'` | transport only, no chemistry (tests the convection–diffusion core) | transport stability |
+  | `'kinetic'` | transport only: the chemistry step is skipped, species set at the inlet are only advected, diffused and lost to the wall (Example 5) | transport stability |
 
 - **Transport stability (explicit scheme):** roughly `dt < dr²/(4D)` (dr = 2R/(Rgrid−1)) and `dt < dx/u_max`. Finer grids need smaller `dt`; an unstable `dt` produces `NaN` and the run stops with a message.
 

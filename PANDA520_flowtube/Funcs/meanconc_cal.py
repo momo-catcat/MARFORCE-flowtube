@@ -40,13 +40,6 @@ def meanconc_cal(c, modelparams, R=None):
 
         meanConc.append(conc1 + conc2)
 
-        ####!!!!!!!!!!!!!!!!!Temporary code
-        if modelparams.model_mode == 'kinetic':
-            if i == 'H2SO4':
-                prof_conc = pd.DataFrame({'R': rVec, 'SA': cVec1})
-                prof_conc.to_csv('./Export_files/Theoretical_model.csv')
-        ####!!!!!!!!!!!!!!!!!!Temporary code
-
     return meanConc
 
 def meanconc_cal_one_sepcies(c, name, modelparams, R=None):

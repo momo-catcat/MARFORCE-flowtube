@@ -20,7 +20,7 @@ def plot_concentration_profiles(c, plot_spec, formula, L1, L2, Zgrid, Rgrid, tim
     x = np.linspace(0, L1 + L2, Zgrid)
     y = np.linspace(-R2, R2, Rgrid)
 
-    axs = axs.ravel()
+    axs = np.atleast_1d(axs).ravel()  # works for one or many subplots
     for i, (ax, spec_idx) in enumerate(zip(axs, comp_plot_indices)):
         cl = ax.pcolor(x,y, c[:, :, spec_idx],
                     shading='nearest', cmap='jet')
@@ -65,7 +65,7 @@ def  plot_concentration_profiles_3(c_1st, c_2nd, plot_spec, formula, tim, comp_p
     plt.style.use('default')
     plt.rcParams.update({'font.size': 13, 'font.weight': 'bold', 'font.family': 'serif'})
 
-    axs = axs.ravel()
+    axs = np.atleast_1d(axs).ravel()  # works for one or many subplots
     for i, (ax, spec_idx) in enumerate(zip(axs, comp_plot_indices)):
         cl = ax.pcolormesh(x, y, c_combined[:, :, spec_idx], shading='auto', cmap='jet')
         ax.set_title(formula[i], fontsize=12)
@@ -107,7 +107,7 @@ def  plot_concentration_profiles_different_dx(c, plot_spec, formula, tim, comp_p
     plt.style.use('default')
     plt.rcParams.update({'font.size': 13, 'font.weight': 'bold', 'font.family': 'serif'})
 
-    axs = axs.ravel()
+    axs = np.atleast_1d(axs).ravel()  # works for one or many subplots
     for i, (ax, spec_idx) in enumerate(zip(axs, comp_plot_indices)):
         cl = ax.pcolormesh(x, y, c[:, :, spec_idx], shading='auto', cmap='jet')
         ax.set_title(formula[i], fontsize=12)
@@ -139,7 +139,7 @@ def plot_concentration_box_timeseries(c_final, tim_1_final,plot_spec, formula,  
         {'font.size': 13, 'font.weight': 'bold', 'font.family': 'serif', 'font.serif': ['DejaVu Serif']})
 
 
-    axs = axs.ravel()
+    axs = np.atleast_1d(axs).ravel()  # works for one or many subplots
     for i, (ax, spec_idx) in enumerate(zip(axs, comp_plot_indices)):
         y = c_arr[:, spec_idx]
         cl = ax.plot(tim_1_final, y, linewidth = 2)
@@ -180,7 +180,7 @@ def plot_concentration_profiles_test(c_1st, plot_spec, formula, tim, comp_plot_i
     plt.style.use('default')
     plt.rcParams.update({'font.size': 13, 'font.weight': 'bold', 'font.family': 'serif'})
 
-    axs = axs.ravel()
+    axs = np.atleast_1d(axs).ravel()  # works for one or many subplots
     for i, (ax, spec_idx) in enumerate(zip(axs, comp_plot_indices)):
         cl = ax.pcolormesh(x, y, c_1st[:, :, spec_idx], shading='auto', cmap='jet')
         ax.set_title(formula[i], fontsize=12)
@@ -214,7 +214,7 @@ def plot_concentration_profiles_test1(c, plot_spec, formula, L1, L2, Zgrid, Rgri
     x = np.linspace(0, L1 + L2, Zgrid)
     y = np.linspace(-R2, R2, Rgrid)
 
-    axs = axs.ravel()
+    axs = np.atleast_1d(axs).ravel()  # works for one or many subplots
     for i, (ax, spec_idx) in enumerate(zip(axs, comp_plot_indices)):
         cl = ax.pcolor(x,y, c[:, :, spec_idx],
                     shading='nearest', cmap='jet')

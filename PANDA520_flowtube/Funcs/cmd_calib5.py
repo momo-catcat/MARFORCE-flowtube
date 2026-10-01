@@ -28,6 +28,8 @@ def cmd_calib5( const_comp_conc, modelparams,Init_comp_conc, Q1, Q2, c_prev=None
     # Restart files (checkpoints, warm start, stage carry-over) are meant for long continuous-OH runs.
     # Point-source calibrations always start fresh; override with use_restart = True/False in the start script.
     use_restart = bool(getattr(modelparams, 'use_restart', modelparams.OHsource == 'Continuous'))
+    # flow-tube transport is solved in the flowtube modes and in 'kinetic' mode (transport only, no chemistry)
+    tube_mode = ('flowtube' in modelparams.model_mode) or (modelparams.model_mode == 'kinetic')
     modelparams.use_restart_now = use_restart
     # print('Q1', modelparams.Q1, 'Q2', modelparams.Q2)
     try: ### if the O2 concentration is not given, set it to 0
@@ -244,7 +246,7 @@ def cmd_calib5( const_comp_conc, modelparams,Init_comp_conc, Q1, Q2, c_prev=None
                       f'c[:, {_zl}:{_zl + _zs}, :] + c_2nd', flush=True)
 
     # A loaded field carries the previous stage's inlet values: re-apply this stage's inlet
-    if 'flowtube' in modelparams.model_mode and modelparams.Init_set == 'on':
+    if tube_mode and modelparams.Init_set == 'on':
         for i in modelparams.comp0:
             c[:, 0, modelparams.comp_namelist.index(i)] = Init_comp_conc[modelparams.comp0.index(i)]
 
@@ -264,7 +266,7 @@ def cmd_calib5( const_comp_conc, modelparams,Init_comp_conc, Q1, Q2, c_prev=None
         else 'OH source is point, not continuous'
     )
 
-    if 'flowtube' in modelparams.model_mode:
+    if tube_mode:
         if modelparams.two_tubes:
             c, c_2nd = model_twotubes(numLoop, Diff_vals, rowvals, colptrs,u, modelparams.plot_spec, modelparams.formula, c, Q1,Q2,modelparams)
             meanConc = meanconc_cal(c_2nd, modelparams)          # second tube → uses R2 (default)
@@ -299,7 +301,7 @@ def cmd_calib5( const_comp_conc, modelparams,Init_comp_conc, Q1, Q2, c_prev=None
     print( "OH meanconc: {:.2E}".format(meanConc[modelparams.comp_namelist.index('OH')]))
 
     # ---- Warm start (#6): save converged state for future runs ----
-    if 'flowtube' in modelparams.model_mode:
+    if tube_mode:
         _ws_base = (f"{modelparams.export_file_folder}"
                     f"warmstart_stage{modelparams.number_stage}_"
                     f"R{modelparams.Rgrid}L{modelparams.Zgrid}")
