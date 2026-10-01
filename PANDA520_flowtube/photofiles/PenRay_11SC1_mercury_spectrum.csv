@@ -1,0 +1,9 @@
+wavelength_nm,relative_intensity_pct,notes
+184.9,3.5,VUV ozone-producing line
+253.6,100.0,Primary emission line (dominant)
+312.5,1.8,UV doublet
+313.1,1.8,UV doublet
+365.0,2.5,UV-A doublet
+366.3,2.5,UV-A doublet
+404.7,1.2,Violet line
+435.8,2.5,Blue line

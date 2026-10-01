@@ -8,9 +8,9 @@ Created on Wed Jan 26 18:52:58 2022
 
 # convert the species name
 
-def get_formula(plot_spec):
-    formula = []
-    for s in plot_spec:
+def get_formula(modelparams):
+    modelparams.formula = []
+    for s in modelparams.plot_spec:
         j=-1
         for i in range(len(s)):
             add_str = '_'
@@ -20,6 +20,6 @@ def get_formula(plot_spec):
                 add_str = add_str + s[j]
                 s = s.replace(s[j], add_str)
                 j=j+1
-        s = '$\mathregular{' + s + '}$'
-        formula.append(s)
-    return formula
+        s = '$\\mathregular{' + s + '}$'
+        modelparams.formula.append(s)
+    return modelparams

@@ -13,7 +13,7 @@
 # If not, see <http://www.gnu.org/licenses/>.
 # #########################################################################################
 import re
-
+import collections
 
 # Remove the comments from the total eqn list and store them in a separate list. Effective
 # comments should start with '//'. 
@@ -72,7 +72,8 @@ def convert_rate_mcm(rate_coef):
         ('dlog', 'numpy.log'),
         ('LOG', 'numpy.log'),
         ('dabs', 'numpy.abs'),
-        ('LOG10', 'numpy.log10')
+        ('LOG10', 'numpy.log10'),
+        ('C(ind_H2O)', 'H2O')
     ]
 
     # if no change is made, pass the rate expression to a new variable
@@ -88,14 +89,50 @@ def convert_rate_mcm(rate_coef):
             continue
 
     # see if the rate expression contains photolysis rate; convert 'J(n)'/'J<n>' to 'J[n]'
-    photolysis_rate_str = re.findall(r"J\(\d+\)|J\<\d+\>", new_rate)
+    photolysis_rate_str = re.findall(r"J\(|J\<", new_rate)
     if (photolysis_rate_str != []):
-        for j_rate in photolysis_rate_str:
-            new_j_rate = j_rate.replace('(', '[')
-            new_j_rate = new_j_rate.replace('<', '[')
-            new_j_rate = new_j_rate.replace(')', ']')
-            new_j_rate = new_j_rate.replace('>', ']')
-            new_rate = new_rate.replace(j_rate, new_j_rate)
+        new_j_rate = new_rate # redefine
+        new_j_rate = new_j_rate.replace('(', '[')
+        new_j_rate = new_j_rate.replace('<', '[')
+        new_j_rate = new_j_rate.replace(')', ']')
+        new_j_rate = new_j_rate.replace('>', ']')
+            
+        new_j_rate = new_j_rate.replace('J_O3_O1D', '1')
+        new_j_rate = new_j_rate.replace('J_O3_O3P', '2')
+        new_j_rate = new_j_rate.replace('J_H2O2', '3')
+        new_j_rate = new_j_rate.replace('J_NO2', '4')
+        new_j_rate = new_j_rate.replace('J_NO3_NO2', '6')
+        new_j_rate = new_j_rate.replace('J_NO3_NO', '5')
+        new_j_rate = new_j_rate.replace('J_HONO', '7')
+        new_j_rate = new_j_rate.replace('J_HNO3', '8')
+        new_j_rate = new_j_rate.replace('J_HCHO_H2', '12')
+        new_j_rate = new_j_rate.replace('J_HCHO_H', '11')
+        new_j_rate = new_j_rate.replace('J_CH3CHO', '13')
+        new_j_rate = new_j_rate.replace('J_C2H5CHO', '14')
+        new_j_rate = new_j_rate.replace('J_C3H7CHO_HCO', '15')
+        new_j_rate = new_j_rate.replace('J_C3H7CHO_C2H4', '16')
+        new_j_rate = new_j_rate.replace('J_IPRCHO', '17')
+        new_j_rate = new_j_rate.replace('J_MACR_HCO', '18')
+        new_j_rate = new_j_rate.replace('J_MACR_H', '19')
+        new_j_rate = new_j_rate.replace('J_C5HPALD1', '20')
+        new_j_rate = new_j_rate.replace('J_CH3COCH3', '21')
+        new_j_rate = new_j_rate.replace('J_MEK', '22')
+        new_j_rate = new_j_rate.replace('J_MVK_CO', '23')
+        new_j_rate = new_j_rate.replace('J_MVK_C2H3', '24')
+        new_j_rate = new_j_rate.replace('J_GLYOX_H2', '31')
+        new_j_rate = new_j_rate.replace('J_GLYOX_HCHO', '32')
+        new_j_rate = new_j_rate.replace('J_GLYOX_HCO', '33')
+        new_j_rate = new_j_rate.replace('J_MGLYOX', '34')
+        new_j_rate = new_j_rate.replace('J_BIACET', '35')
+        new_j_rate = new_j_rate.replace('J_CH3OOH', '41')
+        new_j_rate = new_j_rate.replace('J_CH3NO3', '51')
+        new_j_rate = new_j_rate.replace('J_C2H5NO3', '52')
+        new_j_rate = new_j_rate.replace('J_NC3H7NO3', '53')
+        new_j_rate = new_j_rate.replace('J_IC3H7NO3', '54')
+        new_j_rate = new_j_rate.replace('J_TC4H9NO3', '55')
+        new_j_rate = new_j_rate.replace('J_NOA', '56')
+
+        new_rate = new_j_rate
 
     # The output rate_coef has length equal to the number of
     # equations and values giving the reaction rate coefficient

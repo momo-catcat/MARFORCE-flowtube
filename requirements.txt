@@ -1,0 +1,9 @@
+# Python packages (openbabel is easiest to install with conda: `conda install -c conda-forge openbabel`)
+numpy>=2.0,<2.1
+scipy>=1.13
+pandas>=2.2
+numba>=0.60
+numbalsoda==0.3.4
+matplotlib>=3.9
+molmass
+xmltodict

@@ -1,0 +1,49 @@
+#include isoprene_reduced_plus_v5.spc
+#include isoprene_reduced_plus_v5.eqn
+
+#LANGUAGE Fortran90
+#DRIVER general
+
+#LOOKATALL
+
+
+#INITVALUES
+
+CFACTOR = 2.5E+19;
+ALL_SPEC = 1.0E-30;
+M      = 1.0;
+ISOP   = 1.0E-8 ;
+O2     = 2.1E-1 ;
+OH     = 1.0E-13 ;
+NO     = 8.0E-11 ;
+NO2    = 8.0E-9 ;
+HO2    = 4.0E-11 ;
+
+#INLINE F90_INIT
+        TSTART = 0
+        TEND = TSTART + 259200
+        DT = 60.0
+        TEMP = 298
+#ENDINLINE
+
+#INLINE MATLAB_INIT
+   global TSTART TEND DT TEMP
+   TSTART = 0;
+   TEND   = TSTART + 259200;
+   DT     = 60.0;
+   TEMP   = 298;
+#ENDINLINE
+
+#INLINE C_INIT
+   TSTART = 0.0;
+   TEND   = TSTART + 259200.0;
+   DT     = 60.0;
+   TEMP   = 298.0;
+#ENDINLINE
+
+#INLINE F77_INIT
+        TSTART = 0.0D0
+        TEND   = TSTART + 259200.0D0
+        DT     = 60.D0
+        TEMP   = 298.0D0
+#ENDINLINE

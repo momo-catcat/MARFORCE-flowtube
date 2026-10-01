@@ -1,15 +1,32 @@
 import numpy as np
 
+def grid_para(modelparams):
 
-def grid_para(Zgrid, Rgrid, R2, R1, L2, L1, comp_num):
-    sp_line = int(Zgrid * L1 / (L2 + L1))
-    if R2 == 0:
-        R2 = R1
-    dr = np.zeros([int(Rgrid), int(Zgrid), comp_num])
-    dx = (L2 + L1) / (Zgrid - 1)
-    Rtot = np.zeros([int(Rgrid), int(Zgrid), comp_num])
-    Rtot[:, 0:sp_line, :] = R1
-    Rtot[:, sp_line:, :] = R2
-    dr[:, 0:sp_line, :] = 2 * R1 / (Rgrid - 1)
-    dr[:, sp_line:, :] = 2 * R2 / (Rgrid - 1)
-    return Rtot, dr, dx, sp_line
+    if (modelparams.OHsource == 'Continuous'):
+        modelparams.Zgrid = int(modelparams.Zgrid1 + modelparams.Zgridl)  # 
+        modelparams.dx = np.zeros([int(modelparams.Rgrid), int(modelparams.Zgrid), modelparams.comp_num], dtype=np.float32)
+        # modelparams.dr = np.zeros([int(modelparams.Rgrid), int(modelparams.Zgrid), modelparams.comp_num], dtype=np.float32)
+        if modelparams.R2 == 0:
+            modelparams.R2 = modelparams.R1
+
+        modelparams.dx[:, 0:modelparams.Zgridl, :] = (modelparams.Ll) / (modelparams.Zgridl-1)
+        modelparams.dx[:, modelparams.Zgridl:, :] = (modelparams.L1) / (modelparams.Zgrid1- 1)
+        modelparams.dr = 2 * modelparams.Rl / (modelparams.Rgridl - 1)
+    
+    elif (modelparams.OHsource == 'point') and (modelparams.Q1[0] != modelparams.Q2[0]):
+
+        modelparams.Zgrid = int(modelparams.Zgrid1) 
+        modelparams.dx = np.zeros([int(modelparams.Rgrid), int(modelparams.Zgrid), modelparams.comp_num], dtype=np.float32)
+        # modelparams.dr = np.zeros([int(modelparams.Rgrid), int(modelparams.Zgrid), modelparams.comp_num], dtype=np.float32)
+
+        modelparams.dx[:, :, :] = (modelparams.L1) / (modelparams.Zgrid1-1)
+        modelparams.dr = 2 * modelparams.R1 / (modelparams.Rgrid1 - 1)
+
+    elif (modelparams.Q1[0] == modelparams.Q2[0]):
+        modelparams.Zgrid = int(modelparams.Zgrid1+ modelparams.Zgrid2)  #
+        modelparams.dx = np.zeros([int(modelparams.Rgrid), int(modelparams.Zgrid), modelparams.comp_num], dtype=np.float32)
+        # modelparams.dr = np.zeros([int(modelparams.Rgrid), int(modelparams.Zgrid), modelparams.comp_num], dtype=np.float32)
+
+        modelparams.dx[:, :, :] = (modelparams.L1+modelparams.L2) / (modelparams.Zgrid-1)
+        modelparams.dr = 2 * modelparams.R1 / (modelparams.Rgrid1 - 1)
+    return modelparams

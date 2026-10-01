@@ -1,0 +1,157 @@
+﻿Name;full name;;Formula;Smile;2 from MCM
+CO;carbon monoxide};;CO;[C-]#[O+];1 write by hand
+CO2;carbon dioxide};;CO2;C(=O)=O;3 fake
+O3;ozone};;O3;[O-][O+]=O;
+H2;molecular hydrogen};;H2;[HH];
+OH;hydroxyl radical};;OH;[OH];
+HO2;hydroperoxyl radical};;HO2;O[O];
+H2O2;hydrogen peroxide};;H2O2;OO;
+NO;nitric oxide radical};;NO;[N]=O;
+NO2;nitrogen dioxide radical};;NO2;N(=O)[O];
+NO3;nitrate radical};;NO3;[N+](=O)([O-])[O];
+HNO3;nitric acid};;HNO3;[N+](=O)(O)[O-];
+{C1};;;;;
+HCHO;formaldehyde;;CH2O;C=O;
+HCOOH;formic acid;;CH2O2;O=CO;
+HMHP;hydroxymethyl hydroperoxide;;CH4O3;OCOO;
+CH3OH;methanol;;CH4O;CO;
+CH3OO;methylperoxy radical;;CH3O2;CO[O];2
+CH3OOH;methyl hydroperoxide;;CH4O2;COO;
+CH3ONO2;methyl nitrate;;CH3O3N;CO[N+](=O)[O-];
+CH3OONO2;methylperoxynitrate;;CH3O4N;COO[N+](=O)[O-];
+SCI;C1 stabilized Criegee intermediate;;CH2O2;[O-][O+]=C;2
+{C2};;;;;
+CH3CO3;acetylperoxy radical;;C2H3O3;CC(=O)O[O];2
+CH3CO2H;acetic acid;;C2H4O2;CC(=O)O;
+CH3CO3H;peracetic acid;;C2H4O3;CC(=O)OO;
+PAN;peroxyacetyl nitrate;;C2H3O5N;CC(=O)OO[N+](=O)[O-];
+HPETHNL;hydroperoxy ethanal;;C2H4O3;O=CCOO;
+GLYC;glycolaldehyde;;C2H4O2;O=CCO;
+GLYX;glyoxal;;C2H2O2;O=CC=O;
+HCOCO;radical produced following H-abstraction from glyoxal;;C2HO2;O=[C]C=O;2
+ETHLN;ethanal nitrate;;C2H3O4N;O=CCO[N+](=O)[O-];
+HOCH2CO3;hydroxy-acetylperoxy radical;;C2H3O4;OCC(=O)O[O];2
+HOCH2CO2H;hydroxy-acetic acid;;C2H4O3;OCC(=O)O;
+HOCH2CO3H;hydroxy-peracetic acid;;C2H4O4;OCC(=O)OO;
+PHAN;hydroxy-peroxyacetyl nitrate;;C2H3O6N;OCC(=O)OO[N+](=O)[O-];
+NCH2CO3;nitrooxy-acetylperoxy radical;;C2H2O6N;OCC(=O)O[O][N+](=O)[O-];1
+NCH2CO2H;nitrooxy-acetic acid;;C2H3O5N;O=C(CO[N+](=O)[O-])O;
+NCH2CO3H;nitrooxy-peracetic acid;;C2H3O6N;O=C(CO[N+](=O)[O-])OO;
+PNAN;nitrooxy-peroxyacetyl nitrate;;C2H2O8N2;O=C(CO[N+](=O)[O-])OO[N+](=O)[O-];
+{C3};;;;;
+HAC;hydroxyacetone;;C3H6O;CC(=O)CO;
+MGLY;methylglyoxal;;C3H4O2;CC(=O)C=O;
+HPAC;hydroperoxyacetone;;C3H6O3;CC(=O)COO;
+PYRAC;pyruvic acid;;C3H4O3;CC(=O)C(=O)O;
+PROPNN;propanone nitrate;;C3H5O4N;CC(=O)CO[N+](=O)[O-];
+{C4};;;;;
+MVK;methyl vinyl ketone;;C4H8O;C=CC(C)=O;
+MVKOHOO;lumped peroxy radicals from OH/O2 addition to MVK;;C4H7O4;CC(=O)C(O)CO[O];2
+MVK3OH4OH;dihydroxy-MVK;;C4H8O3;CC(=O)C(O)CO;
+MVK3OOH4OH;hydroxy-hydroperoxy-MVK;;C4H8O4;CC(=O)C(CO)OO;
+MVK3OH4OOH;hydroxy-hydroperoxy-MVK;;C4H8O4;CC(=O)C(O)COO;
+MVK3OOH4CO;hydroperoxy-carbonyl-MVK;;C4H6O4;CC(=O)C(C=O)OO;
+MVK3CO4OH;hydroxy-carbonyl-MVK;;C4H6O3;CC(=O)C(=O)CO;
+MVK3OH4CO;hydroxy-carbonyl-MVK;;C4H6O3;CC(=O)C(O)C=O;
+MVKENOL;hydroxy-MVK (enol);;C4H6O2;CC(=O)/C=C/O;
+MVK3OH4N;hydroxy-nitrooxy-MVK;;C4H7O5N;CC(=O)C(O)CO[N+](=O)[O-];
+MVK3N4OH;hydroxy-nitrooxy-MVK;;C4H7O5N;CC(=O)C(CO)O[N+](=O)[O-];
+MVK3OOH4N;nitrooxy-hydroperoxy-MVK;;C4H7O6N;CC(=O)C(CO[N+](=O)[O-])OO;
+MVK3CO4N;carbonyl-nitrooxy-MVK;;C4H5O5N;CC(=O)C(=O)CO[N+](=O)[O-];
+MACR;methacrolein;;C4H8O;C=C(C)C=O;
+MCROHOO;lumped peroxy radicals from OH/O2 addition to MACR;;C4H7O4;CC(O[O])(CO)C=O;2
+MACR2OH3OH;dihydroxy-methacrolein;;C4H8O3;CC(O)(C=O)CO;
+MACR2OOH3OH;hydroxy-hydroperoxy-methacrolein;;C4H8O4;CC(C=O)(CO)OO;
+MACR2OH3OOH;hydroxy-hydroperoxy-methacrolein;;C4H8O4;CC(O)(C=O)COO;
+MACR2OH3CO;hydroxy-carbonyl-methacrolein;;C4H6O3;CC(O)(C=O)C=O;
+MCRENOL;hydroxy-methacrolein (enol);;C4H6O2;C/C(C=O)=C/O;
+MACR2N3OH;hydroxy-nitrooxy-methacrolein;;C4H7O5N;CC(C=O)(CO)O[N+](=O)[O-];
+MACR2OH3N;hydroxy-nitrooxy-methacrolein;;C4H7O5N;CC(O)(C=O)CO[N+](=O)[O-];
+MACR2OOH3N;nitrooxy-hydroperoxy-methacrolein;;C4H7O6N;CC(C=O)(CO[N+](=O)[O-])OO;
+MACR1OO;peroxy radical from H-abstraction from MACR;;C4H5O3;CC(=C)C(=O)O[O];2
+MACR1OH;methacrylic acid;;C4H6O2;C=C(C)C(=O)O;
+MACR1OOH;methacrylic peracid;;C4H6O3;C=C(C)C(=O)OO;
+MPAN;methacryloyl peroxynitrate;;C4H5O5N;C=C(C)C(=O)OO[N+](=O)[O-];
+HMML;hydroxymethyl-methyl-a-lactone;;C4H6O3;CC1(CO)OC1=O;
+MACRNO2;peroxy radical from H-abstraction from MACR2N3OH;;C4H6O7N;CC(CO)(O[N+](=O)[O-])C(=O)O[O];1
+MACRNOH;hydroxy-nitrooxy-methacrylic acid;;C4H7O6N;CC(CO)(O[N+](=O)[O-])C(=O)O;
+MACRNOOH;hydroxy-nitrooxy-methacrylic peracid;;C4H7O7N;CC(CO)(O[N+](=O)[O-])C(=O)OO;
+MPANHN;hydroxy-nitrooxy-methacryloyl peroxynitrate;;C4H6O9N2;CC(CO)(O[N+](=O)[O-])C(=O)OO[N+](=O)[O-];
+C4HVP1;C4 hydroxy-vinyl-peroxy radical;;C4H7O3;CC1(CO)OC1=O;3
+C4HVP2;C4 hydroxy-vinyl-peroxy radical;;C4H7O3;CC1(CO)OC1=O;3
+{C5};;;;;
+ISOP;isoprene;;C5H8;C=CC(=C)C;
+IHOO1;isoprene-(1-OH)-OO adducts;;C5H9O3;OCC(C)(O[O])C=C;2
+IHOO4;isoprene-(4-OH)-OO adducts;;C5H9O3;C(O)C(O[O])C(C)=C;2
+ISOP1CO4OOH;hydroperoxy-carbonyl-isoprene delta-HPALD;;C5H8O3;C/C(C=O)=C/COO;
+ISOP1OOH4CO;hydroperoxy-carbonyl-isoprene; delta-HPALD;C5H8O3;C/C(=C/C=O)COO;
+ISOP1CO2OOH;hydroperoxy-carbonyl-isoprene; beta-HPALD;C5H8O3;C=CC(C)(C=O)OO;
+ISOP3OOH4CO;hydroperoxy-carbonyl-isoprene; beta-HPALD;C5H8O3;C=C(C)C(C=O)OO;
+ISOP1CO4OH;hydroxy-carbonyl-isoprene; delta-HC5;C5H8O2;C/C(C=O)=C/CO;
+ISOP1OH4CO;hydroxy-carbonyl-isoprene; delta-HC5;C5H8O2;C/C(=C/C=O)CO;
+ISOP3CO4OH;hydroxy-carbonyl-isoprene; beta-HC5;C5H8O2;C=C(C)C(=O)CO;
+ISOP1OH2N;hydroxy-nitrooxy-isoprene; beta-IHN;C5H9O4N;C=CC(C)(CO)O[N+](=O)[O-];
+ISOP3N4OH;hydroxy-nitrooxy-isoprene; beta-IHN;C5H9O4N;C=C(C)C(CO)O[N+](=O)[O-];
+ISOP1OH4N;hydroxy-nitrooxy-isoprene; delta-IHN;C5H9O4N;C/C(=C/CO[N+](=O)[O-])CO;
+ISOP1N4OH;hydroxy-nitrooxy-isoprene; delta-IHN;C5H9O4N;C/C(=C/CO)CO[N+](=O)[O-];
+ISOP1OH2OOH;hydroxy-hydroperoxy-isoprene; beta-ISOPOOH;C5H10O3;C=CC(C)(CO)OO;
+ISOP3OOH4OH;hydroxy-hydroperoxy-isoprene; beta-ISOPOOH;C5H10O3;C=C(C)C(CO)OO;
+ISOP1OH4OOH;hydroxy-hydroperoxy-isoprene; delta-ISOPOOH;C5H10O3;C/C(=C/COO)CO;
+ISOP1OOH4OH;hydroxy-hydroperoxy-isoprene; delta-ISOPOOH;C5H10O3;C/C(=C/CO)COO;
+ICHOO;peroxy radical from OH/O2 addition to beta-HC5; ISOP1OH2OO3CO4OH;C5H9O5;OCC(=O)C(C)(CO)O[O];2
+IHPOO1;peroxy radical from OH/O2 addition to ISOPOOOH; lumped ISOP1OH2OOH3OH4OO and ISOP1OH2OO3OH4OOH;C5H11O6;CC(CO)(OO)C(O)CO[O];1
+IHPOO2;peroxy radical from OH/O2 addition to ISOPOOOH; lumped ISOP1OO2OH3OOH4OH and ISOP1OOH2OH3OO4OH;C5H11O6;CC(CO[O])(O)C(OO)CO;1
+IHPOO3;peroxy radical from OH/O2 addition to ISOPOOOH; lumped ISOP1OH2OO3OOH4OH and ISOP1OH2OOH3OO4OH;C5H11O6;CC(CO)(O[O])C(OO)CO;1
+IEPOXt;trans-beta-IEPOX;;C5H10O3;C[C@]1(CO)O[C@@H]1CO;
+IEPOXc;cis-beta-IEPOX;;C5H10O3;C[C@]1(CO)O[C@H]1CO;
+IEPOXD;lumped delta-IEPOX;;C5H10O3;CC1(C(O)CO)CO1;
+ICHE;isoprene-carbonyl-hydroxy-epoxide;;C5H8O3;CC1(C=O)OC1CO;
+IEPOXAOO;peroxy radical from IEPOX; ISOP1CO2OO3OH4OH;C5H9O5;O=CC(C)(O[O])C(O)CO;2
+IEPOXBOO;peroxy radical from IEPOX; ISOP1OH2OH3OO4CO;C5H9O5;O=CC(O[O])C(C)(O)CO;2
+ISOP1CO4CO;dicarbonyl-isoprene;;C5H6O2;C/C(C=O)=C/C=O;
+HPALD1OO;peroxy radical from OH/O2 addition to 4-OOH d-HPALD; ISOP1CO1OOH2OO;C5H7O5;C=CC(C)(O[O])C(OO)=O;2
+HPALD2OO;peroxy radical from OH/O2 addition to 1-OOH d-HPALD; ISOP3OO4CO4OOH;C5H7O5;C(OO)(=O)C(O[O])C(C)=C;1
+ISOPNOO1;peroxy radical from OH/O2 addition to IHN; lumped ISOP1OH2N3OO4OH and ISOP1OH2N3OH4OO;C5H10O7N;C(O)C(O[O])C(C)(CO)O[N+](=O)[O-];3
+ISOPNOO2;peroxy radical from OH/O2 addition to IHN; lumped ISOP1OH2OO3N4OH and ISOP1OO2OH3N4OH;C5H10O7N;C(O)C(O[N+](=O)[O-])C(C)(CO)O[O];3
+INO2B;beta-nitrooxy peroxy radicals from isoprene + NO3;;C5H8O5N;C(O[N+](=O)[O-])C(O[O])(C=C)C;3
+INO2D;delta-nitrooxy peroxy radicals from isoprene + NO3;;C5H8O5N;C(O[N+](=O)[O-])C=(CCO[O])C;3
+INO;alkoxy radical from isoprene + NO3; ISOP1N4O;C5H8O4N;C(O[N+](=O)[O-])C=(CC[O])C;3
+INPB;beta-nitrooxy hydroperoxides from isoprene + NO3;;C5H9O5N;C=CC(C)(CO[N+](=O)[O-])OO;
+INPD;delta-nitrooxy hydroperoxides from isoprene + NO3;;C5H9O5N;C/C(=C/COO)CO[N+](=O)[O-];
+ISOP1N4CO;nitrooxy-carbonyl-isoprene;;C5H7O4N;C/C(=C/C=O)CO[N+](=O)[O-];
+ISOP1CO4N;nitrooxy-carbonyl-isoprene;;C5H7O4N;C/C(C=O)=C/CO[N+](=O)[O-];
+ISOP3CO4N;nitrooxy-carbonyl-isoprene;;C5H7O4N;C=C(C)C(=O)CO[N+](=O)[O-];
+IHNB;beta-nitrooxy alcohols from isoprene + NO3;;C5H9O4N;C=CC(C)(O)CO[N+](=O)[O-];
+IDN;dinitrates from isoprene + NO3;;C5H8O6N;C/C(=C/CO[N+](=O)[O-])CO[N+](=O)[O-];
+IDHNBOO;lumped peroxy radicals from IHNB + OH/O2;;C5H10O7N;C(O)C(O[O])C(CO)(C)O[N+](=O)[O-];3
+IDHNDOO1;lumped ISOP1N2OH3OO4OH and ISOP1N2OO3OH4OH;;C5H10O7N;C(O)C(O[O])C(CO[N+](=O)[O-])(C)O;3
+IDHNDOO2;lumped ISOP1OH2OO3OH4N and ISOP1OH2OH3OO4N;;C5H10O7N;C(O[N+](=O)[O-])C(O)C(CO)(C)O[O];3
+IHPNBOO;lumped peroxy radicals from IPNB + OH/O2;;C5H10O8N;CC1(CO)OC1=O;3
+IHPNDOO;lumped peroxy radicals from IPND + OH/O2;;C5H10O8N;CC1(CO)OC1=O;3
+IHNE;isoprene-hydroxy-nitrooxy-epoxide;;C5H9O5N;CC1(CO[N+](=O)[O-])OC1CO;
+ICNE;isoprene-carbonyl-nitrooxy-epoxide;;C5H7O5N;CC1(CO[N+](=O)[O-])OC1C=O;
+IHNEOO;lumped peroxy radicals from IHNE;;C5H8O7N;CC1(CO)OC1=O;3
+ICN1OO;peroxy radical from ICN + OH/O2; ISOP1N2OH3OO4CO;C5H8O7N;C(=O)C(O[O])C(CO[N+](=O)[O-])(C)O;3
+ICN2OO;peroxy radical from ICN + OH/O2; ISOP1CO2OO3OH4N;C5H8O7N;C(O[N+](=O)[O-])C(O)C(C=O)(C)O[O];3
+ICN3OO;peroxy radical from ICN + OH/O2; ISOP1OH2OO3CO4N;C5H8O7N;C(O[N+](=O)[O-])C(=O)C(CO)(C)O[O];3
+ICN4OO;peroxy radical from H-abstraction from ICN; ISOP1N4CO4OO;C5H6O6N;C(=O)(O[O])CC(CO[N+](=O)[O-])C;3
+ICN5OO;peroxy radical from H-abstraction from ICN; ISOP1CO1OO4N;C5H6O6N;C(O[N+](=O)[O-])CC(C(=O)(O[O]))C;3
+IDNOO;lumped peroxy radicals from dinitrates;;C5H9O9N;C(O)C(O[O])C(O[N+](=O)[O-])(CO[N+](=O)[O-])C;3
+ICHNP;lumped tetrafunctionalized isoprene: carbonyl-hydroxy-nitrooxy-hydroperoxide;;C5H9O7N;CC(C=O)(O[N+](=O)[O-])C(CO)OO;
+IHNDP;lumped tetrafunctionalized isoprene: hydroxy-nitrooxy-dihydroperoxide;;C5H11O8N;CC(CO[N+](=O)[O-])(OO)C(O)COO;
+IDHDN;lumped tetrafunctionalized isoprene: dihydroxy-dinitrate;;C5H10O8N;CC(CO)(O[N+](=O)[O-])C(O)CO[N+](=O)[O-];
+IDHPN;lumped tetrafunctionalized isoprene: dihydroxy-hydroperoxy-nitrate;;C5H10O7N;CC(CO)(O[N+](=O)[O-])C(O)COO;
+IDHCN;lumped tetrafunctionalized isoprene: dihydroxy-carbonyl-nitrate;;C5H9O6N;CC(CO)(O[N+](=O)[O-])C(=O)CO;
+ICPDH;lumped tetrafunctionalized isoprene: carbonyl-hydroperoxy-diol;;C5H10O5;CC(CO)(OO)C(O)C=O;
+IDHDP;lumped tetrafunctionalized isoprene: dihydroxy-dihydroperoxide;;C5H12O6;CC(CO)(OO)C(O)COO;
+IDHPE;lumped tetrafunctionalized isoprene: dihydroxy-hydroperoxy-epoxide;;C5H10O5;CC(CO)(OO)C1OC1O;
+IHPDN;lumped tetrafunctionalized isoprene: hydroxy-hydroperoxy-dinitrate;;C5H10O9N2;CC(CO[N+](=O)[O-])(OO)C(O)CO[N+](=O)[O-];
+ICHDN;lumped tetrafunctionalized isoprene: carbonyl-hydroxy-dinitrate;;C5H8O8N2;CC(CO)(O[N+](=O)[O-])C(=O)CO[N+](=O)[O-];
+IHNPE;lumped tetrafunctionalized isoprene: hydroxy-nitrooxy-hydroperoxy-epoxide;;C5H9O7N;CC(CO[N+](=O)[O-])(OO)C1OC1O;
+IDCHP;lumped tetrafunctionalized isoprene: hydroxy-hydroperoxy-dialdehyde;;C5H8O5;CC(C=O)(OO)C(O)C=O;
+;;;;;
+#DEFFIX;;;;;
+O2;molecular oxygen};;O2;O=O;
+H2O;water};;H2O;O;
+M;air density};;M;O=O;
+MO2;optional additional methylperoxy radical species};;MO2;O;
