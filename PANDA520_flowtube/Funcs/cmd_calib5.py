@@ -25,6 +25,10 @@ def cmd_calib5( const_comp_conc, modelparams,Init_comp_conc, Q1, Q2, c_prev=None
     modelparams.light_stat_now = 0 
     modelparams.con_infl_nam = modelparams.const_comp
     modelparams.comp0 = modelparams.Init_comp
+    # Restart files (checkpoints, warm start, stage carry-over) are meant for long continuous-OH runs.
+    # Point-source calibrations always start fresh; override with use_restart = True/False in the start script.
+    use_restart = bool(getattr(modelparams, 'use_restart', modelparams.OHsource == 'Continuous'))
+    modelparams.use_restart_now = use_restart
     # print('Q1', modelparams.Q1, 'Q2', modelparams.Q2)
     try: ### if the O2 concentration is not given, set it to 0
         modelparams.O2 = modelparams.O2conc[0][0]
@@ -173,7 +177,7 @@ def cmd_calib5( const_comp_conc, modelparams,Init_comp_conc, Q1, Q2, c_prev=None
     _ws_npz = _ws_base + '.npz'
     _ws_npy = _ws_base + '.npy'
 
-    if os.path.isfile(_ws_npz):
+    if use_restart and os.path.isfile(_ws_npz):
         # New format: contains both first tube (c) and second tube (c_2nd)
         _ws = np.load(_ws_npz)
         if 'c' in _ws and _ws['c'].shape == c.shape:
@@ -183,7 +187,7 @@ def cmd_calib5( const_comp_conc, modelparams,Init_comp_conc, Q1, Q2, c_prev=None
         if 'c_2nd' in _ws:
             modelparams._ws_c2nd = _ws['c_2nd']
             print(f'  [warm start] loaded c_2nd {_ws["c_2nd"].shape} from {_ws_npz}', flush=True)
-    elif os.path.isfile(_ws_npy):
+    elif use_restart and os.path.isfile(_ws_npy):
         # Old format: single array (c_2nd only, shape mismatch with c)
         _c_ws = np.load(_ws_npy)
         if _c_ws.shape == c.shape:
@@ -210,7 +214,7 @@ def cmd_calib5( const_comp_conc, modelparams,Init_comp_conc, Q1, Q2, c_prev=None
                   f'ignoring', flush=True)
 
     # ---- Stage carry-over: use previous stage's converged state if no warm-start ----
-    if not _ws_loaded and c_prev is not None:
+    if use_restart and not _ws_loaded and c_prev is not None:
         if isinstance(c_prev, list):
             # c_prev is a list of 1D arrays from box model — use last converged state
             c_box = c_prev[-1].copy()
@@ -298,14 +302,16 @@ def cmd_calib5( const_comp_conc, modelparams,Init_comp_conc, Q1, Q2, c_prev=None
                     f"R{modelparams.Rgrid}L{modelparams.Zgrid}")
         if Q1 != Q2:
             # Two-tube: save both first tube (c) and second tube (c_2nd)
-            np.savez(_ws_base + '.npz', c=c, c_2nd=c_2nd)
-            print(f'  [warm start] saved c {c.shape} + c_2nd {c_2nd.shape} '
-                  f'→ {_ws_base}.npz', flush=True)
+            if use_restart:
+                np.savez(_ws_base + '.npz', c=c, c_2nd=c_2nd)
+                print(f'  [warm start] saved c {c.shape} + c_2nd {c_2nd.shape} '
+                      f'→ {_ws_base}.npz', flush=True)
             return meanConc, (c, c_2nd)
         else:
             # One-tube: save c directly
-            np.save(_ws_base + '.npy', c)
-            print(f'  [warm start] saved {_ws_base}.npy', flush=True)
+            if use_restart:
+                np.save(_ws_base + '.npy', c)
+                print(f'  [warm start] saved {_ws_base}.npy', flush=True)
             return meanConc, c
 
     return meanConc, c

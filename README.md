@@ -155,7 +155,7 @@ This is the most important choice of a set-up. The model decides it from `Rl`: *
 | Physical picture | OH/HO2 are made in a short lamp region at the inlet and then react downstream (classic SA / HOI calibration) | OH is produced all along an illuminated section of the tube while the chemistry proceeds |
 | Geometry parameters | `R1`, `L1` (+ `R2`, `L2`); **do not set `Rl`, `Ll`** | `Rl`, `Ll`, `Rgridl`, `Zgridl` for the illuminated section, plus `R1`, `L1`, `R2`, `L2` |
 | `Itx` | lamp *It* product at `Qx` (photons cm⁻², e.g. `4.84e10`) | first-order rate coefficient of `H2O = OH + H` in the lamp section (s⁻¹, e.g. `1.9e-10`) |
-| How OH enters | `[OH]₀ = [HO2]₀ = Itx · Qx / Q · 7.22×10⁻²⁰ · [H2O]` is fixed at the inlet | through the mechanism reaction `% itProd(modelparams) : H2O = OH + H ;` (must be in the mechanism) |
+| How OH enters | `[OH]₀ = [HO2]₀ = Itx · Qx / Q · 7.22×10⁻²⁰ · [H2O]` is fixed at the inlet ([H2O] = measured `H2Oconc` if given and H2O flow ≥ 1000 sccm, otherwise calculated from the flow) | through the mechanism reaction `% itProd(modelparams) : H2O = OH + H ;` (must be in the mechanism) |
 | `Init_comp` / `Init_set` | `Init_comp = ['OH', 'HO2']`, `Init_set = 'on'` | OH not in `Init_comp`; use `Init_set = 'on'` only for other species fixed at the inlet (e.g. `['ISOP1OH2OOH']`), otherwise `'off'` |
 | `model_mode` | `'flowtube1'` | `'flowtube2'` |
 
@@ -215,6 +215,7 @@ All parameters live in one `SimulationParams(...)` call at the top of each start
 | `tot_time`, `save_step` | Box-model integration time and output interval (s) |
 | `dil_fac_now`, `wall_loss_set`, `wall_loss_custom` | Box-model dilution rate (s⁻¹), wall loss (0 = off, 1 = computed, other = constant value) and per-species wall loss (s⁻¹) |
 | `pars_skip` | 0 = parse mechanism (normal); 1 = skip parsing |
+| `use_restart` *(optional)* | Checkpoints, warm start and stage carry-over ([5](#5-outputs)). Default: on for a continuous OH source, off for a point source |
 
 **Chemistry and outputs**
 
@@ -265,10 +266,10 @@ The examples use coarse grids and loose convergence so that they finish in minut
 
 | | Example settings (fast) | Publication settings (example) |
 |---|---|---|
-| Point source (`flowtube1`, Examples 1–2) | `Rgrid1 = 20`, `Zgrid1 + Zgrid2 = 20`, `dt = 1e-4` (SA) / `1e-3` (HOI), `inter_acc = 1e-3` | `Rgrid ≥ 40`, `Zgrid ≥ 40`, `inter_acc ≤ 1e-4`; reduce `dt` if the grid is refined |
+| Point source (`flowtube1`, Examples 1–2) | `Rgrid1 = 20`, `Zgrid1 + Zgrid2 = 20`, `dt = 1e-4` (SA) / `1e-3` (HOI), `inter_acc = 1e-3` | `Rgrid1 = 40`, `Zgrid1 = Zgrid2 = 20`, `dt = 5e-5`, `inter_acc = 1e-5` (SA: ~1 min); check with a finer grid |
 | Continuous source (`flowtube2`, Example 4) | `Rgrid = 14`, `dt = 2e-3`, `timesteps = 250`, `inter_acc = 1e-3` | `Rgrid = 60`, `Zgrid1 = Zgrid2 = 30`, `Zgridl = 10`, `dt = 5e-5`, `timesteps = 10000`, `inter_acc = 1e-5` (hours to days, use a cluster) |
 
-Example 4 on the coarse grid agrees with the fine-grid (R = 60) run within ~5 % for OH and HO2 and within ~10–40 % for the oxidation products, so always check grid convergence before using results quantitatively. In `flowtube1` the chemistry is explicit: if the run produces `NaN`, reduce `dt` (fast reactions such as HSO3 + O2 in the SA mechanism need `dt ≈ 1e-4` s).
+Grid test for Example 1 (H2SO4, stage 2): R = 20 → 3.46×10⁷, R = 40 → 3.31×10⁷, R = 80 → 3.23×10⁷ cm⁻³ (identical to the original model at R = 80). The fast R = 20 example is therefore ~7 % high and R = 40 ~2.5 % high — use at least R = 40 for calibration factors. Example 4 on the coarse grid agrees with the fine-grid (R = 60) run within ~5 % for OH and HO2 and within ~10–40 % for the oxidation products, so always check grid convergence before using results quantitatively. In `flowtube1` the chemistry is explicit: if the run produces `NaN`, reduce `dt` (fast reactions such as HSO3 + O2 in the SA mechanism need `dt ≈ 1e-4` s).
 
 ## 5. Outputs
 
@@ -284,7 +285,9 @@ Results are written to `Export_files/<file_name without .csv>/`. File names enco
 | `warmstart_stage<j>_*.npz` / `.npy` | Converged 2-D field, used to warm-start a re-run |
 | `*checkpoint*.npz` | Periodic checkpoint; a re-run with the same settings **resumes** from it automatically |
 
-Delete the `*.npz` / `*.npy` files in the output folder if you want a fresh start after changing inputs.
+**Restart files** (`warmstart_*`, `*checkpoint*`) and **stage carry-over** (stage N+1 starts from the converged field of stage N) are only used for a **continuous OH source**, where fine-grid runs can take hours to days and may need to be resumed. Point-source calibrations are short and always start from a clean tube, so their results never depend on a previous run. Override with `use_restart = True/False` in the start script.
+
+Restart files are named by stage and grid only, **not by the input values** — delete the `*.npz` / `*.npy` files in the output folder after changing the input CSV or concentrations, otherwise a continuous-source run starts from the old field.
 
 ## 6. Running on an HPC cluster
 
@@ -302,7 +305,7 @@ The `flowtube2` chemistry step is parallelised over grid cells with Numba — se
 
 - **`NaN` or exploding concentrations** — reduce `dt`, or coarsen the grid.
 - **Point source gives (almost) no product** — check `model_mode = 'flowtube1'`, `Init_comp = ['OH', 'HO2']`, `Init_set = 'on'` and that `Rl` is not set ([4.2](#42-oh-source-point-or-continuous)).
-- **No convergence / too slow** — start with a coarse grid and a looser `inter_acc`, then refine. Checkpoints and warm starts let you continue interrupted runs.
+- **No convergence / too slow** — start with a coarse grid and a looser `inter_acc`, then refine. For continuous-source runs, checkpoints and warm starts let you continue interrupted runs: just submit the same script again.
 - **`ModuleNotFoundError: Funcs`** — run the scripts from inside `PANDA520_flowtube/` (or add it to `PYTHONPATH`).
 - **Open Babel import error** — install it with `conda install -c conda-forge openbabel` (pip wheels are often unavailable).
 - **Species not found** — names in `const_comp`, `Init_comp`, `plot_spec`, `key_spe_for_plot` and `Diff_setname` must match the mechanism exactly; species in `const_comp`/`Init_comp` need a concentration.

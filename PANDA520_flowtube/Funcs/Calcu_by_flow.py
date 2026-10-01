@@ -158,16 +158,16 @@ def calculate_concentrations(modelparams):
             except:
                 pass
 
-    # Calculate OH concentration
-    OH_conc = ion_trap_intensity * 7.22e-20 * 1 * np.array(H2O_conc_1)
-    
-    # determine the H2O finally 
+    # determine the H2O finally
     if 'H2O' in conc_groups:
         H2Oconc = transposed_dict['H2O']
     else:
         H2Oconc = np.transpose([H2O_conc_1, H2O_conc_2])
     # use the calucated H2O when H2O flow is below 1000
     H2Oconc[idx] = np.transpose([np.array(H2O_conc_1)[idx], np.array(H2O_conc_2)[idx]])
+
+    # Calculate OH concentration (point source) from the H2O used in the tube (measured if available)
+    OH_conc = ion_trap_intensity * 7.22e-20 * 1 * np.asarray(H2Oconc, dtype=float)[:, 0]
 
     if 'flag_tube' in modelparams.__dict__:
         flag_tube1 = modelparams.flag_tube

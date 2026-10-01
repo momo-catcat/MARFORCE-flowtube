@@ -51,7 +51,7 @@ def model_onetube(numLoop, Diff_vals, rowvals, colptrs, u, plot_spec, formula, c
               f'(actual_acc_1st={modelparams.actual_acc_1st:.0e})', flush=True)
 
     # ---- Checkpoint: load previous state if available ----
-    ckpt_file = _ckpt_path(modelparams)
+    ckpt_file = _ckpt_path(modelparams) if modelparams.use_restart_now else None
     k_start = 0
     # model_onetube has no c_2nd; use a dummy for the shared checkpoint API
     _dummy_c2 = np.empty(0)
@@ -67,7 +67,8 @@ def model_onetube(numLoop, Diff_vals, rowvals, colptrs, u, plot_spec, formula, c
         print(f'\n  [checkpoint] SIGTERM received — will save and exit after current iter',
               flush=True)
 
-    signal.signal(signal.SIGTERM, _sigterm_handler)
+    if ckpt_file is not None:
+        signal.signal(signal.SIGTERM, _sigterm_handler)
     _last_ckpt_time = _time.perf_counter()
 
     for k in range(k_start, numLoop):
@@ -170,7 +171,7 @@ def model_onetube(numLoop, Diff_vals, rowvals, colptrs, u, plot_spec, formula, c
             break
 
         if k > modelparams.fix_timstep and delta_c < _conv_threshold:
-            if os.path.isfile(ckpt_file):
+            if ckpt_file is not None and os.path.isfile(ckpt_file):
                 os.remove(ckpt_file)
                 print(f'  [checkpoint] converged — removed {os.path.basename(ckpt_file)}',
                       flush=True)

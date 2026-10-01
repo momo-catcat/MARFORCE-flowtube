@@ -32,7 +32,9 @@ def _ckpt_path(modelparams):
 
 def _save_checkpoint(path, c, c_2nd, k, delta_c_final, tim_1_final, final_sp,
                      comp_namelist):
-    """Save iteration state to disk so the run can be resumed."""
+    """Save iteration state to disk so the run can be resumed (no-op when path is None)."""
+    if path is None:
+        return
     # Convert final_sp dict-of-lists to a 2D array for efficient storage
     sp_arr = np.array([final_sp[spe] for spe in comp_namelist], dtype=np.float64)
     np.savez_compressed(path,
@@ -46,7 +48,7 @@ def _save_checkpoint(path, c, c_2nd, k, delta_c_final, tim_1_final, final_sp,
 
 def _load_checkpoint(path, comp_namelist):
     """Load checkpoint. Returns (c, c_2nd, k_start, delta_c_final, tim_1_final, final_sp) or None."""
-    if not os.path.isfile(path):
+    if path is None or not os.path.isfile(path):
         return None
     try:
         data = np.load(path, allow_pickle=False)
@@ -119,7 +121,7 @@ def model_twotubes(numLoop, Diff_vals, rowvals, colptrs, u, plot_spec, formula, 
               f'(actual_acc_1st={modelparams.actual_acc_1st:.0e})', flush=True)
 
     # ---- Checkpoint: load previous state if available ----
-    ckpt_file = _ckpt_path(modelparams)
+    ckpt_file = _ckpt_path(modelparams) if modelparams.use_restart_now else None
     k_start = 0
     ckpt = _load_checkpoint(ckpt_file, modelparams.comp_namelist)
     if ckpt is not None:
@@ -133,7 +135,8 @@ def model_twotubes(numLoop, Diff_vals, rowvals, colptrs, u, plot_spec, formula, 
         print(f'\n  [checkpoint] SIGTERM received — will save and exit after current iter',
               flush=True)
 
-    signal.signal(signal.SIGTERM, _sigterm_handler)
+    if ckpt_file is not None:
+        signal.signal(signal.SIGTERM, _sigterm_handler)
 
     _last_ckpt_time = _time.perf_counter()
 
@@ -274,7 +277,7 @@ def model_twotubes(numLoop, Diff_vals, rowvals, colptrs, u, plot_spec, formula, 
 
         if k > modelparams.fix_timstep and delta_c < _conv_threshold:
             # Converged — remove checkpoint file (no longer needed)
-            if os.path.isfile(ckpt_file):
+            if ckpt_file is not None and os.path.isfile(ckpt_file):
                 os.remove(ckpt_file)
                 print(f'  [checkpoint] converged — removed {os.path.basename(ckpt_file)}',
                       flush=True)
