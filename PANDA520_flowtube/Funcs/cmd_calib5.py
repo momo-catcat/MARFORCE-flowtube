@@ -96,6 +96,9 @@ def cmd_calib5( const_comp_conc, modelparams,Init_comp_conc, Q1, Q2, c_prev=None
     # Change odd number Rgrid to even number grid
     if (modelparams.Rgrid % 2) != 0:
         modelparams.Rgrid = modelparams.Rgrid + 1
+    # Two-tube model when the flow changes (Y-piece) or a 2nd section with a different radius follows
+    modelparams.two_tubes = bool(Q1 != Q2 or (float(getattr(modelparams, 'L2', 0)) > 0
+                                               and float(modelparams.R2) != float(modelparams.R1)))
     modelparams = grid_para(modelparams)
     # print(modelparams.comp_namelist)
     # % set the concentration for all the species for the grid of 80*40 in c
@@ -262,7 +265,7 @@ def cmd_calib5( const_comp_conc, modelparams,Init_comp_conc, Q1, Q2, c_prev=None
     )
 
     if 'flowtube' in modelparams.model_mode:
-        if Q1 != Q2:
+        if modelparams.two_tubes:
             c, c_2nd = model_twotubes(numLoop, Diff_vals, rowvals, colptrs,u, modelparams.plot_spec, modelparams.formula, c, Q1,Q2,modelparams)
             meanConc = meanconc_cal(c_2nd, modelparams)          # second tube → uses R2 (default)
         else:
@@ -300,7 +303,7 @@ def cmd_calib5( const_comp_conc, modelparams,Init_comp_conc, Q1, Q2, c_prev=None
         _ws_base = (f"{modelparams.export_file_folder}"
                     f"warmstart_stage{modelparams.number_stage}_"
                     f"R{modelparams.Rgrid}L{modelparams.Zgrid}")
-        if Q1 != Q2:
+        if modelparams.two_tubes:
             # Two-tube: save both first tube (c) and second tube (c_2nd)
             if use_restart:
                 np.savez(_ws_base + '.npz', c=c, c_2nd=c_2nd)

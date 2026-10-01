@@ -138,6 +138,8 @@ def model_onetube(numLoop, Diff_vals, rowvals, colptrs, u, plot_spec, formula, c
             print(f'  iter {k}: NaN detected — aborting this run '
                   f'(likely CFL-unstable: dt={modelparams.dt:.0e} too large for this grid)',
                   flush=True)
+            delta_c_final.pop()
+            tim_1_final.pop()
             break
 
         # Record mean concentrations every iteration — one call for all species

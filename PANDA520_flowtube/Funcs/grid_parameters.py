@@ -13,7 +13,8 @@ def grid_para(modelparams):
         modelparams.dx[:, modelparams.Zgridl:, :] = (modelparams.L1) / (modelparams.Zgrid1- 1)
         modelparams.dr = 2 * modelparams.Rl / (modelparams.Rgridl - 1)
     
-    elif (modelparams.OHsource == 'point') and (modelparams.Q1[0] != modelparams.Q2[0]):
+    elif (modelparams.OHsource == 'point') and modelparams.two_tubes:
+        # tube 1 only; the 2nd tube has its own grid (Rgrid2, Zgrid2) in model_twotubes
 
         modelparams.Zgrid = int(modelparams.Zgrid1) 
         modelparams.dx = np.zeros([int(modelparams.Rgrid), int(modelparams.Zgrid), modelparams.comp_num], dtype=np.float32)
@@ -22,7 +23,8 @@ def grid_para(modelparams):
         modelparams.dx[:, :, :] = (modelparams.L1) / (modelparams.Zgrid1-1)
         modelparams.dr = 2 * modelparams.R1 / (modelparams.Rgrid1 - 1)
 
-    elif (modelparams.Q1[0] == modelparams.Q2[0]):
+    else:
+        # one tube (same radius and flow throughout): Zgrid1 + Zgrid2 points over L1 + L2
         modelparams.Zgrid = int(modelparams.Zgrid1+ modelparams.Zgrid2)  #
         modelparams.dx = np.zeros([int(modelparams.Rgrid), int(modelparams.Zgrid), modelparams.comp_num], dtype=np.float32)
         # modelparams.dr = np.zeros([int(modelparams.Rgrid), int(modelparams.Zgrid), modelparams.comp_num], dtype=np.float32)

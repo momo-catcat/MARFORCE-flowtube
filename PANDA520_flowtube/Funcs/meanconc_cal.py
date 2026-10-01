@@ -3,6 +3,8 @@ from scipy import interpolate
 import pandas as pd
 
 def meanconc_cal(c, modelparams, R=None):
+    """Outlet concentration of every species: 'mean' (area average, default) or 'weighted'
+    (flow-weighted) according to modelparams.final_output_method."""
     if R is None:
         R = modelparams.R2
     dr_final = R / (modelparams.Rgrid - 1) * 2
@@ -26,8 +28,15 @@ def meanconc_cal(c, modelparams, R=None):
 
         cVec2 = interpolate.splev(rVec, splineres2)
 
-        conc1 = 0.001 / R ** 2 * np.sum(cVec1 * rVec)
-        conc2 = 0.001 / R ** 2 * np.sum(cVec2 * rVec)
+        if getattr(modelparams, 'final_output_method', 'mean') == 'weighted':
+            # flow-weighted (flux) mean with the parabolic laminar velocity profile, as in the Matlab model
+            velocity_profile = 1 - (rVec / R) ** 2
+            conc1 = 2 * 0.001 / R ** 2 * np.sum(cVec1 * rVec * velocity_profile)
+            conc2 = 2 * 0.001 / R ** 2 * np.sum(cVec2 * rVec * velocity_profile)
+        else:
+            # 'mean': area-weighted average over the outlet cross-section
+            conc1 = 0.001 / R ** 2 * np.sum(cVec1 * rVec)
+            conc2 = 0.001 / R ** 2 * np.sum(cVec2 * rVec)
 
         meanConc.append(conc1 + conc2)
 
