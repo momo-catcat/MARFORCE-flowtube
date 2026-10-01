@@ -31,6 +31,7 @@ Feedback is very welcome — please open an issue.
 6. [Running on an HPC cluster](#6-running-on-an-hpc-cluster)
 7. [Tips and troubleshooting](#7-tips-and-troubleshooting)
 8. [Acknowledgements](#8-acknowledgements)
+9. [License](#9-license)
 
 ---
 
@@ -38,6 +39,7 @@ Feedback is very welcome — please open an issue.
 
 ```
 MARFORCE-flowtube/
+├── LICENSE                                     # GNU GPL v3
 ├── environment.yml / requirements.txt          # dependencies
 └── PANDA520_flowtube/                          # run everything from this folder
     ├── Start_SetParam_SA_calibration.py        # Example 1: SA calibration, point OH source
@@ -309,3 +311,7 @@ The `flowtube2` chemistry step is parallelised over grid cells with Numba — se
 ## 8. Acknowledgements
 
 We thank the ACCC Flagship funded by the Academy of Finland grant number 337549, Academy professorship funded by the Academy of Finland (grant no. 302958), Academy of Finland projects no. 346370, 325656, 316114, 314798, 325647, 341349 and 349659. European Research Council (ERC) project ATM-GTP Contract No. 742206. The Arena for the gap analysis of the existing Arctic Science Co-Operations (AASCO) funded by Prince Albert Foundation Contract No 2859. M.K. thanks the Jane and Aatos Erkko Foundation for providing funding. M.K. and X.-C.H thank the Jenny and Antti Wihuri Foundation for providing funding for this research.
+
+## 9. License
+
+MARFORCE-Flowtube is free software released under the [GNU General Public License v3.0](LICENSE). It includes code adapted from [PyCHAM](https://github.com/simonom/PyCHAM) (© 2018–2024 Simon O'Meara, GPL-3.0); those files keep their original copyright headers. You may redistribute and modify it under the terms of the GPL v3; it is distributed WITHOUT ANY WARRANTY.
