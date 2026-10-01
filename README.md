@@ -2,9 +2,9 @@
 
 MARFORCE-Flowtube simulates **laminar flow tubes with chemistry**: gas flows through a tube with a parabolic velocity profile, species diffuse radially and axially, are lost to the wall and react with each other. The model is mainly used to
 
-- **calibrate chemical-ionisation mass spectrometers (CIMS)** for H2SO4 (SA), HOI and other species: OH is produced by H2O photolysis with a UV lamp, reacts with an excess reactant (SO2, I2, …) and the model predicts the concentration of the product that reaches the instrument;
-- simulate **flow-reactor oxidation experiments** (e.g. isoprene chemistry with the Wennberg mechanism), with a continuously illuminated OH-production section and photolysis reactions;
-- run the same chemistry as a **0-D box model** for comparison.
+- **Calibrate chemical-ionisation mass spectrometers (CIMS)** for H2SO4 (SA), HOI and other species: OH is produced by H2O photolysis with a UV lamp, reacts with an excess reactant (SO2, I2, …) and the model predicts the concentration of the product that reaches the instrument;
+- Simulate **flow-reactor oxidation experiments** (e.g. isoprene chemistry with the Wennberg mechanism), with a continuously illuminated OH-production section and photolysis reactions;
+- Run the same chemistry as a **0-D box model** for comparison.
 
 The model was published with our manuscript in [Atmospheric Measurement Techniques](https://amt.copernicus.org/articles/16/4461/2023/) — please cite it if you use MARFORCE-Flowtube. Parts of the chemistry parser are adapted from [PyCHAM](https://github.com/simonom/PyCHAM) (Simon O'Meara, GPL-3.0). A Matlab-based model for sulphuric acid calibration only is available at https://github.com/ceciliarighi/ACTRIS_CiGas_condensable_vapors (see [section 7](#7-outlet-concentration-mean-or-flow-weighted) for how its output differs).
 
