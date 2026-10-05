@@ -122,7 +122,7 @@ Each flow-tube example simulates **two experiment stages** (two rows of its inpu
 | 1b SA, ODE | H2SO4 = 6.73×10⁷ | H2SO4 = 3.23×10⁷ |
 | 2 HOI | HOI = 6.76×10⁶ | HOI = 8.57×10⁶ |
 | 3 Isoprene box | IDHDP = 2.80×10⁹ | – (box mode runs one stage) |
-| 4 Isoprene continuous OH | IDHDP = 2.33×10⁶, OH = 5.19×10⁸ | IDHDP = 1.28×10⁶, OH = 4.07×10⁸ |
+| 4 Isoprene continuous OH | IDHDP = 2.33×10⁶, OH = 5.19×10⁸ | IDHDP = 1.27×10⁶, OH = 4.07×10⁸ |
 | 5 Transport test (`'weighted'`) | H2SO4 penetration 0.657 (Gormley–Kennedy 0.645, +1.9 %) at 22.5 slpm | 0.458 (0.449, +2.0 %) at 10 slpm |
 
 ### 3.1 Which SA calibration example should I use? (1a vs 1b)

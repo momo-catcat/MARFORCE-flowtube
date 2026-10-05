@@ -12,7 +12,6 @@ from Funcs.model_twotubes import model_twotubes
 from Funcs.model_box import model_box
 from Funcs.meanconc_cal import meanconc_cal
 from Funcs.grid_parameters import grid_para as grid_para
-import Funcs.group_indices as group_indices
 import Funcs.rrc_calc as rrc_calc
 from Funcs.wall_loss_cal_species import get_wall_loss
 from Funcs.ode_solv_numba_batch import init_numba_batch
@@ -79,15 +78,13 @@ def cmd_calib5( const_comp_conc, modelparams,Init_comp_conc, Q1, Q2, c_prev=None
     modelparams.rxn_net_stoich = _rxn_net
     # ------------------------------------------------------------------
 
+    # RO2 list = species of the mechanism's RO2 line. (PyCHAM's group_indices is not called: it was
+    # given the SMILES list of the whole xml file instead of one species, so it re-added every RO2
+    # or failed depending on unrelated xml entries.)
     modelparams = RO2_indices.RO2_indices(modelparams)
 
-    for i in range(len(modelparams.RO2_indices)):
-        nu = modelparams.RO2_indices[i][1]
-        # print(modelparams.Pybel_objects[nu].formula)
-        modelparams = group_indices.group_indices(modelparams.comp_smil, nu, modelparams)
-
-    # group_indices appends peroxy radicals to RO2_indices again: keep each species once,
-    # otherwise the RO2 sum used in rate coefficients is double counted
+    # keep each species once (the RO2 line may name a species twice), otherwise the RO2 sum used
+    # in rate coefficients is double counted
     if modelparams.RO2_indices.size:
         _, _first = np.unique(modelparams.RO2_indices[:, 1], return_index=True)
         modelparams.RO2_indices = modelparams.RO2_indices[np.sort(_first)]
