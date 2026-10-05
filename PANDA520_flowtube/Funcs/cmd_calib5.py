@@ -85,7 +85,13 @@ def cmd_calib5( const_comp_conc, modelparams,Init_comp_conc, Q1, Q2, c_prev=None
         nu = modelparams.RO2_indices[i][1]
         # print(modelparams.Pybel_objects[nu].formula)
         modelparams = group_indices.group_indices(modelparams.comp_smil, nu, modelparams)
-    
+
+    # group_indices appends peroxy radicals to RO2_indices again: keep each species once,
+    # otherwise the RO2 sum used in rate coefficients is double counted
+    if modelparams.RO2_indices.size:
+        _, _first = np.unique(modelparams.RO2_indices[:, 1], return_index=True)
+        modelparams.RO2_indices = modelparams.RO2_indices[np.sort(_first)]
+
     # get the diffusion for all species and  the index of species in C except constant compounds
     u, Diff_vals = get_diff_and_u_for_more_species(modelparams.comp_namelist, modelparams.Diff_setname, modelparams.con_C_indx, modelparams.Diff_set, modelparams.TEMP, modelparams.p, modelparams)
     numLoop = 500000000  # number of times to run to reach the pinhole of the instrument
